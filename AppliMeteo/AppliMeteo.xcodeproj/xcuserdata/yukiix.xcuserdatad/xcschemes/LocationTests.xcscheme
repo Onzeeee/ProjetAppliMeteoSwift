@@ -32,13 +32,6 @@
    <LaunchAction
       useCustomWorkingDirectory = "NO"
       allowLocationSimulation = "YES">
-      <EnvironmentVariables>
-         <EnvironmentVariable
-            key = "PIXABAY_APIKEY"
-            value = "33890820-57f6befd152701393514ca01c"
-            isEnabled = "YES">
-         </EnvironmentVariable>
-      </EnvironmentVariables>
       <LocationScenarioReference
          identifier = "com.apple.dt.IDEFoundation.CurrentLocationScenarioIdentifier"
          referenceType = "1">

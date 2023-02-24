@@ -69,6 +69,21 @@ final class CityTest: XCTestCase {
         wait(for: [expectation], timeout: 30.0)
     }
 
+    func testToggleFavorite(){
+        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        let cities = loadCitiesFromJson(context: context)
+        let city = cities[0]
+        print("City: \(city.name)")
+        print("Favorite: \(city.favorite)")
+        let favorite = city.favorite
+        toggleFavorite(city: city, context: context)
+        print("Favorite: \(city.favorite)")
+        XCTAssertEqual(city.favorite, !favorite)
+        toggleFavorite(city: city, context: context)
+        print("Favorite: \(city.favorite)")
+        XCTAssertEqual(city.favorite, favorite)
+    }
+
     func testPerformanceExample() throws {
         // This is an example of a performance test case.
         self.measure {

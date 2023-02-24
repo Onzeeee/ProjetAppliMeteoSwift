@@ -199,3 +199,25 @@ func findPhotos(query: String, completion: @escaping (Result<[String], Error>) -
     }
     task.resume()
 }
+
+extension CityEntity{
+    static func == (lhs: CityEntity, rhs: CityEntity) -> Bool {
+        return lhs.id == rhs.id
+    }
+
+    static func fromId(id: Int32, context: NSManagedObjectContext) -> CityEntity? {
+        return findCityFromCoreDataById(id: id, context: context)
+    }
+
+    static func fromName(name: String, context: NSManagedObjectContext) -> [CityEntity] {
+        return findCitiesFromCoreDataByName(name: name, context: context)
+    }
+
+    static func favoriteCities(context: NSManagedObjectContext) -> [CityEntity] {
+        return findFavoriteCitiesFromCoreData(context: context)
+    }
+
+    static func allCities(context: NSManagedObjectContext) -> [CityEntity] {
+        return loadCitiesFromJson(context: context)
+    }
+}

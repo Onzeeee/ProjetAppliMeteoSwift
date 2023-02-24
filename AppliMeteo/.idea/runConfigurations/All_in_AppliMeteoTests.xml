@@ -2,6 +2,7 @@
   <configuration default="false" name="All in AppliMeteoTests" type="OCUnitRunConfiguration" factoryName="XCTest/Kiwi" nameIsGenerated="true" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="AppliMeteo" TARGET_NAME="AppliMeteoTests" CONFIG_NAME="Debug" IS_LOCATION_SIMULATION_SUPPORTED="true" SCHEME_NAME="All in AppliMeteoTests" IS_LOCATION_SIMULATION_ALLOWED="true" LOCATION_SCENARIO_ID="com.apple.dt.IDEFoundation.CurrentLocationScenarioIdentifier" LOCATION_SCENARIO_TYPE="1" APPLICATION_LANGUAGE="IDELaunchSchemeLanguageUseSystemLanguage" APPLICATION_REGION="" TEST_MODE="SUITE_TEST">
     <envs>
       <env name="OPENWEATHER_APIKEY" value="785f075ac053c608833639845e0f9464" />
+      <env name="PIXABAY_APIKEY" value="33890820-57f6befd152701393514ca01c" />
     </envs>
     <method v="2">
       <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />

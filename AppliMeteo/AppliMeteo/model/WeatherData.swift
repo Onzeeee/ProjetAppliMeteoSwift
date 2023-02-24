@@ -18,6 +18,7 @@ func fetchWeatherDataFromLonLat(context: NSManagedObjectContext, lon: Double, la
             return
         }
         print("data: \(data)")
+
         guard let data = data, let response = response as? HTTPURLResponse, response.statusCode == 200 else {
             completion(.failure(NSError(domain: "Invalid response from server", code: 0, userInfo: nil)))
             return

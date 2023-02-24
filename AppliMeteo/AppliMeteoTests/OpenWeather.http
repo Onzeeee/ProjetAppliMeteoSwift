@@ -7,5 +7,5 @@ GET https://api.openweathermap.org/data/2.5/forecast?lat=37.785834&lon=-122.4064
 Accept: application/json
 
 ### GET request with a header
-GET https://pixabay.com/api/?q=Paris&key=$(PIXABAY_APIKEY)&image_type=photo
+GET https://pixabay.com/api/?q=Paris&key=33890820-57f6befd152701393514ca01c&image_type=photo
 Accept: application/json

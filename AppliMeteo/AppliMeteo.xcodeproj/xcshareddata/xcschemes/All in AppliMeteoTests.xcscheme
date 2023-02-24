@@ -62,6 +62,11 @@
             value = "785f075ac053c608833639845e0f9464"
             isEnabled = "YES">
          </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "PIXABAY_APIKEY"
+            value = "33890820-57f6befd152701393514ca01c"
+            isEnabled = "YES">
+         </EnvironmentVariable>
       </EnvironmentVariables>
       <LocationScenarioReference
          identifier = "com.apple.dt.IDEFoundation.CurrentLocationScenarioIdentifier"

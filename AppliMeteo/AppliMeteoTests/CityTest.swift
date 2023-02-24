@@ -83,6 +83,26 @@ final class CityTest: XCTestCase {
         print("Favorite: \(city.favorite)")
         XCTAssertEqual(city.favorite, favorite)
     }
+    
+    func testFindFavoritesCities(){
+        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+        let cities = findFavoriteCitiesFromCoreData(context: context)
+        print("Number of favorite cities: \(cities.count)")
+        let num = cities.count
+        let id: Int32 = 6454159 // Orléans, FR
+        let city = findCityFromCoreDataById(id: id, context: context)
+        let wasfav = city!.favorite
+        toggleFavorite(city: city!, context: context)
+        let cities2 = findFavoriteCitiesFromCoreData(context: context)
+        print("Number of favorite cities: \(cities2.count)")
+        if(wasfav){
+            XCTAssertEqual(cities2.count, num-1)
+        }
+        else{
+            XCTAssertEqual(cities2.count, num+1)
+        }
+
+    }
 
     func testPerformanceExample() throws {
         // This is an example of a performance test case.

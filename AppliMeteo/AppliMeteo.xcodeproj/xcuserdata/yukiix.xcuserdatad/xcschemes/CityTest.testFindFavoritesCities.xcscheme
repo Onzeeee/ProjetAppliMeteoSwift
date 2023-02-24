@@ -32,9 +32,5 @@
    <LaunchAction
       useCustomWorkingDirectory = "NO"
       allowLocationSimulation = "YES">
-      <LocationScenarioReference
-         identifier = "com.apple.dt.IDEFoundation.CurrentLocationScenarioIdentifier"
-         referenceType = "1">
-      </LocationScenarioReference>
    </LaunchAction>
 </Scheme>

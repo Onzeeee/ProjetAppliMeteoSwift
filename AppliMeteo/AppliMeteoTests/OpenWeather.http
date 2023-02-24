@@ -1,0 +1,7 @@
+### GET request with a header
+GET https://api.openweathermap.org/data/2.5/forecast?id=6454159&units=metric&appid=785f075ac053c608833639845e0f9464
+Accept: application/json
+
+### GET request with a header
+GET https://pixabay.com/api/?q=Paris&key=33890820-57f6befd152701393514ca01c&image_type=photo
+Accept: application/json

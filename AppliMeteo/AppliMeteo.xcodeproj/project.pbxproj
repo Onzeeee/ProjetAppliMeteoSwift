@@ -24,8 +24,6 @@
 		D51D52F62F26399DB235FCB8 /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51D54FD76C1961117115AD7 /* City.swift */; };
 		D51D53B5C404720FEC354DA8 /* OpenWeather.http in Resources */ = {isa = PBXBuildFile; fileRef = D51D531A1DFDD5428782D96A /* OpenWeather.http */; };
 		D51D5590BC1992672361CCD0 /* AppliMeteoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51D59DA30FA2E107A41E2F6 /* AppliMeteoTests.swift */; };
-		D51D5AA43AD3F44B7E975645 /* .env in Resources */ = {isa = PBXBuildFile; fileRef = D51D5D20C086BC3DD37BBDA8 /* .env */; };
-		D51D5B0B99878A57C8B6EC0C /* .env in Resources */ = {isa = PBXBuildFile; fileRef = D51D5D20C086BC3DD37BBDA8 /* .env */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,7 +56,6 @@
 		D51D54FD76C1961117115AD7 /* City.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
 		D51D5882F7B91B5E4247FCE2 /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		D51D59DA30FA2E107A41E2F6 /* AppliMeteoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppliMeteoTests.swift; sourceTree = "<group>"; };
-		D51D5D20C086BC3DD37BBDA8 /* .env */ = {isa = PBXFileReference; lastKnownFileType = file.env; path = .env; sourceTree = "<group>"; };
 		D51D5EAD8CE22FDFE7E3420A /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = file.github; path = .gitignore; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -87,7 +84,6 @@
 				3B9D45DE29A6871800510517 /* AppliMeteo */,
 				3B9D45DD29A6871800510517 /* Products */,
 				D51D536DE530868B7E2C9080 /* AppliMeteoTests */,
-				D51D5D20C086BC3DD37BBDA8 /* .env */,
 				D51D5EAD8CE22FDFE7E3420A /* .gitignore */,
 			);
 			sourceTree = "<group>";
@@ -222,7 +218,6 @@
 				1898689F29A80797003E7F7C /* city.list.json in Resources */,
 				3B9D45EC29A6871A00510517 /* Assets.xcassets in Resources */,
 				3B9D45E729A6871800510517 /* Main.storyboard in Resources */,
-				D51D5AA43AD3F44B7E975645 /* .env in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -232,7 +227,6 @@
 			files = (
 				D51D53B5C404720FEC354DA8 /* OpenWeather.http in Resources */,
 				189868A029A80797003E7F7C /* city.list.json in Resources */,
-				D51D5B0B99878A57C8B6EC0C /* .env in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -28,7 +28,6 @@ func fetchWeatherDataFromLonLat(context: NSManagedObjectContext, lon: Double, la
                 completion(.failure(NSError(domain: "Invalid response from server", code: 0, userInfo: nil)))
                 return
             }
-            print("weatherDataJson: \(weatherDataJson)")
             let city = weatherDataJson["city"] as! [String: Any]
             let name = city["name"] as! String
             let sunrise = city["sunrise"] as! Int32
@@ -82,7 +81,6 @@ func fetchWeatherDataFromLonLat(context: NSManagedObjectContext, lon: Double, la
             completion(.failure(error))
         }
     }
-    print("task: \(task)")
     task.resume()
 
 }

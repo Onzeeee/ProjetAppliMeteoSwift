@@ -54,7 +54,7 @@ func fetchWeatherDataFromLonLat(context: NSManagedObjectContext, lon: Double, la
                 let weather0 = weather[0] as! [String: Any]
                 let description = weather0["description"] as! String
                 let icon = weather0["icon"] as! String
-                let iconUrl = "https://openweathermap.org/img/wn/"+icon+"@4x.png"
+//                let iconUrl = "https://openweathermap.org/img/wn/"+icon+"@4x.png"
                 let dt_txt = forecast["dt_txt"] as! String
                 let dt = forecast["dt"] as! Int32
                 let pressure = main["pressure"] as! Int32
@@ -68,7 +68,7 @@ func fetchWeatherDataFromLonLat(context: NSManagedObjectContext, lon: Double, la
                 temperatureforecast.windSpeed = speed
                 temperatureforecast.windDeg = deg
                 temperatureforecast.weatherDescription = description
-                temperatureforecast.icon = iconUrl
+                temperatureforecast.icon = icon
                 temperatureforecast.dt_txt = dt_txt
                 temperatureforecast.dt = dt
                 temperatureforecast.pressure = pressure
@@ -130,7 +130,7 @@ func fetchWeatherData(context: NSManagedObjectContext, for cityEntity: CityEntit
                 let weather0 = weather[0] as! [String: Any]
                 let description = weather0["description"] as! String
                 let icon = weather0["icon"] as! String
-                let iconUrl = "https://openweathermap.org/img/wn/"+icon+"@4x.png"
+//                let iconUrl = "https://openweathermap.org/img/wn/"+icon+"@4x.png"
                 let dt_txt = forecast["dt_txt"] as! String
                 let dt = forecast["dt"] as! Int32
                 let pressure = main["pressure"] as! Int32
@@ -144,7 +144,7 @@ func fetchWeatherData(context: NSManagedObjectContext, for cityEntity: CityEntit
                 temperatureforecast.windSpeed = speed
                 temperatureforecast.windDeg = deg
                 temperatureforecast.weatherDescription = description
-                temperatureforecast.icon = iconUrl
+                temperatureforecast.icon = icon
                 temperatureforecast.dt_txt = dt_txt
                 temperatureforecast.dt = dt
                 temperatureforecast.pressure = pressure

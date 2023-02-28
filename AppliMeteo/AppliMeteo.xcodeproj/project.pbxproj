@@ -22,6 +22,7 @@
 		3B9D45EF29A6871A00510517 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3B9D45ED29A6871A00510517 /* LaunchScreen.storyboard */; };
 		3BB5416429AA6EEA000445BA /* ViewControllerFavori.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BB5416329AA6EEA000445BA /* ViewControllerFavori.swift */; };
 		3BB5416629AA6EF8000445BA /* ViewControllerDetailsVille.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BB5416529AA6EF8000445BA /* ViewControllerDetailsVille.swift */; };
+		3BB5416829AC11BA000445BA /* CustomCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BB5416729AC11BA000445BA /* CustomCollectionViewCell.swift */; };
 		D51D52BDFA4493453C029CD9 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51D5882F7B91B5E4247FCE2 /* Location.swift */; };
 		D51D52F62F26399DB235FCB8 /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51D54FD76C1961117115AD7 /* City.swift */; };
 		D51D53B5C404720FEC354DA8 /* OpenWeather.http in Resources */ = {isa = PBXBuildFile; fileRef = D51D531A1DFDD5428782D96A /* OpenWeather.http */; };
@@ -55,6 +56,7 @@
 		3B9D45F029A6871A00510517 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3BB5416329AA6EEA000445BA /* ViewControllerFavori.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerFavori.swift; sourceTree = "<group>"; };
 		3BB5416529AA6EF8000445BA /* ViewControllerDetailsVille.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerDetailsVille.swift; sourceTree = "<group>"; };
+		3BB5416729AC11BA000445BA /* CustomCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCollectionViewCell.swift; sourceTree = "<group>"; };
 		D51D531A1DFDD5428782D96A /* OpenWeather.http */ = {isa = PBXFileReference; lastKnownFileType = file.http; path = OpenWeather.http; sourceTree = "<group>"; };
 		D51D539F11D590F976325E77 /* AppliMeteoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppliMeteoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D51D54FD76C1961117115AD7 /* City.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
@@ -109,6 +111,7 @@
 				3B9D45E329A6871800510517 /* ViewController.swift */,
 				3BB5416329AA6EEA000445BA /* ViewControllerFavori.swift */,
 				3BB5416529AA6EF8000445BA /* ViewControllerDetailsVille.swift */,
+				3BB5416729AC11BA000445BA /* CustomCollectionViewCell.swift */,
 				3B9D45E529A6871800510517 /* Main.storyboard */,
 				3B9D45EB29A6871A00510517 /* Assets.xcassets */,
 				3B9D45ED29A6871A00510517 /* LaunchScreen.storyboard */,
@@ -282,6 +285,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3B9D45E429A6871800510517 /* ViewController.swift in Sources */,
+				3BB5416829AC11BA000445BA /* CustomCollectionViewCell.swift in Sources */,
 				3B9D45E029A6871800510517 /* AppDelegate.swift in Sources */,
 				3B9D45E229A6871800510517 /* SceneDelegate.swift in Sources */,
 				3BB5416429AA6EEA000445BA /* ViewControllerFavori.swift in Sources */,

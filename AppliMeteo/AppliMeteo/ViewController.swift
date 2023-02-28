@@ -17,6 +17,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var labelTemp: UILabel!
     @IBOutlet weak var labelTempMaxMin: UILabel!
     @IBOutlet weak var labelTempRessenti: UILabel!
+    @IBOutlet weak var pageControl: UIPageControl!
     
     let leContexte = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
@@ -26,23 +27,37 @@ class ViewController: UIViewController {
     var pageActuelle : Int = 0;
     
     override func viewDidLoad() {
-        let swipeRight = UISwipeGestureRecognizer(target: self, action:
-        #selector (swipeFunc(gesture:)))
-        swipeRight.direction = .right
-        self.view.addGestureRecognizer (swipeRight)
-        let swipeLeft = UISwipeGestureRecognizer (target: self, action:
-        #selector (swipeFunc(gesture:)))
-        swipeLeft.direction = .left
-        self.view.addGestureRecognizer (swipeLeft)
-        _ = loadCitiesFromJson(context: leContexte)
-        boutonMenu.setBackgroundImage(UIImage(named: "menu.png"), for: .normal)
-        labelDateDuJour.text = Date.now.formatted(date: .complete, time: .omitted)
-        
-        listeCities = findFavoriteCitiesFromCoreData(context: leContexte)
-        
-        updateUserLocation()
-        
         super.viewDidLoad()
+        title = "Loading..."
+        pageControl.setIndicatorImage(UIImage(systemName: "paperplane.fill"), forPage: 0)
+        if(listeCities.count == 1){
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "EEEE d MMMM"
+            let dateString = dateFormatter.string(from: Date())
+            labelDateDuJour.text = dateString.capitalized
+            chargerLesDonneesVille(ville: listeCities[0])
+        }
+        else{
+            let swipeRight = UISwipeGestureRecognizer(target: self, action:
+            #selector (swipeFunc(gesture:)))
+            swipeRight.direction = .right
+            self.view.addGestureRecognizer (swipeRight)
+            let swipeLeft = UISwipeGestureRecognizer (target: self, action:
+            #selector (swipeFunc(gesture:)))
+            swipeLeft.direction = .left
+            self.view.addGestureRecognizer (swipeLeft)
+            _ = loadCitiesFromJson(context: leContexte)
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "EEEE d MMMM"
+            let dateString = dateFormatter.string(from: Date())
+            labelDateDuJour.text = dateString.capitalized
+            
+            listeCities = findFavoriteCitiesFromCoreData(context: leContexte)
+            
+            self.pageControl.numberOfPages = self.listeCities.count+1
+            
+            updateUserLocation()
+        }
         // Do any additional setup after loading the view.
     }
     
@@ -52,21 +67,18 @@ class ViewController: UIViewController {
             if(pageActuelle - 1 >= 0){
                 pageActuelle -= 1
             }
-            if(pageActuelle == 0){
-                ville = listeCities[listeCities.count-1]
-            }
-            else{
-                ville = listeCities[pageActuelle-1]
-            }
+            ville = listeCities[pageActuelle]
             chargerLesDonneesVille(ville: ville)
             afficherFavori(ville: ville)
+            pageControl.currentPage = pageActuelle
         }
         else if gesture.direction == .left {
             if(pageActuelle + 1 < listeCities.count){
                 pageActuelle  += 1
             }
-            chargerLesDonneesVille(ville: listeCities[pageActuelle-1])
-            afficherFavori(ville: listeCities[pageActuelle-1])
+            chargerLesDonneesVille(ville: listeCities[pageActuelle])
+            afficherFavori(ville: listeCities[pageActuelle])
+            pageControl.currentPage = pageActuelle
         }
     }
 
@@ -82,9 +94,9 @@ class ViewController: UIViewController {
                     case .success(let weatherData):
                         //A définir
                         DispatchQueue.main.async {
-                            self.listeCities.append(weatherData.city!)
-                            self.chargerLesDonneesVille(ville : self.listeCities[self.listeCities.count-1])
-                            self.afficherFavori(ville : self.listeCities[self.listeCities.count-1])
+                            self.listeCities.insert(weatherData.city!, at: 0)
+                            self.chargerLesDonneesVille(ville : self.listeCities[self.pageActuelle])
+                            self.afficherFavori(ville : self.listeCities[self.pageActuelle])
                         }
                         break
                     case .failure(let error):
@@ -99,29 +111,35 @@ class ViewController: UIViewController {
         title = ville.name
         imageDescriptionTemps.image = UIImage(named: "\(ville.weatherData!.currentTemperatureForecast!.icon!).png")
         labelTemp.text = "\(String(Int(ville.weatherData!.currentTemperatureForecast!.temp)+1))°C"
-        labelTempMaxMin.text = "\(String(Int((ville.weatherData?.currentTemperatureForecast!.temp_min)!)))°C / \(String(Int((ville.weatherData?.currentTemperatureForecast!.temp_max)!)+1))°C"
+        let fullString = NSMutableAttributedString(string : "\(String(Int((ville.weatherData?.currentTemperatureForecast!.temp_min)!)))°C ")
+        let imageUpArrow = NSTextAttachment()
+        imageUpArrow.image = UIImage(systemName: "arrow.up")
+        let imageUpArrowAttach = NSAttributedString(attachment: imageUpArrow)
+        let imageDownArrow = NSTextAttachment()
+        imageDownArrow.image = UIImage(systemName: "arrow.down")
+        let imageDownArrowAttach = NSAttributedString(attachment: imageDownArrow)
+        fullString.append(imageDownArrowAttach)
+        fullString.append(NSAttributedString(string: " \(String(Int((ville.weatherData?.currentTemperatureForecast!.temp_max)!)+1))°C "))
+        fullString.append(imageUpArrowAttach)
+        
+        labelTempMaxMin.attributedText = fullString
         labelTempRessenti.text = "Ressenti : \(String(Int((ville.weatherData?.currentTemperatureForecast!.feels_like)!)+1))°C"
     }
     
     func afficherFavori(ville : CityEntity){
         if(ville.favorite){
-            boutonFavori.setBackgroundImage(UIImage(named: "favori_jaune.png"), for: .normal)
+            boutonFavori.setImage(UIImage(systemName: "star.fill"), for: .normal)
+            boutonFavori.tintColor = .systemYellow
         }
         else{
-            boutonFavori.setBackgroundImage(UIImage(named: "favori.png"), for: .normal)
+            boutonFavori.setImage(UIImage(systemName: "star"), for: .normal)
+            boutonFavori.tintColor = .systemYellow
         }
     }
     
     @IBAction func ajouterFavori(_ sender: Any) {
-        if(pageActuelle == 0){
-            toggleFavorite(city: listeCities[listeCities.count-1], context: leContexte)
-            afficherFavori(ville: listeCities[listeCities.count-1])
-        }
-        else{
-            toggleFavorite(city: listeCities[pageActuelle-1], context: leContexte)
-            afficherFavori(ville: listeCities[pageActuelle-1])
-        }
-        
+        toggleFavorite(city: listeCities[pageActuelle], context: leContexte)
+        afficherFavori(ville: listeCities[pageActuelle])
     }
 }
 

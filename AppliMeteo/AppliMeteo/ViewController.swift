@@ -11,8 +11,6 @@ class HomeViewController: UIViewController {
     
     @IBOutlet weak var labelDateDuJour: UILabel!
     @IBOutlet weak var imageDeFond: UIImageView!
-    @IBOutlet weak var boutonMenu: UIButton!
-    @IBOutlet weak var boutonFavori: UIButton!
     @IBOutlet weak var imageDescriptionTemps: UIImageView!
     @IBOutlet weak var labelTemp: UILabel!
     @IBOutlet weak var labelTempMaxMin: UILabel!
@@ -32,7 +30,7 @@ class HomeViewController: UIViewController {
         let dateString = dateFormatter.string(from: Date())
         labelDateDuJour.text = dateString.capitalized
         chargerLesDonneesVille(ville: ville[0])
-        afficherFavori(ville: ville[0])
+//        afficherFavori(ville: ville[0])
         // Do any additional setup after loading the view.
     }
     
@@ -53,22 +51,6 @@ class HomeViewController: UIViewController {
         
         labelTempMaxMin.attributedText = fullString
         labelTempRessenti.text = "Ressenti : \(String(Int((ville.weatherData?.currentTemperatureForecast!.feels_like)!)+1))°C"
-    }
-    
-    public func afficherFavori(ville : CityEntity){
-        if(ville.favorite){
-            boutonFavori.setImage(UIImage(systemName: "star.fill"), for: .normal)
-            boutonFavori.tintColor = .systemYellow
-        }
-        else{
-            boutonFavori.setImage(UIImage(systemName: "star"), for: .normal)
-            boutonFavori.tintColor = .systemYellow
-        }
-    }
-    
-    @IBAction func ajouterFavori(_ sender: Any) {
-        toggleFavorite(city: ville[0], context: leContexte)
-        afficherFavori(ville: ville[0])
     }
 
     static func getInstance(ville: CityEntity) -> HomeViewController {

@@ -1,13 +1,23 @@
 import Foundation
 import UIKit
 
+
+protocol PageViewControllerDelegate : class{
+    func numberofpage(atIndex : Int, current: CityEntity)
+    func pageChangeTo(atIndex : Int, current: CityEntity)
+    func afficherFavori(ville : CityEntity)
+    func changerTitle(title : String)
+}
+
 class PageViewController: UIPageViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate {
 
+    var pageViewDelegate : PageViewControllerDelegate?
     var pageControl = UIPageControl()
     var pages : [UIViewController] = []
     var currentIndex = 0
     let locationHandler = LocationHandler()
     let leContexte = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    var listeCities : [CityEntity] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -16,7 +26,7 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource, 
         self.delegate = self
         pageControl.frame = CGRect(x: 46, y: 796, width: 296, height: 26)
         self.view.addSubview(pageControl)
-        let listeCities = findFavoriteCitiesFromCoreData(context: leContexte)
+        listeCities = findFavoriteCitiesFromCoreData(context: leContexte)
         for i in 0..<listeCities.count{
             pages.append(HomeViewController.getInstance(ville : listeCities[i]))
         }
@@ -35,10 +45,12 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource, 
                     case .success(let weatherData):
                         //A définir
                         DispatchQueue.main.async {
+                            self.listeCities.insert(weatherData.city!, at: 0)
                             self.pages.insert(HomeViewController.getInstance(ville: weatherData.city!), at: 0)
-                            self.pageControl.numberOfPages = self.pages.count
+                            self.pageViewDelegate?.numberofpage(atIndex: self.listeCities.count, current: weatherData.city!)
+                            self.pageViewDelegate?.afficherFavori(ville: weatherData.city!)
+                            self.pageViewDelegate?.changerTitle(title: weatherData.city!.name!)
                             self.setViewControllers([self.pages[0]], direction: .forward, animated: true, completion: nil)
-                            self.title = self.pages[0].title
                         }
                         break
                     case .failure(let error):
@@ -85,6 +97,17 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource, 
 //        return 0
 //    }
 
+    func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+        
+        if let currentIndexPageViewController = pageViewController.viewControllers?.first
+            as? HomeViewController {
+            let index = pages.firstIndex(of: currentIndexPageViewController)!
+            pageViewDelegate?.pageChangeTo(atIndex: index, current: listeCities[index])
+            pageViewDelegate?.afficherFavori(ville: listeCities[index])
+            pageViewDelegate?.changerTitle(title: listeCities[index].name!)
+        }
+    }
+    
     func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
         guard let viewControllerIndex = pages.firstIndex(of: pendingViewControllers[0]) else {
             return

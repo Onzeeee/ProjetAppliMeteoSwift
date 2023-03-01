@@ -28,7 +28,6 @@ class PageControllerImage: UIPageViewController, UIPageViewControllerDataSource,
                     }
                     else{
                         for photo in photos{
-                            print("Photo : \(photo)")
                             let image = UIImageView()
                             let url = URL(string: photo)
                             image.load(url: url!)

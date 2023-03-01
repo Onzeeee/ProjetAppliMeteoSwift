@@ -120,13 +120,13 @@
 				3B857BE129AE9DE600A1C87E /* ViewControllerImage.swift */,
 				3BB5416329AA6EEA000445BA /* ViewControllerFavori.swift */,
 				3BB5416529AA6EF8000445BA /* ViewControllerDetailsVille.swift */,
+				3B857BE529AFB73900A1C87E /* ViewControllerPourPageControl.swift */,
 				3B9D45E529A6871800510517 /* Main.storyboard */,
 				3B9D45EB29A6871A00510517 /* Assets.xcassets */,
 				3B9D45ED29A6871A00510517 /* LaunchScreen.storyboard */,
 				3B9D45F029A6871A00510517 /* Info.plist */,
 				3B9D45E829A6871800510517 /* AppliMeteo.xcdatamodeld */,
 				D51D533418717573C228A898 /* model */,
-				3B857BE529AFB73900A1C87E /* ViewControllerPourPageControl.swift */,
 			);
 			path = AppliMeteo;
 			sourceTree = "<group>";

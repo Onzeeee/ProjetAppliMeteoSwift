@@ -7,10 +7,15 @@ import CoreData
 func loadCitiesFromJson(context: NSManagedObjectContext) -> [CityEntity] {
     do {
         let fetchRequest: NSFetchRequest<CityEntity> = CityEntity.fetchRequest()
-        let existingCities = try context.fetch(fetchRequest)
+        let existingCities: [CityEntity] = try context.fetch(fetchRequest)
         if !existingCities.isEmpty {
             // Cities already exist in the store, no need to load from JSON
             return existingCities;
+            // Delete all cities
+            //for city in existingCities {
+            //    context.delete(city)
+            //}
+            //try context.save()
         }
     } catch let error {
         fatalError("Error fetching cities from Core Data: \(error)")
@@ -25,6 +30,7 @@ func loadCitiesFromJson(context: NSManagedObjectContext) -> [CityEntity] {
     do {
         let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
         let citiesData = try JSONSerialization.jsonObject(with: data, options: []) as! [[String: Any]]
+        var setNameCountryState = Set<String>()
 
         for cityData in citiesData {
             let id = cityData["id"] as! Int32
@@ -34,6 +40,9 @@ func loadCitiesFromJson(context: NSManagedObjectContext) -> [CityEntity] {
             let lon = coord["lon"] as! Double
             let country_code = cityData["country"] as! String
             let state = cityData["state"] as! String
+            if(setNameCountryState.contains("\(name)\(country_code)\(state)")){
+                continue
+            }
             let city = CityEntity(context: context)
             city.id = id
             city.name = name
@@ -42,6 +51,7 @@ func loadCitiesFromJson(context: NSManagedObjectContext) -> [CityEntity] {
             city.country = country_code
             city.state = state
             city.favorite = false
+            setNameCountryState.insert("\(name)\(country_code)\(state)")
             cities.append(city)
 
         }
@@ -87,19 +97,22 @@ func findCityFromCoreDataById(id: Int32, context: NSManagedObjectContext) -> Cit
 
 func findCitiesFromCoreDataByName(name: String, context: NSManagedObjectContext) -> [CityEntity] {
     let request: NSFetchRequest<CityEntity> = CityEntity.fetchRequest()
-    let predicate = NSPredicate(format: "name CONTAINS[cd] %@", name)
+    let pattern = "\\b\(name)"
+    let predicate = NSPredicate(format: "name MATCHES[cd] %@", pattern)
     request.predicate = predicate
     do {
-        let cities = try context.fetch(request)
-        let sortedCities = cities.sorted { (city1, city2) -> Bool in
-            guard let name1 = city1.name as String?, let name2 = city2.name as String? else {
-                return false
+        var cities = try context.fetch(request)
+        if (cities.count < 30) {
+            cities = cities.sorted { (city1, city2) -> Bool in
+                guard let name1 = city1.name as String?, let name2 = city2.name as String? else {
+                    return false
+                }
+                let matchPercentage1 = name1.matchPercentage(with: name)
+                let matchPercentage2 = name2.matchPercentage(with: name)
+                return matchPercentage1 > matchPercentage2
             }
-            let matchPercentage1 = name1.matchPercentage(with: name)
-            let matchPercentage2 = name2.matchPercentage(with: name)
-            return matchPercentage1 > matchPercentage2
         }
-        return sortedCities
+        return cities
 
     } catch let error {
         fatalError("Error fetching cities: \(error)")

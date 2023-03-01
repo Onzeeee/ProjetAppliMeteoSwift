@@ -40,11 +40,11 @@ class ViewControllerFavori: UIViewController, UITableViewDataSource, UITableView
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
         
-        let VC = storyBoard.instantiateViewController(withIdentifier: "ViewController") as! ViewController
+        let VC = storyBoard.instantiateViewController(withIdentifier: "HomeViewController") as! HomeViewController
         
         tableView.deselectRow(at: indexPath, animated: true)
         
-        VC.listeCities.append(listeCities[indexPath.row])
+        VC.ville.append(listeCities[indexPath.row])
         
         self.navigationController?.pushViewController(VC, animated: true)
     }

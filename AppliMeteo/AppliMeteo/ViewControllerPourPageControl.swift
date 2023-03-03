@@ -17,7 +17,6 @@ class ViewControllerPourPageControl: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        pageControl.setIndicatorImage(UIImage(systemName: "paperplane.fill"), forPage: 0)
         // Do any additional setup after loading the view.
     }
     
@@ -58,5 +57,9 @@ extension ViewControllerPourPageControl : PageViewControllerDelegate{
     
     func changerTitle(title : String){
         self.title = title
+    }
+    
+    func mettrePosActuellePageControle(){
+        pageControl.setIndicatorImage(UIImage(systemName: "paperplane.fill"), forPage: 0)
     }
 }

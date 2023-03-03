@@ -24,7 +24,6 @@ class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //let cities = loadCitiesFromJson(context: leContexte)
         title = "Loading..."
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "EEEE d MMMM"
@@ -59,7 +58,7 @@ class HomeViewController: UIViewController {
             fullString.append(imageDownArrowAttach)
             fullString.append(NSAttributedString(string: " \(String(Int((weatherData.currentTemperatureForecast!.temp_max))+1))°C "))
             fullString.append(imageUpArrowAttach)
-            
+
             self.labelTempMaxMin.attributedText = fullString
             self.labelTempRessenti.text = "Ressenti : \(String(Int((weatherData.currentTemperatureForecast!.feels_like))+1))°C"
         }

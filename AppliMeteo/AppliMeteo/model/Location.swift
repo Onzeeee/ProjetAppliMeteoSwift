@@ -15,11 +15,11 @@ final class LocationHandler: NSObject, CLLocationManagerDelegate {
         super.init()
         locationManager = CLLocationManager()
         locationManager.delegate = self
-
     }
 
 
 
+    @available(*, deprecated, message: "Implement CLLocationManagerDelegate instead")
     func getUserLocation(completion: @escaping LocationCompletionHandler) {
         switch locationManager.authorizationStatus {
         case .notDetermined:

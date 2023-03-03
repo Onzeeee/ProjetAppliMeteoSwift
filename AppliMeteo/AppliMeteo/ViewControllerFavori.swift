@@ -21,9 +21,7 @@ class ViewControllerFavori: UIViewController, UISearchResultsUpdating, UISearchC
     }
 
     @IBOutlet weak var home: UINavigationItem!
-    
-    var locationHandler = LocationHandler()
-    
+
     var listeCities : [CityEntity] = []
     
     override func viewDidLoad() {
@@ -98,6 +96,8 @@ class ViewControllerFavori: UIViewController, UISearchResultsUpdating, UISearchC
 
 class SearchResultsTableViewController: UITableViewController {
     
+    let leContexte = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    
     var results: [CityEntity] = []
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -143,8 +143,10 @@ class SearchResultsTableViewController: UITableViewController {
     }
     
     @objc func starButtonTapped(_ sender: UIButton) {
-        let city = results[sender.tag]
-        toggleFavorite(city: city, context: (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext)
-        sender.isSelected = city.favorite
+        DispatchQueue.main.async {
+            let city = self.results[sender.tag]
+            toggleFavorite(city: city, context: self.leContexte)
+            sender.isSelected = city.favorite
+        }
     }
 }

@@ -1,6 +1,6 @@
 import Foundation
 import UIKit
-
+import CoreLocation
 
 protocol PageViewControllerDelegate : class{
     func numberofpage(atIndex : Int, current: CityEntity)
@@ -10,22 +10,29 @@ protocol PageViewControllerDelegate : class{
     func mettrePosActuellePageControle()
 }
 
-class PageViewController: UIPageViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate {
+class PageViewController: UIPageViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate, CLLocationManagerDelegate {
 
     var pageViewDelegate : PageViewControllerDelegate?
     var pageControl = UIPageControl()
     var pages : [UIViewController] = []
     var currentIndex = 0
-    let locationHandler = LocationHandler()
     let leContexte = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     var listeCities : [CityEntity] = []
-    
+    var currentLocationAdded = false
+    let locationManager = CLLocationManager()
     
     
     override func viewDidLoad() {
         _ = loadCitiesFromJson(context: leContexte)
-        
-        
+        locationManager.delegate = self
+        switch(locationManager.authorizationStatus){
+            case .authorizedWhenInUse:
+                locationManager.startUpdatingLocation()
+                break
+            default:
+                locationManager.requestWhenInUseAuthorization()
+                break
+        }
         self.dataSource = self
         self.delegate = self
         pageControl.frame = CGRect(x: 46, y: 796, width: 296, height: 26)
@@ -41,21 +48,58 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource, 
         self.pageViewDelegate?.afficherFavori(ville: listeCities[0])
         self.pageViewDelegate?.changerTitle(title: listeCities[0].name!)
         self.setViewControllers([self.pages[0]], direction: .forward, animated: true, completion: nil)
-        updateUserLocation()
         super.viewDidLoad()
     }
-    
-    func updateUserLocation() {
-        locationHandler.getUserLocation { (location) in
-            if location == nil{
+
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = locations.last else {
+            return
+        }
+        print("Latitude: \(location.coordinate.latitude), Longitude: \(location.coordinate.longitude)")
+        updateUserLocation(lat: location.coordinate.latitude, lon: location.coordinate.longitude)
+    }
+
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        switch manager.authorizationStatus {
+        case .authorizedWhenInUse:
+            manager.startUpdatingLocation()
+            break
+        default:
+            print("Location access denied by user")
+        }
+    }
+
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        if let clError = error as? CLError {
+            if clError.code == .denied {
+                // Location access denied by user
+                print("Location access denied by user")
+                return
+            } else if clError.code == .locationUnknown {
+                // Failed to get location, retry after a delay
+                print("Failed to get location, retry after a delay")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                    manager.requestLocation()
+                }
+                return
             }
-            else{
-                let locationBis = location
-                fetchWeatherDataFromLonLat(context: self.leContexte, lon: locationBis!.coordinate.longitude, lat: locationBis!.coordinate.latitude) { resulat in
+        }
+        // Handle other errors
+        print("Failed to get location: \(error.localizedDescription)")
+    }
+
+    func updateUserLocation(lat: CLLocationDegrees, lon: CLLocationDegrees) {
+
+        fetchWeatherDataFromLonLat(context: self.leContexte, lon: lon, lat: lat) { resulat in
                     switch resulat{
                     case .success(let weatherData):
                         //A définir
                         DispatchQueue.main.async {
+                            if(self.currentLocationAdded){
+                                self.listeCities.remove(at: 0)
+                                self.pages.remove(at: 0)
+                            }
+                            self.currentLocationAdded = true
                             self.listeCities.insert(weatherData.city!, at: 0)
                             self.pages.insert(HomeViewController.getInstance(ville: weatherData.city!), at: 0)
                             self.pageViewDelegate?.numberofpage(atIndex: self.listeCities.count, current: weatherData.city!)
@@ -69,8 +113,6 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource, 
                         print(error)
                     }
                 }
-            }
-        }
     }
 
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {

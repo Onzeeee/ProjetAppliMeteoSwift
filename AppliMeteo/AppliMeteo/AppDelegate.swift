@@ -10,13 +10,8 @@ import CoreData
 import CoreLocation
 
 @main
-class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate {
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let location = locations.last else {
-            return
-        }
-        fatalError("AppDelegate receive update location, Latitude: \(location.coordinate.latitude), Longitude: \(location.coordinate.longitude)")
-    }
+class AppDelegate: UIResponder, UIApplicationDelegate {
+   
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.

@@ -9,7 +9,6 @@ import UIKit
 
 class HomeViewController: UIViewController {
     
-    @IBOutlet weak var labelDateDuJour: UILabel!
     @IBOutlet weak var imageDeFond: UIImageView!
     @IBOutlet weak var imageDescriptionTemps: UIImageView!
     @IBOutlet weak var labelTemp: UILabel!
@@ -25,10 +24,6 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Loading..."
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "EEEE d MMMM"
-        let dateString = dateFormatter.string(from: Date())
-        labelDateDuJour.text = dateString.capitalized
         fetchWeatherData(context: leContexte, for: ville[0]) { result in
             switch(result){
             case .success(let weatherData):

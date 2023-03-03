@@ -20,9 +20,12 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource, 
     let leContexte = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     var listeCities : [CityEntity] = []
     
+    
+    
     override func viewDidLoad() {
-        super.viewDidLoad()
         _ = loadCitiesFromJson(context: leContexte)
+        
+        
         self.dataSource = self
         self.delegate = self
         pageControl.frame = CGRect(x: 46, y: 796, width: 296, height: 26)
@@ -39,6 +42,7 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource, 
         self.pageViewDelegate?.changerTitle(title: listeCities[0].name!)
         self.setViewControllers([self.pages[0]], direction: .forward, animated: true, completion: nil)
         updateUserLocation()
+        super.viewDidLoad()
     }
     
     func updateUserLocation() {

@@ -26,6 +26,7 @@
 		3B9D45EF29A6871A00510517 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3B9D45ED29A6871A00510517 /* LaunchScreen.storyboard */; };
 		3BB5416429AA6EEA000445BA /* ViewControllerFavori.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BB5416329AA6EEA000445BA /* ViewControllerFavori.swift */; };
 		3BB5416629AA6EF8000445BA /* ViewControllerDetailsVille.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BB5416529AA6EF8000445BA /* ViewControllerDetailsVille.swift */; };
+		D51D50734362BD2D379A9D3A /* UINavigationItemDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51D5DA843CABACCA0A4F6CE /* UINavigationItemDate.swift */; };
 		D51D52BDFA4493453C029CD9 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51D5882F7B91B5E4247FCE2 /* Location.swift */; };
 		D51D52F62F26399DB235FCB8 /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51D54FD76C1961117115AD7 /* City.swift */; };
 		D51D53B5C404720FEC354DA8 /* OpenWeather.http in Resources */ = {isa = PBXBuildFile; fileRef = D51D531A1DFDD5428782D96A /* OpenWeather.http */; };
@@ -68,6 +69,7 @@
 		D51D54FD76C1961117115AD7 /* City.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
 		D51D5882F7B91B5E4247FCE2 /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		D51D59DA30FA2E107A41E2F6 /* AppliMeteoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppliMeteoTests.swift; sourceTree = "<group>"; };
+		D51D5DA843CABACCA0A4F6CE /* UINavigationItemDate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UINavigationItemDate.swift; sourceTree = "<group>"; };
 		D51D5EAD8CE22FDFE7E3420A /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = file.github; path = .gitignore; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -127,6 +129,7 @@
 				3B9D45F029A6871A00510517 /* Info.plist */,
 				3B9D45E829A6871800510517 /* AppliMeteo.xcdatamodeld */,
 				D51D533418717573C228A898 /* model */,
+				D51D5DA843CABACCA0A4F6CE /* UINavigationItemDate.swift */,
 			);
 			path = AppliMeteo;
 			sourceTree = "<group>";
@@ -306,6 +309,7 @@
 				D51D52F62F26399DB235FCB8 /* City.swift in Sources */,
 				3BB5416629AA6EF8000445BA /* ViewControllerDetailsVille.swift in Sources */,
 				D51D52BDFA4493453C029CD9 /* Location.swift in Sources */,
+				D51D50734362BD2D379A9D3A /* UINavigationItemDate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

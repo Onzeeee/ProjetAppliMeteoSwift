@@ -37,6 +37,7 @@ extension ViewControllerPourPageControl : PageViewControllerDelegate{
     
     func numberofpage(atIndex: Int, current: CityEntity) {
         pageControl.numberOfPages = atIndex
+        currentCity = current
     }
     
     func pageChangeTo(atIndex: Int, current: CityEntity) {

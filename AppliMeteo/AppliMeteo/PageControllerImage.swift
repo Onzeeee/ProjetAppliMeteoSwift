@@ -34,6 +34,7 @@ class PageControllerImage: UIPageViewController, UIPageViewControllerDataSource,
                             let image = UIImageView()
                             let url = URL(string: photo)
                             image.load(url: url!)
+                            image.contentMode = .scaleAspectFit
                             self.pages.append(ViewControllerImage.getInstance(imageView: image))
                         }
                     }

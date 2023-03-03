@@ -29,6 +29,7 @@ class ViewControllerDetailsVille: UIViewController{
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let sndVC = segue.destination as! PageControllerImage
         sndVC.ville = ville
+        navigationItem.title = ville
     }
     /*
     // MARK: - Navigation

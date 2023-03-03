@@ -19,7 +19,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PvI-YN-hBD">
-                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                                <rect key="frame" x="-2" y="-2" width="393" height="853"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <connections>
                                     <segue destination="s6W-Km-38N" kind="embed" id="XSo-LG-QGv"/>
@@ -160,7 +160,7 @@
             </objects>
             <point key="canvasLocation" x="4565.6488549618316" y="-411.26760563380282"/>
         </scene>
-        <!--View Controller Favori-->
+        <!--Favoris-->
         <scene sceneID="au9-Xb-Kgg">
             <objects>
                 <viewController id="MY5-jF-hpd" customClass="ViewControllerFavori" customModule="AppliMeteo" customModuleProvider="target" sceneMemberID="viewController">
@@ -200,8 +200,8 @@
                         <viewLayoutGuide key="safeArea" id="V23-v6-22B"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
-                    <navigationItem key="navigationItem" id="1Mt-iC-NNm">
-                        <barButtonItem key="backBarButtonItem" title="Retour" id="2V8-Db-ILi"/>
+                    <navigationItem key="navigationItem" title="Favoris" id="1Mt-iC-NNm">
+                        <barButtonItem key="backBarButtonItem" title="Favoris" id="2V8-Db-ILi"/>
                     </navigationItem>
                     <connections>
                         <outlet property="home" destination="1Mt-iC-NNm" id="lTV-Az-Ko1"/>
@@ -225,7 +225,7 @@
                                 <standardMapConfiguration key="preferredConfiguration"/>
                             </mapView>
                             <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2d7-cC-sVT">
-                                <rect key="frame" x="0.0" y="568" width="393" height="250"/>
+                                <rect key="frame" x="-1" y="567" width="393" height="251"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <connections>
                                     <segue destination="lxA-TR-UYZ" kind="embed" identifier="" id="3Nd-pU-JKJ"/>

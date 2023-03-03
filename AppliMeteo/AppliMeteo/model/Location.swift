@@ -15,7 +15,10 @@ final class LocationHandler: NSObject, CLLocationManagerDelegate {
         super.init()
         locationManager = CLLocationManager()
         locationManager.delegate = self
+
     }
+
+
 
     func getUserLocation(completion: @escaping LocationCompletionHandler) {
         switch locationManager.authorizationStatus {

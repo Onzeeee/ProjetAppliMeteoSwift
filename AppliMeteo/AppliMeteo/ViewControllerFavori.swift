@@ -122,6 +122,7 @@ class SearchResultsTableViewController: UITableViewController {
         cell.textLabel?.text = str
         
         let favoriteButton = UIButton(type: .custom)
+        favoriteButton.tag = indexPath.row
         favoriteButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
         favoriteButton.tintColor = .gray
         favoriteButton.setImage(UIImage(systemName: "star"), for: .normal)

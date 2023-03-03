@@ -27,6 +27,9 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource, 
         pageControl.frame = CGRect(x: 46, y: 796, width: 296, height: 26)
         self.view.addSubview(pageControl)
         listeCities = findFavoriteCitiesFromCoreData(context: leContexte)
+        // print (listeCities)
+        print("favorite cities :")
+        print(listeCities.count)
         for i in 0..<listeCities.count{
             pages.append(HomeViewController.getInstance(ville : listeCities[i]))
         }

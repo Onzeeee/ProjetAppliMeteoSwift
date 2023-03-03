@@ -24,33 +24,45 @@ class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        //let cities = loadCitiesFromJson(context: leContexte)
         title = "Loading..."
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "EEEE d MMMM"
         let dateString = dateFormatter.string(from: Date())
         labelDateDuJour.text = dateString.capitalized
-        chargerLesDonneesVille(ville: ville[0])
+        fetchWeatherData(context: leContexte, for: ville[0]) { result in
+            switch(result){
+            case .success(let weatherData):
+                print("Weather data: \(weatherData)")
+                self.chargerLesDonneesVille(weatherData: weatherData)
+            case .failure:
+                break
+            }
+        }
 //        afficherFavori(ville: ville[0])
         // Do any additional setup after loading the view.
     }
     
-    func chargerLesDonneesVille(ville : CityEntity){
-        title = ville.name
-        imageDescriptionTemps.image = UIImage(named: "\(ville.weatherData!.currentTemperatureForecast!.icon!).png")
-        labelTemp.text = "\(String(Int(ville.weatherData!.currentTemperatureForecast!.temp)+1))°C"
-        let fullString = NSMutableAttributedString(string : "\(String(Int((ville.weatherData?.currentTemperatureForecast!.temp_min)!)))°C ")
-        let imageUpArrow = NSTextAttachment()
-        imageUpArrow.image = UIImage(systemName: "arrow.up")
-        let imageUpArrowAttach = NSAttributedString(attachment: imageUpArrow)
-        let imageDownArrow = NSTextAttachment()
-        imageDownArrow.image = UIImage(systemName: "arrow.down")
-        let imageDownArrowAttach = NSAttributedString(attachment: imageDownArrow)
-        fullString.append(imageDownArrowAttach)
-        fullString.append(NSAttributedString(string: " \(String(Int((ville.weatherData?.currentTemperatureForecast!.temp_max)!)+1))°C "))
-        fullString.append(imageUpArrowAttach)
-        
-        labelTempMaxMin.attributedText = fullString
-        labelTempRessenti.text = "Ressenti : \(String(Int((ville.weatherData?.currentTemperatureForecast!.feels_like)!)+1))°C"
+    func chargerLesDonneesVille(weatherData : WeatherData){
+        DispatchQueue.main.async{
+            let ville = weatherData.city!;
+            self.title = ville.name
+            self.imageDescriptionTemps.image = UIImage(named: "\(weatherData.currentTemperatureForecast!.icon!).png")
+            self.labelTemp.text = "\(String(Int(weatherData.currentTemperatureForecast!.temp)+1))°C"
+            let fullString = NSMutableAttributedString(string : "\(String(Int((weatherData.currentTemperatureForecast!.temp_min))))°C ")
+            let imageUpArrow = NSTextAttachment()
+            imageUpArrow.image = UIImage(systemName: "arrow.up")
+            let imageUpArrowAttach = NSAttributedString(attachment: imageUpArrow)
+            let imageDownArrow = NSTextAttachment()
+            imageDownArrow.image = UIImage(systemName: "arrow.down")
+            let imageDownArrowAttach = NSAttributedString(attachment: imageDownArrow)
+            fullString.append(imageDownArrowAttach)
+            fullString.append(NSAttributedString(string: " \(String(Int((weatherData.currentTemperatureForecast!.temp_max))+1))°C "))
+            fullString.append(imageUpArrowAttach)
+            
+            self.labelTempMaxMin.attributedText = fullString
+            self.labelTempRessenti.text = "Ressenti : \(String(Int((weatherData.currentTemperatureForecast!.feels_like))+1))°C"
+        }
     }
 
     static func getInstance(ville: CityEntity) -> HomeViewController {

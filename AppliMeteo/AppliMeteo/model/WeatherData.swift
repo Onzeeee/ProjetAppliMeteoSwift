@@ -38,6 +38,15 @@ func fetchWeatherDataFromLonLat(context: NSManagedObjectContext, lon: Double, la
             let cityId = city["id"] as! Int32
             weatherData.sunrise = sunrise
             weatherData.sunset = sunset
+            let cityentity = CityEntity.fromId(id: cityId, context: context)
+            if(cityentity == nil) {
+                print("city is nil ? cityId: \(cityId)")
+                let city = CityEntity(context: context)
+                city.id = cityId
+                city.name = name
+                city.country = country
+                weatherData.city = city
+            }
             weatherData.city = CityEntity.fromId(id: cityId, context: context)
 
             for forecast in list_forecast{

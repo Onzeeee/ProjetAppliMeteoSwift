@@ -12,10 +12,10 @@ func loadCitiesFromJson(context: NSManagedObjectContext) -> [CityEntity] {
             // Cities already exist in the store, no need to load from JSON
             return existingCities;
             // Delete all cities
-            //for city in existingCities {
-            //    context.delete(city)
-            //}
-            //try context.save()
+//            for city in existingCities {
+//                context.delete(city)
+//            }
+//            try context.save()
         }
     } catch let error {
         fatalError("Error fetching cities from Core Data: \(error)")
@@ -30,7 +30,6 @@ func loadCitiesFromJson(context: NSManagedObjectContext) -> [CityEntity] {
     do {
         let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
         let citiesData = try JSONSerialization.jsonObject(with: data, options: []) as! [[String: Any]]
-        var setNameCountryState = Set<String>()
 
         for cityData in citiesData {
             let id = cityData["id"] as! Int32
@@ -40,9 +39,6 @@ func loadCitiesFromJson(context: NSManagedObjectContext) -> [CityEntity] {
             let lon = coord["lon"] as! Double
             let country_code = cityData["country"] as! String
             let state = cityData["state"] as! String
-            if(setNameCountryState.contains("\(name)\(country_code)\(state)")){
-                continue
-            }
             let city = CityEntity(context: context)
             city.id = id
             city.name = name
@@ -51,7 +47,6 @@ func loadCitiesFromJson(context: NSManagedObjectContext) -> [CityEntity] {
             city.country = country_code
             city.state = state
             city.favorite = false
-            setNameCountryState.insert("\(name)\(country_code)\(state)")
             cities.append(city)
 
         }
@@ -98,7 +93,8 @@ func findCityFromCoreDataById(id: Int32, context: NSManagedObjectContext) -> Cit
 func findCitiesFromCoreDataByName(name: String, context: NSManagedObjectContext) -> [CityEntity] {
     let request: NSFetchRequest<CityEntity> = CityEntity.fetchRequest()
     let pattern = "\\b\(name)"
-    let predicate = NSPredicate(format: "name MATCHES[cd] %@", pattern)
+    // predicate to match the pattern at the beginning of the string
+    let predicate = NSPredicate(format: "name BEGINSWITH[cd] %@", name)
     request.predicate = predicate
     do {
         var cities = try context.fetch(request)
@@ -188,9 +184,16 @@ func findPhotos(query: String, completion: @escaping (Result<[String], Error>) -
     if(PIXABAY_APIKEY.isEmpty) {
         fatalError("PIXABAY_APIKEY not found")
     }
-    let url = URL(string: "https://pixabay.com/api/?key=\(PIXABAY_APIKEY)&q=\(query)&image_type=photo")!
-    print("url: \(url)")
-    let task = URLSession.shared.dataTask(with: url) { data, response, error in
+    let query_photo = query
+    let encodedString = query_photo.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!.replacingOccurrences(of: "%20", with: "+")
+    print(encodedString)
+    let url = URL(string: "https://pixabay.com/api/?key=\(PIXABAY_APIKEY)&q=\(encodedString)&image_type=photo")
+    if(url == nil){
+        // completion error with message : pixabay url is nil
+        fatalError("PIXABAY Url is nil")
+    }
+    print("url: \(url!)")
+    let task = URLSession.shared.dataTask(with: url!) { data, response, error in
         if let error = error {
             completion(.failure(error))
             return

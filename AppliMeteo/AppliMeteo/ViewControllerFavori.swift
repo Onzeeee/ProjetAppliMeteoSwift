@@ -17,7 +17,7 @@ class ViewControllerFavori: UIViewController, UISearchResultsUpdating, UISearchC
     }
     
     func willDismissSearchController(_ searchController: UISearchController) {
-        searchController.dismiss(animated: true)
+        searchController.dismiss(animated: false)
     }
 
     @IBOutlet weak var home: UINavigationItem!
@@ -71,6 +71,13 @@ class ViewControllerFavori: UIViewController, UISearchResultsUpdating, UISearchC
             VC.ville.append(listeCities[indexPath.row])
             
             self.navigationController?.pushViewController(VC, animated: true)
+        }
+    
+        func didDismissSearchController(_ searchController: UISearchController) {
+            listeCities = findFavoriteCitiesFromCoreData(context: (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext)
+            if let tableView = view.viewWithTag(1) as? UITableView {
+                tableView.reloadData()
+            }
         }
         
         func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
@@ -127,13 +134,14 @@ class SearchResultsTableViewController: UITableViewController {
         favoriteButton.setImage(UIImage(systemName: "star"), for: .normal)
         favoriteButton.setImage(UIImage(systemName: "star.fill"), for: .selected)
         favoriteButton.isSelected = results[indexPath.row].favorite
-        favoriteButton.addTarget(self, action: #selector(starButtonTapped(sender:)), for: .touchUpInside)
+        favoriteButton.tag = indexPath.row
+        favoriteButton.addTarget(self, action: #selector(starButtonTapped(_ :)), for: .touchUpInside)
         cell.accessoryView = favoriteButton
         
         return cell
     }
     
-    @objc func starButtonTapped(sender: UIButton) {
+    @objc func starButtonTapped(_ sender: UIButton) {
         let city = results[sender.tag]
         toggleFavorite(city: city, context: (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext)
         sender.isSelected = city.favorite

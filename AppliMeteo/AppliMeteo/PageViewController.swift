@@ -7,6 +7,7 @@ protocol PageViewControllerDelegate : class{
     func pageChangeTo(atIndex : Int, current: CityEntity)
     func afficherFavori(ville : CityEntity)
     func changerTitle(title : String)
+    func mettrePosActuellePageControle()
 }
 
 class PageViewController: UIPageViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate {
@@ -30,13 +31,16 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource, 
         for i in 0..<listeCities.count{
             pages.append(HomeViewController.getInstance(ville : listeCities[i]))
         }
+        self.pageViewDelegate?.numberofpage(atIndex: self.listeCities.count, current: listeCities[0])
+        self.pageViewDelegate?.afficherFavori(ville: listeCities[0])
+        self.pageViewDelegate?.changerTitle(title: listeCities[0].name!)
+        self.setViewControllers([self.pages[0]], direction: .forward, animated: true, completion: nil)
         updateUserLocation()
     }
     
     func updateUserLocation() {
         locationHandler.getUserLocation { (location) in
             if location == nil{
-                print("Pas de position")
             }
             else{
                 let locationBis = location
@@ -49,8 +53,9 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource, 
                             self.pages.insert(HomeViewController.getInstance(ville: weatherData.city!), at: 0)
                             self.pageViewDelegate?.numberofpage(atIndex: self.listeCities.count, current: weatherData.city!)
                             self.pageViewDelegate?.afficherFavori(ville: weatherData.city!)
+                            self.pageViewDelegate?.mettrePosActuellePageControle()
                             self.pageViewDelegate?.changerTitle(title: weatherData.city!.name!)
-                            self.setViewControllers([self.pages[0]], direction: .forward, animated: true, completion: nil)
+                            self.setViewControllers([self.pages[0]], direction: .reverse, animated: true, completion: nil)
                         }
                         break
                     case .failure(let error):

@@ -32,10 +32,10 @@ class ViewControllerImage: UIViewController {
         return vc
     }
     
-    static func getInstancePasDImage() -> ViewControllerImage{
+    static func getInstanceMessage(message : String) -> ViewControllerImage{
         let vc = UIStoryboard (name: "Main", bundle:
                                 nil).instantiateViewController(withIdentifier: "ViewControllerImage") as! ViewControllerImage
-        vc.textLabel = "Pas d'images"
+        vc.textLabel = message
         return vc
     }
 

@@ -47,6 +47,7 @@ private extension MKMapView {
         _ location: CLLocation,
         regionRadius: CLLocationDistance = 100000
     ) {
+        print("Coordonne de la position : \(location.coordinate.longitude) \(location.coordinate.latitude)")
         let coordinateRegion = MKCoordinateRegion(
             center: location.coordinate,
             latitudinalMeters: regionRadius,

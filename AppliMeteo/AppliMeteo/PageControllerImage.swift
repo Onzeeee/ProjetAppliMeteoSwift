@@ -19,14 +19,17 @@ class PageControllerImage: UIPageViewController, UIPageViewControllerDataSource,
         super.viewDidLoad()
         self.dataSource = self
         self.delegate = self
+        self.pages.append(ViewControllerImage.getInstanceMessage(message : "Pas d'internet"))
         findPhotos(query: ville) { result in
             switch result{
             case .success(let photos):
                 DispatchQueue.main.async {
                     if(photos.count == 0){
-                        self.pages.append(ViewControllerImage.getInstancePasDImage())
+                        self.pages.remove(at: 0)
+                        self.pages.append(ViewControllerImage.getInstanceMessage(message : "Pas de photos"))
                     }
                     else{
+                        self.pages.remove(at: 0)
                         for photo in photos{
                             let image = UIImageView()
                             let url = URL(string: photo)
@@ -34,7 +37,6 @@ class PageControllerImage: UIPageViewController, UIPageViewControllerDataSource,
                             self.pages.append(ViewControllerImage.getInstance(imageView: image))
                         }
                     }
-                    self.pageControl.numberOfPages = self.pages.count
                     self.setViewControllers([self.pages[0]], direction: .forward, animated: true, completion: nil)
                 }
                 break
@@ -42,6 +44,7 @@ class PageControllerImage: UIPageViewController, UIPageViewControllerDataSource,
                 print(error)
             }
         }
+        self.setViewControllers([self.pages[0]], direction: .forward, animated: true, completion: nil)
         // Do any additional setup after loading the view.
     }
     

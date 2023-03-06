@@ -105,11 +105,9 @@ class SearchResultsTableViewController: UITableViewController {
     }
     
     func search(searchText: String, context: NSManagedObjectContext) {
-        print("searching for \(searchText)")
         results = findCitiesFromCoreDataByName(name: searchText, context: context)
         // take the firsts 10 results
         results = Array(results.prefix(30))
-        print(results)
         tableView.reloadData()
     }
     

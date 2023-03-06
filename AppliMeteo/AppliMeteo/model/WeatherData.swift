@@ -11,13 +11,11 @@ func fetchWeatherDataFromLonLat(context: NSManagedObjectContext, lon: Double, la
     let apiKey = ProcessInfo.processInfo.environment["OPENWEATHER_APIKEY"] ?? ""
     let urlstring = "https://api.openweathermap.org/data/2.5/forecast?lat=\(lat)&lon=\(lon)&units=metric&appid=\(apiKey)"
     let url = URL(string: urlstring)!
-    print("URL: \(url)")
     let task = URLSession.shared.dataTask(with: url) { data, response, error in
         if let error = error {
             completion(.failure(error))
             return
         }
-        print("data: \(data)")
 
         guard let data = data, let response = response as? HTTPURLResponse, response.statusCode == 200 else {
             completion(.failure(NSError(domain: "Invalid response from server", code: 0, userInfo: nil)))
@@ -40,7 +38,6 @@ func fetchWeatherDataFromLonLat(context: NSManagedObjectContext, lon: Double, la
             weatherData.sunset = sunset
             let cityentity = CityEntity.fromId(id: cityId, context: context)
             if(cityentity == nil) {
-                print("city is nil ? cityId: \(cityId)")
                 let city = CityEntity(context: context)
                 city.id = cityId
                 city.name = name
@@ -99,7 +96,6 @@ func fetchWeatherData(context: NSManagedObjectContext, for cityEntity: CityEntit
     let id = cityEntity.id
     let urlstring = "https://api.openweathermap.org/data/2.5/forecast?id=\(id)&units=metric&appid=\(apiKey)"
     let url = URL(string: urlstring)!
-    print("URL: \(url)")
     let task = URLSession.shared.dataTask(with: url) { data, response, error in
         if let error = error {
             completion(.failure(error))

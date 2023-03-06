@@ -186,13 +186,11 @@ func findPhotos(query: String, completion: @escaping (Result<[String], Error>) -
     }
     let query_photo = query
     let encodedString = query_photo.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!.replacingOccurrences(of: "%20", with: "+")
-    print(encodedString)
     let url = URL(string: "https://pixabay.com/api/?key=\(PIXABAY_APIKEY)&q=\(encodedString)&image_type=photo")
     if(url == nil){
         // completion error with message : pixabay url is nil
         fatalError("PIXABAY Url is nil")
     }
-    print("url: \(url!)")
     let task = URLSession.shared.dataTask(with: url!) { data, response, error in
         if let error = error {
             completion(.failure(error))

@@ -48,6 +48,13 @@ final class WeatherDataTests: XCTestCase {
                 print("Current temp: \(currentTemp!.temp)")
                 print("sunrise on \(intToDate(unixTime: weatherData.sunrise))")
                 print("daily forecast for \(weatherData.temperatureForecastDaily!.count) days")
+                let list = weatherData.sortedTemperatureForecastDaily
+                for day in list {
+                    print("Day: \(intToDate(unixTime: day.dt))")
+                    print("Picto: \(day.weather_icon)")
+                    print("Temp min: \(day.temp_min)")
+                    print("Temp max: \(day.temp_max)")
+                }
                 expectation.fulfill()
             case .failure(let error):
                 XCTFail("Error fetching weather data: \(error.localizedDescription)")

@@ -32,5 +32,16 @@
    <LaunchAction
       useCustomWorkingDirectory = "NO"
       allowLocationSimulation = "YES">
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "OPENWEATHER_APIKEY"
+            value = "a426b9f2f27a821c5ebd69e882daff65"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
+      <LocationScenarioReference
+         identifier = "com.apple.dt.IDEFoundation.CurrentLocationScenarioIdentifier"
+         referenceType = "1">
+      </LocationScenarioReference>
    </LaunchAction>
 </Scheme>

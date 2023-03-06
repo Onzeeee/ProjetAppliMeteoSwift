@@ -38,12 +38,19 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource, 
         pageControl.frame = CGRect(x: 46, y: 796, width: 296, height: 26)
         self.view.addSubview(pageControl)
         listeCities = findFavoriteCitiesFromCoreData(context: leContexte)
-        for i in 0..<listeCities.count{
-            pages.append(HomeViewController.getInstance(ville : listeCities[i]))
+        if(listeCities.count != 0){
+            for i in 0..<listeCities.count{
+                pages.append(HomeViewController.getInstance(ville : listeCities[i]))
+            }
+
+            self.pageViewDelegate?.numberofpage(atIndex: self.listeCities.count, current: listeCities[0])
+            self.pageViewDelegate?.afficherFavori(ville: listeCities[0])
+            self.pageViewDelegate?.changerTitle(title: listeCities[0].name!)
         }
-        self.pageViewDelegate?.numberofpage(atIndex: self.listeCities.count, current: listeCities[0])
-        self.pageViewDelegate?.afficherFavori(ville: listeCities[0])
-        self.pageViewDelegate?.changerTitle(title: listeCities[0].name!)
+        else{
+            pages.append(HomeViewController.getInstanceNil())
+            self.pageViewDelegate?.changerTitle(title: "Aucune ville en favori")
+        }
         self.setViewControllers([self.pages[0]], direction: .forward, animated: true, completion: nil)
         super.viewDidLoad()
     }
@@ -102,7 +109,7 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource, 
                             self.pageViewDelegate?.numberofpage(atIndex: self.listeCities.count, current: weatherData.city!)
                             self.pageViewDelegate?.afficherFavori(ville: weatherData.city!)
                             self.pageViewDelegate?.mettrePosActuellePageControle()
-                            self.pageViewDelegate?.changerTitle(title: weatherData.city!.name!)
+                            //self.pageViewDelegate?.changerTitle(title: weatherData.city!.name!)
                             self.setViewControllers([self.pages[0]], direction: .reverse, animated: true, completion: nil)
                         }
                         break

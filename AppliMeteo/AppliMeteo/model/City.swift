@@ -10,6 +10,7 @@ func loadCitiesFromJson(context: NSManagedObjectContext) -> [CityEntity] {
         let existingCities: [CityEntity] = try context.fetch(fetchRequest)
         if !existingCities.isEmpty {
             // Cities already exist in the store, no need to load from JSON
+            print(existingCities.count)
             return existingCities;
             // Delete all cities
 //            for city in existingCities {
@@ -18,7 +19,7 @@ func loadCitiesFromJson(context: NSManagedObjectContext) -> [CityEntity] {
 //            try context.save()
         }
     } catch let error {
-        fatalError("Error fetching cities from Core Data: \(error)")
+        //fatalError("Error fetching cities from Core Data: \(error)")
     }
 
     var cities = [CityEntity]()
@@ -59,6 +60,7 @@ func loadCitiesFromJson(context: NSManagedObjectContext) -> [CityEntity] {
     } catch let error {
         fatalError("Error saving cities data: \(error)")
     }
+    print(cities.count)
 
     return cities
 }

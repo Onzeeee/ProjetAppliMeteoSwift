@@ -27,7 +27,6 @@ class HomeViewController: UIViewController {
         fetchWeatherData(context: leContexte, for: ville[0]) { result in
             switch(result){
             case .success(let weatherData):
-                print("Weather data: \(weatherData)")
                 self.chargerLesDonneesVille(weatherData: weatherData)
             case .failure:
                 break
@@ -53,7 +52,11 @@ class HomeViewController: UIViewController {
             fullString.append(imageDownArrowAttach)
             fullString.append(NSAttributedString(string: " \(String(Int((weatherData.currentTemperatureForecast!.temp_max))+1))°C "))
             fullString.append(imageUpArrowAttach)
-
+            let icon = weatherData.currentTemperatureForecast?.icon!
+            let premiereLettre = icon![icon!.index((icon!.startIndex), offsetBy: 0)]
+            let deuxiemeLettre = icon![icon!.index((icon!.startIndex), offsetBy: 1)]
+            self.imageDeFond.image = UIImage(named: "\(String(Int(String(premiereLettre))!))\(String(Int(String(deuxiemeLettre))!)).jpg")
+            self.imageDeFond.contentMode = .scaleAspectFill
             self.labelTempMaxMin.attributedText = fullString
             self.labelTempRessenti.text = "Ressenti : \(String(Int((weatherData.currentTemperatureForecast!.feels_like))+1))°C"
         }

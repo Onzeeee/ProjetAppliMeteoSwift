@@ -10,10 +10,46 @@ import CoreData
 
 class ViewControllerFavori: UIViewController, UISearchResultsUpdating, UISearchControllerDelegate, UINavigationBarDelegate, UITableViewDelegate, UITableViewDataSource{
 
+    @IBOutlet weak var editButton: UIBarButtonItem!
+    @IBOutlet weak var tableView: UITableView!
+    @IBAction func onEditButtonTapped(_ sender: Any) {
+        tableView.isEditing = !tableView.isEditing
+    }
     func updateSearchResults(for searchController: UISearchController) {
         let searchText = searchController.searchBar.text
         let searchResult = searchController.searchResultsController as! SearchResultsTableViewController
         searchResult.search(searchText: searchText!, context: (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext)
+    }
+
+    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+
+    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        print("row moved from \(sourceIndexPath.row) to \(destinationIndexPath.row)")
+        moveFavorite(from: sourceIndexPath.row, to: destinationIndexPath.row, context: (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext)
+        listeCities = findFavoriteCitiesFromCoreData(context: (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext)
+        // Reload the table view to reflect the changes
+        tableView.reloadData()
+    }
+
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            print("row deleted at \(indexPath.row)")
+            toggleFavorite(city: listeCities[indexPath.row], context: (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext)
+            listeCities = findFavoriteCitiesFromCoreData(context: (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext)
+            // Reload the table view to reflect the changes
+            if(listeCities.count == 0){
+                tableView.isEditing = false
+                editButton.isEnabled = false
+            }
+            tableView.reloadData()
+
+        }
     }
     
     func willDismissSearchController(_ searchController: UISearchController) {
@@ -34,6 +70,10 @@ class ViewControllerFavori: UIViewController, UISearchResultsUpdating, UISearchC
         searchController.delegate = self
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.searchController = searchController
+        if(listeCities.count == 0){
+            tableView.isEditing = false
+            editButton.isEnabled = false
+        }
         super.viewDidLoad()
         // Do any additional setup after loading the view.
     }
@@ -59,6 +99,9 @@ class ViewControllerFavori: UIViewController, UISearchResultsUpdating, UISearchC
         }
         
         func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+            if(listeCities.count == 0){
+                return
+            }
             let storyBoard = UIStoryboard(name: "Main", bundle: nil)
             
             let VC = storyBoard.instantiateViewController(withIdentifier: "HomeViewController") as! HomeViewController
@@ -75,9 +118,19 @@ class ViewControllerFavori: UIViewController, UISearchResultsUpdating, UISearchC
             if let tableView = view.viewWithTag(1) as? UITableView {
                 tableView.reloadData()
             }
+            if(listeCities.count == 0){
+                tableView.isEditing = false
+                editButton.isEnabled = false
+            }
+            else{
+                editButton.isEnabled = true
+            }
         }
         
         func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+            if(tableView.isEditing){
+                return
+            }
             let storyBoard = UIStoryboard(name: "Main", bundle: nil)
             
             let detailVC = storyBoard.instantiateViewController(withIdentifier: "ViewControllerDetailsVille") as! ViewControllerDetailsVille

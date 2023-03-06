@@ -160,6 +160,7 @@ func fetchWeatherDataFromLonLat(context: NSManagedObjectContext, lon: Double, la
                         dailyForecast.weather_id = Int32(weather0["id"] as? Int ?? 0)
                         dailyForecast.weatherData = weatherData
                     }
+                    try context.save()
                     completion(.success(weatherData))
                 }
                 catch {

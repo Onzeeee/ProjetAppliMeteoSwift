@@ -38,9 +38,10 @@ class ViewControllerPourPageControl: UIViewController {
         }
     }
     
-    @IBAction func changePages(_ sender: Any) {
+    @IBAction func changePages(_ sender: UIPageControl  ) {
         print("Appelle")
-        pageViewDelegate?.changePageControlPage(atIndex: pageControl.currentPage)
+        print(sender.currentPage)
+        customPageViewController?.changePageControlPage(atIndex: pageControl.currentPage)
     }
 }
 

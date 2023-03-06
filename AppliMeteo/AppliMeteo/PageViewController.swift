@@ -10,18 +10,24 @@ protocol PageViewControllerDelegate : class{
     func mettrePosActuellePageControle()
 }
 
-class PageViewController: UIPageViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate, CLLocationManagerDelegate {
+class PageViewController: UIPageViewController,
+        UIPageViewControllerDataSource,
+        UIPageViewControllerDelegate,
+        CLLocationManagerDelegate{
 
     var pageViewDelegate : PageViewControllerDelegate?
-    var pageControl = UIPageControl()
-    var pages : [UIViewController] = []
     var currentIndex = 0
     let leContexte = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     var listeCities : [CityEntity] = []
-    var pasFavori = false
+    var cityViews: [Int32: HomeViewController] = [:]
+    var currentCity : CityEntity?
     var currentLocationAdded = false
     let locationManager = CLLocationManager()
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        initFavoris()
+    }
 
     override func viewDidLoad() {
         _ = loadCitiesFromJson(context: leContexte)
@@ -36,25 +42,64 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource, 
         }
         self.dataSource = self
         self.delegate = self
-        pageControl.frame = CGRect(x: 46, y: 796, width: 296, height: 26)
-        self.view.addSubview(pageControl)
-        listeCities = findFavoriteCitiesFromCoreData(context: leContexte)
-        if(listeCities.count != 0){
-            for i in 0..<listeCities.count{
-                pages.append(HomeViewController.getInstance(ville : listeCities[i]))
+        super.viewDidLoad()
+    }
+
+    func initFavoris(){
+        listeCities.removeAll()
+
+        let favs = findFavoriteCitiesFromCoreData(context: leContexte)
+        if(favs.count != 0){
+            let oldindex = currentIndex
+            // remove all pages except the first one
+
+            if(currentCity != nil){
+                self.currentLocationAdded = true
+                listeCities.append(currentCity!)
+                //pages.append(HomeViewController.getInstance(ville : currentCity!))
             }
 
-            self.pageViewDelegate?.numberofpage(atIndex: self.listeCities.count, current: listeCities[0])
-            self.pageViewDelegate?.afficherFavori(ville: listeCities[0])
-            self.pageViewDelegate?.changerTitle(title: listeCities[0].name!)
+            for i in 0..<favs.count{
+                listeCities.append(favs[i])
+                if(cityViews[favs[i].id] == nil){
+                    cityViews[favs[i].id] = HomeViewController.getInstance(ville : favs[i])
+                }
+                //pages.append(HomeViewController.getInstance(ville : favs[i]))
+            }
+            var target = 0
+            if(oldindex < listeCities.count){
+                target = oldindex
+            }
+            self.currentIndex = target
+            DispatchQueue.main.async() { [self] in
+                self.pageViewDelegate?.numberofpage(atIndex: self.listeCities.count, current: self.listeCities[target])
+                self.pageViewDelegate?.afficherFavori(ville: self.listeCities[target])
+                self.pageViewDelegate?.changerTitle(title: self.listeCities[target].name!)
+                self.pageViewDelegate?.pageChangeTo(atIndex: target, current: self.listeCities[target])
+                self.setViewControllers([self.cityViews[self.listeCities[target].id]!], direction: .reverse, animated: true, completion: nil)
+            }
         }
         else{
-            pasFavori = true
-            pages.append(HomeViewController.getInstanceNil())
-            self.pageViewDelegate?.changerTitle(title: "Aucune ville en favori")
+            // todo il se passe des trucs bizarre quand on supprime tous les favoris et qu'on revient sur la page
+            if(currentCity != nil){
+                listeCities.append(currentCity!)
+                DispatchQueue.main.async() { [self] in
+                    self.pageViewDelegate?.numberofpage(atIndex: 1, current: self.currentCity!)
+                    self.pageViewDelegate?.afficherFavori(ville: self.currentCity!)
+                    self.pageViewDelegate?.mettrePosActuellePageControle()
+                    self.pageViewDelegate?.changerTitle(title: self.currentCity!.name!)
+                    self.pageViewDelegate?.pageChangeTo(atIndex: 0, current: self.currentCity!)
+                    self.setViewControllers([cityViews[self.currentCity!.id]!], direction: .reverse, animated: true, completion: nil)
+                }
+            }
+            else{
+                DispatchQueue.main.async() { [self] in
+                    // todo changer le page control pour qu'il n'y ait qu'une page ( sans ville )
+                    self.pageViewDelegate?.changerTitle(title: "Aucune ville en favori")
+                    self.setViewControllers([HomeViewController.getInstanceNil()], direction: .reverse, animated: true, completion: nil)
+                }
+            }
         }
-        self.setViewControllers([self.pages[0]], direction: .forward, animated: true, completion: nil)
-        super.viewDidLoad()
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -99,23 +144,26 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource, 
         fetchWeatherDataFromLonLat(context: self.leContexte, lon: lon, lat: lat) { resulat in
                     switch resulat{
                     case .success(let weatherData):
+                        if(weatherData.city == nil){
+                            fatalError("City is nil") // TODO pk des fois c'est null ici je pige pas
+                        }
                         //A définir
-                        DispatchQueue.main.async {
-                            if(self.pasFavori){
-                                self.pages.remove(at: 0)
-                            }
+                        DispatchQueue.main.async { [self] in
+
                             if(self.currentLocationAdded){
                                 self.listeCities.remove(at: 0)
-                                self.pages.remove(at: 0)
+                                //self.pages.remove(at: 0)
                             }
                             self.currentLocationAdded = true
+                            self.currentCity = weatherData.city
                             self.listeCities.insert(weatherData.city!, at: 0)
-                            self.pages.insert(HomeViewController.getInstance(ville: weatherData.city!), at: 0)
+                            //self.pages.insert(HomeViewController.getInstance(ville: weatherData.city!), at: 0)
                             self.pageViewDelegate?.numberofpage(atIndex: self.listeCities.count, current: weatherData.city!)
                             self.pageViewDelegate?.afficherFavori(ville: weatherData.city!)
                             self.pageViewDelegate?.mettrePosActuellePageControle()
                             self.pageViewDelegate?.changerTitle(title: weatherData.city!.name!)
-                            self.setViewControllers([self.pages[0]], direction: .reverse, animated: true, completion: nil)
+                            self.cityViews[weatherData.city!.id] = HomeViewController.getInstance(ville: weatherData.city!)
+                            self.setViewControllers([self.cityViews[weatherData.city!.id]!], direction: .reverse, animated: true, completion: nil)
                         }
                         break
                     case .failure(let error):
@@ -125,69 +173,63 @@ class PageViewController: UIPageViewController, UIPageViewControllerDataSource, 
     }
 
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-        guard let viewControllerIndex = pages.firstIndex(of: viewController) else {
+        let previousIndex = currentIndex - 1
+        guard !(previousIndex < 0 || listeCities.count <= previousIndex) else {
             return nil
         }
-        let previousIndex = viewControllerIndex - 1
-        guard previousIndex >= 0 else {
-            return nil
+        if(cityViews[listeCities[previousIndex].id] != nil){
+            return cityViews[listeCities[previousIndex].id]
         }
-        guard pages.count > previousIndex else {
-            return nil
-        }
-        return pages[previousIndex]
+        cityViews[listeCities[previousIndex].id] = HomeViewController.getInstance(ville: listeCities[previousIndex])
+        return cityViews[listeCities[previousIndex].id]
     }
 
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-        guard let viewControllerIndex = pages.firstIndex(of: viewController) else {
+        let nextIndex = currentIndex + 1
+        guard !(nextIndex < 0 || nextIndex >= listeCities.count) else {
             return nil
         }
-        let nextIndex = viewControllerIndex + 1
-        guard nextIndex < pages.count else {
-            return nil
+        if(cityViews[listeCities[nextIndex].id] != nil){
+            return cityViews[listeCities[nextIndex].id]
         }
-        guard pages.count > nextIndex else {
-            return nil
-        }
-        return pages[nextIndex]
+        cityViews[listeCities[nextIndex].id] = HomeViewController.getInstance(ville: listeCities[nextIndex])
+        return cityViews[listeCities[nextIndex].id]
     }
 
-//    func presentationCount(for pageViewController: UIPageViewController) -> Int {
-//        return pages.count
-//    }
-//
-//    func presentationIndex(for pageViewController: UIPageViewController) -> Int {
-//        return 0
-//    }
-
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
-        
-        if let currentIndexPageViewController = pageViewController.viewControllers?.first
-            as? HomeViewController {
-            let index = pages.firstIndex(of: currentIndexPageViewController)!
-            pageViewDelegate?.pageChangeTo(atIndex: index, current: listeCities[index])
-            pageViewDelegate?.afficherFavori(ville: listeCities[index])
-            pageViewDelegate?.changerTitle(title: listeCities[index].name!)
-        }
+        pageViewDelegate?.pageChangeTo(atIndex: currentIndex, current: listeCities[currentIndex])
+        pageViewDelegate?.afficherFavori(ville: listeCities[currentIndex])
+        pageViewDelegate?.changerTitle(title: listeCities[currentIndex].name!)
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
-        guard let viewControllerIndex = pages.firstIndex(of: pendingViewControllers[0]) else {
+        guard let pendingViewControllers = pendingViewControllers as? [HomeViewController] else {
+            return
+        }
+        if pendingViewControllers[0].ville.count == 0 {
+            return
+        }
+        guard let viewControllerIndex = listeCities.firstIndex(of: pendingViewControllers[0].ville[0]) else {
             return
         }
         currentIndex = viewControllerIndex
-        pageControl.currentPage = viewControllerIndex
-        title = pages[currentIndex].title
+        title = listeCities[currentIndex].name
     }
 }
 
 extension PageViewController : ViewControllerPourPageControlDelegate{
 
     func changePageControlPage(atIndex: Int) {
-        print("Appelle")
-        self.pageViewDelegate?.afficherFavori(ville: listeCities[atIndex])
-        self.pageViewDelegate?.changerTitle(title: listeCities[atIndex].name!)
-        self.setViewControllers([self.pages[atIndex]], direction: .forward, animated: true, completion: nil)
+        DispatchQueue.main.async() {
+            let direction: UIPageViewController.NavigationDirection = atIndex > self.currentIndex ? .forward : .reverse
+            self.pageViewDelegate?.afficherFavori(ville: self.listeCities[atIndex])
+            self.pageViewDelegate?.changerTitle(title: self.listeCities[atIndex].name!)
+            if(self.cityViews[self.listeCities[atIndex].id] == nil){
+                self.cityViews[self.listeCities[atIndex].id] = HomeViewController.getInstance(ville: self.listeCities[atIndex])
+            }
+            self.setViewControllers([self.cityViews[self.listeCities[atIndex].id]!], direction: direction, animated: true, completion: nil)
+            self.currentIndex = atIndex
+        }
     }
 
 }

@@ -10,6 +10,9 @@
         <attribute name="state" optional="YES" attributeType="String"/>
         <relationship name="weatherData" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WeatherData" inverseName="city" inverseEntity="WeatherData"/>
     </entity>
+    <entity name="Favorites" representedClassName="Favorites" syncable="YES">
+        <relationship name="cities" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="CityEntity"/>
+    </entity>
     <entity name="TemperatureForecast" representedClassName="TemperatureForecast" syncable="YES">
         <attribute name="dt" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="dt_txt" optional="YES" attributeType="String"/>

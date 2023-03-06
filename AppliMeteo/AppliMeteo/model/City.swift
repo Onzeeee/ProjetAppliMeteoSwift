@@ -159,13 +159,18 @@ extension String {
     }
 }
 
-func toggleFavorite(city: CityEntity, context: NSManagedObjectContext) {
-    city.favorite = !city.favorite
-    if(city.favorite) {
-        favoriteCities.append(city)
-    } else {
-        favoriteCities.removeAll(where: { $0.id == city.id })
+func moveFavorite(from: Int, to: Int, context: NSManagedObjectContext){
+    if(from == to) {
+        return
     }
+    if(from < 0 || from >= favoriteCities.count || to < 0 || to >= favoriteCities.count) {
+        fatalError("Invalid index")
+    }
+
+    let city = favoriteCities[from]
+    favoriteCities.remove(at: from)
+    favoriteCities.insert(city, at: to)
+    favManager!.cities = NSOrderedSet(array: favoriteCities)
     do {
         try context.save()
     } catch let error {
@@ -173,6 +178,53 @@ func toggleFavorite(city: CityEntity, context: NSManagedObjectContext) {
     }
 }
 
+func toggleFavorite(city: CityEntity, context: NSManagedObjectContext) {
+    city.favorite = !city.favorite
+    loadFavManager(context: context)
+    if(city.favorite) {
+        var cities = favManager!.cities!.array as! [CityEntity]
+        cities.append(city)
+        favoriteCities = cities
+        favManager!.cities = NSOrderedSet(array: cities)
+    }
+    else {
+        var cities = favManager!.cities!.array as! [CityEntity]
+        cities = cities.filter { $0.id != city.id }
+        favoriteCities = cities
+        favManager!.cities = NSOrderedSet(array: cities)
+    }
+    do {
+        try context.save()
+    } catch let error {
+        fatalError("Error saving city favorite: \(error)")
+    }
+}
+var favManager: Favorites? = nil
+func loadFavManager(context: NSManagedObjectContext){
+    if(favManager == nil) {
+        let request: NSFetchRequest<Favorites> = Favorites.fetchRequest()
+        if let favorites = try? context.fetch(request) {
+            if favorites.count > 0 {
+                favManager = favorites[0]
+                print("loaded favorite cities from core data")
+            }
+            else{
+                let newFav = Favorites(context: context)
+                print("created new favorite cities entity")
+                newFav.cities = []
+                do {
+                    try context.save()
+                } catch let error {
+                    fatalError("Error saving favorite cities: \(error)")
+                }
+                favManager = newFav
+            }
+        }
+        else {
+            fatalError("Error fetching favorite cities")
+        }
+    }
+}
 var favoriteCities: [CityEntity] = []
 
 func findFavoriteCitiesFromCoreData(context: NSManagedObjectContext) -> [CityEntity] {
@@ -180,16 +232,15 @@ func findFavoriteCitiesFromCoreData(context: NSManagedObjectContext) -> [CityEnt
         return favoriteCities
     }
     print("fetching favorite cities from core data")
-    let request: NSFetchRequest<CityEntity> = CityEntity.fetchRequest()
-    let predicate = NSPredicate(format: "favorite == true")
-    request.predicate = predicate
-    do {
-        let cities = try context.fetch(request)
-        favoriteCities = cities
-        return cities
-    } catch let error {
-        fatalError("Error fetching cities: \(error)")
+    if(favManager == nil) {
+        loadFavManager(context: context)
     }
+    if(favManager == nil) {
+        fatalError("Error fetching favorite cities: no favorites entity")
+    }
+    let cities = favManager!.cities!
+    favoriteCities = cities.array as! [CityEntity]
+    return favoriteCities
 }
 
 

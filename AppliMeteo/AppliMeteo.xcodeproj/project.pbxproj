@@ -10,6 +10,8 @@
 		18723D2B29A7DFA000213E47 /* CityTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18723D2A29A7DFA000213E47 /* CityTest.swift */; };
 		1898689F29A80797003E7F7C /* city.list.json in Resources */ = {isa = PBXBuildFile; fileRef = 1898689E29A80797003E7F7C /* city.list.json */; };
 		189868A029A80797003E7F7C /* city.list.json in Resources */ = {isa = PBXBuildFile; fileRef = 1898689E29A80797003E7F7C /* city.list.json */; };
+		18AB6ADA29B6A43E00C12576 /* Favorites+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18AB6AD829B6A43E00C12576 /* Favorites+CoreDataClass.swift */; };
+		18AB6ADB29B6A43E00C12576 /* Favorites+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18AB6AD929B6A43E00C12576 /* Favorites+CoreDataProperties.swift */; };
 		18BE19A429A8485200F5BED8 /* WeatherData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18BE19A329A8485200F5BED8 /* WeatherData.swift */; };
 		18BE19A629A8491000F5BED8 /* WeatherDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18BE19A529A8491000F5BED8 /* WeatherDataTests.swift */; };
 		18BE19A829A8E6C900F5BED8 /* LocationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18BE19A729A8E6C900F5BED8 /* LocationTests.swift */; };
@@ -55,6 +57,8 @@
 		18723D2A29A7DFA000213E47 /* CityTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityTest.swift; sourceTree = "<group>"; };
 		1898689E29A80797003E7F7C /* city.list.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = city.list.json; sourceTree = "<group>"; };
 		18AB6AC529B62D9300C12576 /* AppliMeteo 2.xcdatamodel */ = {isa = PBXFileReference; explicitFileType = wrapper.xcdatamodel; path = "AppliMeteo 2.xcdatamodel"; sourceTree = "<group>"; };
+		18AB6AD829B6A43E00C12576 /* Favorites+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Favorites+CoreDataClass.swift"; sourceTree = "<group>"; };
+		18AB6AD929B6A43E00C12576 /* Favorites+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Favorites+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		18BE19A329A8485200F5BED8 /* WeatherData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherData.swift; sourceTree = "<group>"; };
 		18BE19A529A8491000F5BED8 /* WeatherDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherDataTests.swift; sourceTree = "<group>"; };
 		18BE19A729A8E6C900F5BED8 /* LocationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationTests.swift; sourceTree = "<group>"; };
@@ -177,6 +181,8 @@
 		D51D5A7C20CA70873A41A2D5 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
+				18AB6AD829B6A43E00C12576 /* Favorites+CoreDataClass.swift */,
+				18AB6AD929B6A43E00C12576 /* Favorites+CoreDataProperties.swift */,
 				D51D599077E778AA3ACAAFB4 /* CityEntity+CoreDataClass.swift */,
 				D51D594A43B832CAA198511B /* CityEntity+CoreDataProperties.swift */,
 				D51D52C1F7ABBB6C2EDE9CCB /* TemperatureForecast+CoreDataClass.swift */,
@@ -336,6 +342,7 @@
 				3B9D45E029A6871800510517 /* AppDelegate.swift in Sources */,
 				3B9D45E229A6871800510517 /* SceneDelegate.swift in Sources */,
 				3BB5416429AA6EEA000445BA /* ViewControllerFavori.swift in Sources */,
+				18AB6ADB29B6A43E00C12576 /* Favorites+CoreDataProperties.swift in Sources */,
 				3B9D45EA29A6871800510517 /* AppliMeteo.xcdatamodeld in Sources */,
 				18BE19A429A8485200F5BED8 /* WeatherData.swift in Sources */,
 				3B857BE429AE9E3000A1C87E /* PageControllerImage.swift in Sources */,
@@ -349,6 +356,7 @@
 				D51D56DD5DE769FF918C891B /* TemperatureForecast+CoreDataProperties.swift in Sources */,
 				D51D5AA4F72A8D312835CB8E /* TemperatureForecastDaily+CoreDataClass.swift in Sources */,
 				D51D5EA9366CA652E664E069 /* TemperatureForecastDaily+CoreDataProperties.swift in Sources */,
+				18AB6ADA29B6A43E00C12576 /* Favorites+CoreDataClass.swift in Sources */,
 				D51D5AC2D2A1D5DFB388B95D /* WeatherData+CoreDataClass.swift in Sources */,
 				D51D5EC6CBB94A2B909B36ED /* WeatherData+CoreDataProperties.swift in Sources */,
 			);

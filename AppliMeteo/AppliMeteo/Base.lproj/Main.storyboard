@@ -19,7 +19,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PvI-YN-hBD">
-                                <rect key="frame" x="-5" y="-3" width="401" height="856"/>
+                                <rect key="frame" x="-6" y="-3" width="402" height="856"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <connections>
                                     <segue destination="s6W-Km-38N" kind="embed" id="XSo-LG-QGv"/>
@@ -197,9 +197,16 @@
                     </view>
                     <navigationItem key="navigationItem" title="Favoris" id="1Mt-iC-NNm">
                         <barButtonItem key="backBarButtonItem" title="Favoris" id="2V8-Db-ILi"/>
+                        <barButtonItem key="rightBarButtonItem" title="Item" image="square.and.pencil" catalog="system" id="XeF-Ou-Qv0">
+                            <connections>
+                                <action selector="onEditButtonTapped:" destination="MY5-jF-hpd" id="XRR-DS-gVh"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="editButton" destination="XeF-Ou-Qv0" id="5Cc-Iq-CSq"/>
                         <outlet property="home" destination="1Mt-iC-NNm" id="lTV-Az-Ko1"/>
+                        <outlet property="tableView" destination="TbB-OH-QZX" id="PTP-p0-Zuu"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cZa-b3-qy8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -223,7 +230,7 @@
                                 </connections>
                             </mapView>
                             <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2d7-cC-sVT">
-                                <rect key="frame" x="-5" y="566" width="403" height="290"/>
+                                <rect key="frame" x="-6" y="566" width="403" height="288"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <connections>
                                     <segue destination="lxA-TR-UYZ" kind="embed" identifier="" id="3Nd-pU-JKJ"/>
@@ -306,6 +313,7 @@
     </scenes>
     <resources>
         <image name="list.bullet" catalog="system" width="128" height="87"/>
+        <image name="square.and.pencil" catalog="system" width="128" height="113"/>
         <image name="star" catalog="system" width="128" height="116"/>
         <systemColor name="labelColor">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

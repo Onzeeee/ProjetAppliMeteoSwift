@@ -7,8 +7,14 @@
 
 import UIKit
 
+protocol ViewControllerPourPageControlDelegate : class{
+    func changePageControlPage(atIndex : Int)
+}
+
 class ViewControllerPourPageControl: UIViewController {
 
+    
+    var pageViewDelegate : ViewControllerPourPageControlDelegate?
     @IBOutlet weak var pageControl: UIPageControl!
     var customPageViewController: PageViewController!
     var currentCity : CityEntity!
@@ -30,6 +36,11 @@ class ViewControllerPourPageControl: UIViewController {
         customPageViewController = destinationViewController
         customPageViewController.pageViewDelegate = self
         }
+    }
+    
+    @IBAction func changePages(_ sender: Any) {
+        print("Appelle")
+        pageViewDelegate?.changePageControlPage(atIndex: pageControl.currentPage)
     }
 }
 

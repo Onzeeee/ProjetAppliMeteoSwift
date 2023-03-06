@@ -20,7 +20,7 @@ class ViewControllerImage: UIViewController {
             
         }else{
             self.view.addSubview(imageViewAttribut!)
-            imageViewAttribut?.frame = CGRect(x: 0, y: 0, width: 393, height: 253)
+            imageViewAttribut?.frame = CGRect(x: 0, y: 0, width: 403, height: 291)
         }
         // Do any additional setup after loading the view.
     }

@@ -8,9 +8,14 @@
 import UIKit
 import MapKit
 
-class ViewControllerDetailsVille: UIViewController{
+class ViewControllerDetailsVille: UIViewController, MKMapViewDelegate{
 
     @IBOutlet weak var mapVille: MKMapView!
+    @IBOutlet weak var verticalSlider: UISlider!{
+        didSet{
+            verticalSlider.transform = CGAffineTransform(rotationAngle: CGFloat(-Double.pi/2))
+        }
+    }
     
     var longitude : Double = Double()
     var latitude : Double = Double()
@@ -22,7 +27,7 @@ class ViewControllerDetailsVille: UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        mapVille.centerToLocation(CLLocation(latitude: latitude, longitude: longitude))
+        mapVille.centerToLocation(CLLocation(latitude: latitude, longitude: longitude), regionRadius: 100000)
         // Do any additional setup after loading the view.
     }
     
@@ -30,6 +35,10 @@ class ViewControllerDetailsVille: UIViewController{
         let sndVC = segue.destination as! PageControllerImage
         sndVC.ville = ville
         navigationItem.title = ville
+    }
+    
+    @IBAction func sliderChanged(_ sender: Any) {
+        mapVille.centerToLocation(CLLocation(latitude: latitude, longitude: longitude), regionRadius: CLLocationDistance(verticalSlider.value))
     }
     /*
     // MARK: - Navigation
@@ -46,9 +55,8 @@ class ViewControllerDetailsVille: UIViewController{
 private extension MKMapView {
     func centerToLocation(
         _ location: CLLocation,
-        regionRadius: CLLocationDistance = 100000
+        regionRadius: CLLocationDistance
     ) {
-        print("Coordonne de la position : \(location.coordinate.longitude) \(location.coordinate.latitude)")
         let coordinateRegion = MKCoordinateRegion(
             center: location.coordinate,
             latitudinalMeters: regionRadius,

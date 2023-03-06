@@ -14,6 +14,11 @@ final class WeatherDataTests: XCTestCase {
     func testFetchWeatherData() {
         let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
+        let cities = loadCitiesFromJson(context: context)
+        if(cities == nil){
+            XCTFail("Cities not found")
+            return
+        }
         let expectation = XCTestExpectation(description: "Fetch weather data")
 
         let id: Int32 = 6454159 // Orléans, FR
@@ -42,6 +47,7 @@ final class WeatherDataTests: XCTestCase {
                 print("Current picto: \(currentTemp!.icon)")
                 print("Current temp: \(currentTemp!.temp)")
                 print("sunrise on \(intToDate(unixTime: weatherData.sunrise))")
+                print("daily forecast for \(weatherData.temperatureForecastDaily!.count) days")
                 expectation.fulfill()
             case .failure(let error):
                 XCTFail("Error fetching weather data: \(error.localizedDescription)")

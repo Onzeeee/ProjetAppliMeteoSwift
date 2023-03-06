@@ -25,7 +25,6 @@ class ViewControllerFavori: UIViewController, UISearchResultsUpdating, UISearchC
     var listeCities : [CityEntity] = []
     
     override func viewDidLoad() {
-        _ = loadCitiesFromJson(context: (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext)
         listeCities = findFavoriteCitiesFromCoreData(context: (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext)
         let searchResultsController = SearchResultsTableViewController(style: .plain)
         searchResultsController.definesPresentationContext = true

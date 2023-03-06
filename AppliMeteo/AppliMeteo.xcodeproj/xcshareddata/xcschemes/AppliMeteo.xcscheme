@@ -52,7 +52,7 @@
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "OPENWEATHER_APIKEY"
-            value = "785f075ac053c608833639845e0f9464"
+            value = "a426b9f2f27a821c5ebd69e882daff65"
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
@@ -62,7 +62,7 @@
          </EnvironmentVariable>
       </EnvironmentVariables>
       <LocationScenarioReference
-         identifier = "com.apple.dt.IDEFoundation.CurrentLocationScenarioIdentifier"
+         identifier = "London, England"
          referenceType = "1">
       </LocationScenarioReference>
    </LaunchAction>

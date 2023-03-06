@@ -159,6 +159,11 @@ extension String {
 
 func toggleFavorite(city: CityEntity, context: NSManagedObjectContext) {
     city.favorite = !city.favorite
+    if(city.favorite) {
+        favoriteCities.append(city)
+    } else {
+        favoriteCities.removeAll(where: { $0.id == city.id })
+    }
     do {
         try context.save()
     } catch let error {
@@ -166,12 +171,19 @@ func toggleFavorite(city: CityEntity, context: NSManagedObjectContext) {
     }
 }
 
+var favoriteCities: [CityEntity] = []
+
 func findFavoriteCitiesFromCoreData(context: NSManagedObjectContext) -> [CityEntity] {
+    if(favoriteCities.count > 0) {
+        return favoriteCities
+    }
+    print("fetching favorite cities from core data")
     let request: NSFetchRequest<CityEntity> = CityEntity.fetchRequest()
     let predicate = NSPredicate(format: "favorite == true")
     request.predicate = predicate
     do {
         let cities = try context.fetch(request)
+        favoriteCities = cities
         return cities
     } catch let error {
         fatalError("Error fetching cities: \(error)")

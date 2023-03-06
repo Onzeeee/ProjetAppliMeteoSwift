@@ -24,15 +24,18 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Loading..."
-        fetchWeatherData(context: leContexte, for: ville[0]) { result in
-            switch(result){
-            case .success(let weatherData):
-                self.chargerLesDonneesVille(weatherData: weatherData)
-            case .failure:
-                break
+        if(ville.count != 0){
+            fetchWeatherData(context: leContexte, for: ville[0]) { result in
+                switch(result){
+                case .success(let weatherData):
+                    self.chargerLesDonneesVille(weatherData: weatherData)
+                case .failure:
+                    break
+                }
             }
+        }else{
+            
         }
-//        afficherFavori(ville: ville[0])
         // Do any additional setup after loading the view.
     }
     
@@ -66,6 +69,12 @@ class HomeViewController: UIViewController {
         let vc = UIStoryboard (name: "Main", bundle:
                                 nil).instantiateViewController(withIdentifier: "HomeViewController") as! HomeViewController
         vc.ville.append(ville)
+        return vc
+    }
+    
+    static func getInstanceNil() -> HomeViewController {
+        let vc = UIStoryboard (name: "Main", bundle:
+                                nil).instantiateViewController(withIdentifier: "HomeViewController") as! HomeViewController
         return vc
     }
 

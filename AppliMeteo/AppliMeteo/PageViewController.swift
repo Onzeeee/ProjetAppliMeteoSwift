@@ -8,6 +8,7 @@ protocol PageViewControllerDelegate : class{
     func afficherFavori(ville : CityEntity)
     func changerTitle(title : String)
     func mettrePosActuellePageControle()
+//    func changerFondEcran(nomImage : String)
 }
 
 class PageViewController: UIPageViewController,
@@ -157,7 +158,6 @@ class PageViewController: UIPageViewController,
                             self.currentLocationAdded = true
                             self.currentCity = weatherData.city
                             self.listeCities.insert(weatherData.city!, at: 0)
-                            //self.pages.insert(HomeViewController.getInstance(ville: weatherData.city!), at: 0)
                             self.pageViewDelegate?.numberofpage(atIndex: self.listeCities.count, current: weatherData.city!)
                             self.pageViewDelegate?.afficherFavori(ville: weatherData.city!)
                             self.pageViewDelegate?.mettrePosActuellePageControle()
@@ -200,6 +200,9 @@ class PageViewController: UIPageViewController,
         pageViewDelegate?.pageChangeTo(atIndex: currentIndex, current: listeCities[currentIndex])
         pageViewDelegate?.afficherFavori(ville: listeCities[currentIndex])
         pageViewDelegate?.changerTitle(title: listeCities[currentIndex].name!)
+//        let icon = self.listeCities[currentIndex].weatherData?.currentTemperatureForecast?.icon!
+//        let premiereLettre = icon![icon!.index((icon!.startIndex), offsetBy: 0)]
+//        let deuxiemeLettre = icon![icon!.index((icon!.startIndex), offsetBy: 1)]
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {

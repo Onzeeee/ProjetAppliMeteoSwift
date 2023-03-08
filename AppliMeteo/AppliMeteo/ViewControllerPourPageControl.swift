@@ -20,6 +20,7 @@ class ViewControllerPourPageControl: UIViewController {
     var currentCity : CityEntity!
     let leContexte = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     @IBOutlet weak var boutonFavori: UIButton!
+    @IBOutlet weak var imageFond: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,8 +40,6 @@ class ViewControllerPourPageControl: UIViewController {
     }
     
     @IBAction func changePages(_ sender: UIPageControl  ) {
-        print("Appelle")
-        print(sender.currentPage)
         customPageViewController?.changePageControlPage(atIndex: pageControl.currentPage)
     }
 }

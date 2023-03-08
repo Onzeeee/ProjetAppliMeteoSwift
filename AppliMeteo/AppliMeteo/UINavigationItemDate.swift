@@ -14,7 +14,7 @@ class UINavigationItemDate : UINavigationItem {
         let dateString = dateFormatter.string(from: date)
         let button = UIBarButtonItem(title: dateString.capitalized, style: .plain, target: nil, action: nil)
         // set the button color to gray
-        button.tintColor = .darkGray
+        button.tintColor = .black
         // set the button to disable
         button.isEnabled = false
         self.leftBarButtonItem = button

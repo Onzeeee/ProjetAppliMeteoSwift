@@ -134,7 +134,7 @@ class PageViewController: UIPageViewController,
                 return
             } else if clError.code == .locationUnknown {
                 // Failed to get location, retry after a delay
-                print("Failed to get location, retry after a delay")
+                //print("Failed to get location, retry after a delay")
                 DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                     manager.requestLocation()
                 }
@@ -146,35 +146,29 @@ class PageViewController: UIPageViewController,
     }
 
     func updateUserLocation(lat: CLLocationDegrees, lon: CLLocationDegrees) {
-
-        fetchWeatherDataFromLonLat(context: self.leContexte, lon: lon, lat: lat) { resulat in
-                    switch resulat{
-                    case .success(let weatherData):
-                        if(weatherData.city == nil){
-                            fatalError("City is nil") // TODO pk des fois c'est null ici je pige pas
-                        }
-                        //A définir
-                        DispatchQueue.main.async { [self] in
-
-                            if(self.currentLocationAdded){
-                                self.listeCities.remove(at: 0)
-                                //self.pages.remove(at: 0)
-                            }
-                            self.currentLocationAdded = true
-                            self.currentCity = weatherData.city
-                            self.listeCities.insert(weatherData.city!, at: 0)
-                            self.pageViewDelegate?.numberofpage(atIndex: self.listeCities.count, current: weatherData.city!)
-                            self.pageViewDelegate?.afficherFavori(ville: weatherData.city!)
-                            self.pageViewDelegate?.mettrePosActuellePageControle()
-                            self.pageViewDelegate?.changerTitle(title: weatherData.city!.name!)
-                            self.cityViews[weatherData.city!.id] = HomeViewController.getInstance(ville: weatherData.city!)
-                            self.setViewControllers([self.cityViews[weatherData.city!.id]!], direction: .reverse, animated: true, completion: nil)
-                        }
-                        break
-                    case .failure(let error):
-                        print(error)
-                    }
+        Task{
+            do{
+                let weatherData = try await fetchWeatherDataFromLonLat(context: self.leContexte, lon: lon, lat: lat)
+                guard let city = weatherData.city else {
+                    fatalError("City is nil : \(weatherData)")
                 }
+                DispatchQueue.main.async { [self] in
+                    if(self.currentLocationAdded){
+                        self.listeCities.remove(at: 0)
+                        //self.pages.remove(at: 0)
+                    }
+                    self.currentLocationAdded = true
+                    self.currentCity = city
+                    self.listeCities.insert(city, at: 0)
+                    self.pageViewDelegate?.numberofpage(atIndex: self.listeCities.count, current: city)
+                    self.pageViewDelegate?.afficherFavori(ville: city)
+                    self.pageViewDelegate?.mettrePosActuellePageControle()
+                    self.pageViewDelegate?.changerTitle(title: city.name!)
+                    self.cityViews[city.id] = HomeViewController.getInstance(ville: city)
+                    self.setViewControllers([self.cityViews[city.id]!], direction: .reverse, animated: true, completion: nil)
+                }
+            }
+        }
     }
 
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {

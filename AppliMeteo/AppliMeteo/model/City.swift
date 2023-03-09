@@ -13,10 +13,10 @@ func loadCitiesFromJson(context: NSManagedObjectContext) -> [CityEntity] {
             print(existingCities.count)
             return existingCities;
             // Delete all cities
-//            for city in existingCities {
-//                context.delete(city)
-//            }
-//            try context.save()
+            //for city in existingCities {
+            //    context.delete(city)
+            //}
+            //try context.save()
         }
     } catch let error {
         //fatalError("Error fetching cities from Core Data: \(error)")
@@ -53,12 +53,6 @@ func loadCitiesFromJson(context: NSManagedObjectContext) -> [CityEntity] {
         }
     } catch let error {
         fatalError("Error loading cities data: \(error)")
-    }
-
-    do {
-        try context.save()
-    } catch let error {
-        fatalError("Error saving cities data: \(error)")
     }
     print(cities.count)
 
@@ -100,7 +94,13 @@ func findCitiesFromCoreDataByName(name: String, context: NSManagedObjectContext)
     request.predicate = predicate
     do {
         var cities = try context.fetch(request)
-        if (cities.count < 30) {
+        // make sure there only is one match for a given city name / state / country
+        let uniqueCities = cities.reduce(into: [String: CityEntity]()) { (result, city) in
+            let key = "\(city.name ?? "")-\(city.state ?? "")-\(city.country ?? "")"
+            result[key] = city
+        }
+        cities = uniqueCities.map { $0.value }
+        if (cities.count < 50) {
             cities = cities.sorted { (city1, city2) -> Bool in
                 guard let name1 = city1.name as String?, let name2 = city2.name as String? else {
                     return false
@@ -110,6 +110,7 @@ func findCitiesFromCoreDataByName(name: String, context: NSManagedObjectContext)
                 return matchPercentage1 > matchPercentage2
             }
         }
+
         return cities
 
     } catch let error {
@@ -170,33 +171,37 @@ func moveFavorite(from: Int, to: Int, context: NSManagedObjectContext){
     let city = favoriteCities[from]
     favoriteCities.remove(at: from)
     favoriteCities.insert(city, at: to)
-    favManager!.cities = NSOrderedSet(array: favoriteCities)
-    do {
+    context.performAndWait {
+        favManager!.cities = NSOrderedSet(array: favoriteCities)
+    }
+    do{
         try context.save()
     } catch let error {
-        fatalError("Error saving city favorite: \(error)")
+        fatalError("Error saving context: \(error)")
     }
 }
 
 func toggleFavorite(city: CityEntity, context: NSManagedObjectContext) {
     city.favorite = !city.favorite
     loadFavManager(context: context)
-    if(city.favorite) {
-        var cities = favManager!.cities!.array as! [CityEntity]
-        cities.append(city)
-        favoriteCities = cities
-        favManager!.cities = NSOrderedSet(array: cities)
+    context.performAndWait {
+        if(city.favorite) {
+            var cities = favManager!.cities!.array as! [CityEntity]
+            cities.append(city)
+            favoriteCities = cities
+            favManager!.cities = NSOrderedSet(array: cities)
+        }
+        else {
+            var cities = favManager!.cities!.array as! [CityEntity]
+            cities = cities.filter { $0.id != city.id }
+            favoriteCities = cities
+            favManager!.cities = NSOrderedSet(array: cities)
+        }
     }
-    else {
-        var cities = favManager!.cities!.array as! [CityEntity]
-        cities = cities.filter { $0.id != city.id }
-        favoriteCities = cities
-        favManager!.cities = NSOrderedSet(array: cities)
-    }
-    do {
+    do{
         try context.save()
     } catch let error {
-        fatalError("Error saving city favorite: \(error)")
+        fatalError("Error saving context: \(error)")
     }
 }
 var favManager: Favorites? = nil
@@ -212,11 +217,6 @@ func loadFavManager(context: NSManagedObjectContext){
                 let newFav = Favorites(context: context)
                 print("created new favorite cities entity")
                 newFav.cities = []
-                do {
-                    try context.save()
-                } catch let error {
-                    fatalError("Error saving favorite cities: \(error)")
-                }
                 favManager = newFav
             }
         }

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreData
 
 class HomeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -14,9 +15,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     @IBOutlet weak var labelTempMaxMin: UILabel!
     @IBOutlet weak var labelTempRessenti: UILabel!
     @IBOutlet weak var tableViewJoursSuivants: UITableView!
-    
-    let leContexte = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    
+
     
     var ville : [CityEntity] = []
     var pageActuelle : Int = 0;
@@ -25,15 +24,24 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Loading..."
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            fatalError("Could not access app delegate")
+        }
+        let leContexte = appDelegate.persistentContainer.viewContext
         if(ville.count != 0){
-            fetchWeatherData(context: leContexte, for: ville[0]) { result in
-                switch(result){
-                case .success(let weatherData):
-                    self.chargerLesDonneesVille(weatherData: weatherData)
-                    self.joursSuivants = weatherData.sortedTemperatureForecastDaily
-                    self.tableViewJoursSuivants.reloadData()
-                case .failure:
-                    break
+            let cityentity = self.ville[0]
+            Task{
+                do{
+                    let weatherData = try await fetchWeatherData(context: leContexte, for: cityentity)
+                    print("Weather data loaded for \(cityentity.name)")
+                    DispatchQueue.main.async{
+                        self.chargerLesDonneesVille(weatherData: weatherData)
+                        self.joursSuivants = weatherData.sortedTemperatureForecastDaily
+                        self.tableViewJoursSuivants.reloadData()
+                    }
+                }
+                catch (let error){
+                    print("Error: \(error)")
                 }
             }
         }
@@ -47,24 +55,22 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func chargerLesDonneesVille(weatherData : WeatherData){
-        DispatchQueue.main.async{
-            let ville = weatherData.city!;
-            self.title = ville.name
-            self.imageDescriptionTemps.image = UIImage(named: "\(weatherData.currentTemperatureForecast!.icon!).png")
-            self.labelTemp.text = "\(String(Int(weatherData.currentTemperatureForecast!.temp)+1))°C"
-            let fullString = NSMutableAttributedString(string : "\(String(Int((weatherData.currentTemperatureForecast!.temp_min))))°C ")
-            let imageUpArrow = NSTextAttachment()
-            imageUpArrow.image = UIImage(systemName: "arrow.up")
-            let imageUpArrowAttach = NSAttributedString(attachment: imageUpArrow)
-            let imageDownArrow = NSTextAttachment()
-            imageDownArrow.image = UIImage(systemName: "arrow.down")
-            let imageDownArrowAttach = NSAttributedString(attachment: imageDownArrow)
-            fullString.append(imageDownArrowAttach)
-            fullString.append(NSAttributedString(string: " \(String(Int((weatherData.currentTemperatureForecast!.temp_max))+1))°C "))
-            fullString.append(imageUpArrowAttach)
-            self.labelTempMaxMin.attributedText = fullString
-            self.labelTempRessenti.text = "Ressenti : \(String(Int((weatherData.currentTemperatureForecast!.feels_like))+1))°C"
-        }
+        let ville = ville[0];
+        self.title = ville.name
+        self.imageDescriptionTemps.image = UIImage(named: "\(weatherData.currentTemperatureForecast!.icon!).png")
+        self.labelTemp.text = "\(String(Int(weatherData.currentTemperatureForecast!.temp)+1))°C"
+        let fullString = NSMutableAttributedString(string : "\(String(Int((weatherData.currentTemperatureForecast!.temp_min))))°C ")
+        let imageUpArrow = NSTextAttachment()
+        imageUpArrow.image = UIImage(systemName: "arrow.up")
+        let imageUpArrowAttach = NSAttributedString(attachment: imageUpArrow)
+        let imageDownArrow = NSTextAttachment()
+        imageDownArrow.image = UIImage(systemName: "arrow.down")
+        let imageDownArrowAttach = NSAttributedString(attachment: imageDownArrow)
+        fullString.append(imageDownArrowAttach)
+        fullString.append(NSAttributedString(string: " \(String(Int((weatherData.currentTemperatureForecast!.temp_max))+1))°C "))
+        fullString.append(imageUpArrowAttach)
+        self.labelTempMaxMin.attributedText = fullString
+        self.labelTempRessenti.text = "Ressenti : \(String(Int((weatherData.currentTemperatureForecast!.feels_like))+1))°C"
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21513" systemVersion="22D68" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="CityEntity" representedClassName="CityEntity" syncable="YES">
+    <entity name="CityEntity" representedClassName="CityEntity" syncable="YES" codeGenerationType="class">
         <attribute name="country" optional="YES" attributeType="String"/>
         <attribute name="favorite" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="id" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="lat" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="lon" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="state" optional="YES" attributeType="String"/>
-        <relationship name="weatherData" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WeatherData" inverseName="city" inverseEntity="WeatherData"/>
     </entity>
-    <entity name="Favorites" representedClassName="Favorites" syncable="YES">
+    <entity name="Favorites" representedClassName="Favorites" syncable="YES" codeGenerationType="class">
         <relationship name="cities" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="CityEntity"/>
     </entity>
-    <entity name="TemperatureForecast" representedClassName="TemperatureForecast" syncable="YES">
+    <entity name="TemperatureForecast" representedClassName="TemperatureForecast" syncable="YES" codeGenerationType="class">
         <attribute name="dt" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="dt_txt" optional="YES" attributeType="String"/>
         <attribute name="feels_like" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
@@ -27,9 +26,9 @@
         <attribute name="weatherDescription" optional="YES" attributeType="String"/>
         <attribute name="windDeg" optional="YES" attributeType="Integer 32" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="windSpeed" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <relationship name="weatherData" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WeatherData" inverseName="temperatureForecast" inverseEntity="WeatherData"/>
+        <relationship name="weatherData" maxCount="1" deletionRule="Nullify" destinationEntity="WeatherData" inverseName="temperatureForecast" inverseEntity="WeatherData"/>
     </entity>
-    <entity name="TemperatureForecastDaily" representedClassName="TemperatureForecastDaily" syncable="YES">
+    <entity name="TemperatureForecastDaily" representedClassName="TemperatureForecastDaily" syncable="YES" codeGenerationType="class">
         <attribute name="clouds" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="dt" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="feels_like_day" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
@@ -56,12 +55,10 @@
         <attribute name="weather_main" optional="YES" attributeType="String"/>
         <attribute name="wind_deg" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="wind_speed" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
-        <relationship name="weatherData" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="WeatherData" inverseName="temperatureForecastDaily" inverseEntity="WeatherData"/>
+        <relationship name="weatherData" maxCount="1" deletionRule="Nullify" destinationEntity="WeatherData" inverseName="temperatureForecastDaily" inverseEntity="WeatherData"/>
     </entity>
-    <entity name="WeatherData" representedClassName="WeatherData" syncable="YES">
-        <attribute name="sunrise" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="sunset" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
-        <relationship name="city" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CityEntity" inverseName="weatherData" inverseEntity="CityEntity"/>
+    <entity name="WeatherData" representedClassName="WeatherData" syncable="YES" codeGenerationType="class">
+        <relationship name="city" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CityEntity"/>
         <relationship name="temperatureForecast" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TemperatureForecast" inverseName="weatherData" inverseEntity="TemperatureForecast"/>
         <relationship name="temperatureForecastDaily" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="TemperatureForecastDaily" inverseName="weatherData" inverseEntity="TemperatureForecastDaily"/>
     </entity>

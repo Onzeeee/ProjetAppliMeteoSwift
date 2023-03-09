@@ -15,9 +15,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "25"
-            endingLineNumber = "25"
-            landmarkName = "testGetUserLocation()"
-            landmarkType = "7">
+            endingLineNumber = "25">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -31,9 +29,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "224"
-            endingLineNumber = "224"
-            landmarkName = "fetchWeatherData(context:for:completion:)"
-            landmarkType = "9">
+            endingLineNumber = "224">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -47,9 +43,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "223"
-            endingLineNumber = "223"
-            landmarkName = "fetchWeatherData(context:for:completion:)"
-            landmarkType = "9">
+            endingLineNumber = "223">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

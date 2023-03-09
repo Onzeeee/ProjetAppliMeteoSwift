@@ -74,6 +74,7 @@ final class CityTest: XCTestCase {
         let cities = loadCitiesFromJson(context: context)
         let city = cities[0]
         print("City: \(city.name)")
+        city.name = "Ortelle"
         print("Favorite: \(city.favorite)")
         let favorite = city.favorite
         toggleFavorite(city: city, context: context)
@@ -82,6 +83,12 @@ final class CityTest: XCTestCase {
         toggleFavorite(city: city, context: context)
         print("Favorite: \(city.favorite)")
         XCTAssertEqual(city.favorite, favorite)
+        do{
+            try context.save()
+        }
+        catch{
+            XCTFail("Error saving context: \(error)")
+        }
     }
     
     func testFindFavoritesCities(){
@@ -101,7 +108,12 @@ final class CityTest: XCTestCase {
         else{
             XCTAssertEqual(cities2.count, num+1)
         }
-
+        do{
+            try context.save()
+        }
+        catch{
+            XCTFail("Error saving context: \(error)")
+        }
     }
 
     func testPerformanceExample() throws {

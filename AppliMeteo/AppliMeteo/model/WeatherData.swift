@@ -7,178 +7,128 @@
 
 import CoreData
 
+func performRequest(url: URL) async throws -> [String: Any] {
+    let (data, response) = try await URLSession.shared.data(from: url)
+    guard let httpResponse = response as? HTTPURLResponse,
+          httpResponse.statusCode == 200 else {
+        throw NSError(domain: NSURLErrorDomain, code: NSURLErrorBadServerResponse, userInfo: nil)
+    }
+    guard let jsonObject = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+        throw NSError(domain: NSURLErrorDomain, code: NSURLErrorBadServerResponse, userInfo: nil)
+    }
+    return jsonObject
+}
 
-func fetchWeatherDataFromLonLat(context: NSManagedObjectContext, lon: Double, lat: Double, completion: @escaping (Result<WeatherData, Error>) -> Void){
+
+func fetchWeatherDataFromLonLat(context: NSManagedObjectContext, lon: Double, lat: Double) async throws -> WeatherData{
+
     let apiKey = ProcessInfo.processInfo.environment["OPENWEATHER_APIKEY"] ?? ""
     let urlstring = "https://api.openweathermap.org/data/2.5/forecast?lat=\(lat)&lon=\(lon)&units=metric&appid=\(apiKey)"
     let url = URL(string: urlstring)!
-    let task = URLSession.shared.dataTask(with: url) { data, response, error in
-        if let error = error {
-            completion(.failure(error))
-            return
+    let weatherDataJson = try await performRequest(url: url)
+    let city = weatherDataJson["city"] as! [String: Any]
+    let cityId = city["id"] as! Int32
+    let urlstring_dailyforecast = "https://api.openweathermap.org/data/2.5/forecast/daily?id=\(cityId)&units=metric&appid=\(apiKey)&cnt=16"
+    let url_daily = URL(string: urlstring_dailyforecast)!
+    let weatherDataJson_daily = try await performRequest(url: url_daily)
+    var weatherData: WeatherData?
+    await context.perform{
+        print("received weather data for city: \(city["name"] as! String)")
+        let list_forecast = weatherDataJson["list"] as! [[String: Any]]
+        weatherData = WeatherData(context: context)
+        guard let weatherData = weatherData else {
+            fatalError("weatherData is nil")
+        }
+        let CityEntityFromCoreData = CityEntity.fromId(id: cityId, context: context)
+        if(CityEntityFromCoreData == nil) {
+            print("City not found in core data, creating it... \(cityId as Int32)")
+            let NewCityEntity = CityEntity(context: context)
+            NewCityEntity.id = cityId
+            NewCityEntity.name = city["name"] as? String
+            NewCityEntity.country = city["country"] as? String
+            weatherData.city = NewCityEntity
+        }
+        else {
+            weatherData.city = CityEntityFromCoreData!
+        }
+        guard weatherData.city != nil else {
+            fatalError("weatherData.city is nil")
+        }
+        for forecast in list_forecast{
+            let main = forecast["main"] as! [String: Any]
+            let wind = forecast["wind"] as! [String: Any]
+            let weather = forecast["weather"] as! [[String: Any]]
+            let weather0 = weather[0]
+            let temperatureforecast = TemperatureForecast(context: context)
+            temperatureforecast.temp = main["temp"] as! Double
+            temperatureforecast.feels_like = main["feels_like"] as! Double
+            temperatureforecast.temp_min = main["temp_min"] as! Double
+            temperatureforecast.temp_max = main["temp_max"] as! Double
+            temperatureforecast.humidityLevel = main["humidity"] as! Int32
+            temperatureforecast.windSpeed = wind["speed"] as! Double
+            temperatureforecast.windDeg = wind["deg"] as! Int32
+            temperatureforecast.weatherDescription = weather0["description"] as? String
+            temperatureforecast.icon = weather0["icon"] as? String
+            temperatureforecast.dt_txt = forecast["dt_txt"] as? String
+            temperatureforecast.dt = forecast["dt"] as! Int32
+            temperatureforecast.pressure = main["pressure"] as! Int32
+            temperatureforecast.visibility = forecast["visibility"] as! Int32
+            temperatureforecast.weatherData = weatherData
         }
 
-        guard let data = data, let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-            completion(.failure(NSError(domain: "Invalid response from server", code: 0, userInfo: nil)))
-            return
+        let list = weatherDataJson_daily["list"] as! [[String: Any]]
+        print("received daily weather data for city: \(city["name"] as! String)")
+        for dailyForecastJson in list {
+            let temp = dailyForecastJson["temp"] as! [String: Any]
+            let feels_like = dailyForecastJson["feels_like"] as! [String: Any]
+            let weather = dailyForecastJson["weather"] as! [[String: Any]]
+            let weather0 = weather[0]
+            let dailyForecast = TemperatureForecastDaily(context: context)
+            dailyForecast.dt = dailyForecastJson["dt"] as! Int32
+            dailyForecast.sunrise = dailyForecastJson["sunrise"] as! Int32
+            dailyForecast.sunset = dailyForecastJson["sunset"] as! Int32
+            dailyForecast.pressure = dailyForecastJson["pressure"] as! Int32
+            dailyForecast.humidity = dailyForecastJson["humidity"] as! Int32
+            dailyForecast.wind_speed = dailyForecastJson["speed"] as! Double
+            dailyForecast.wind_deg = dailyForecastJson["deg"] as! Int32
+            dailyForecast.clouds = dailyForecastJson["clouds"] as! Int32
+            dailyForecast.pop = dailyForecastJson["pop"] as? Double ?? 0.0
+            dailyForecast.rain = dailyForecastJson["rain"] as? Double ?? 0.0
+            dailyForecast.gust = dailyForecastJson["gust"] as? Double ?? 0.0
+            dailyForecast.temp_day = temp["day"] as! Double
+            dailyForecast.temp_min = temp["min"] as! Double
+            dailyForecast.temp_max = temp["max"] as! Double
+            dailyForecast.temp_night = temp["night"] as! Double
+            dailyForecast.temp_eve = temp["eve"] as! Double
+            dailyForecast.temp_morn = temp["morn"] as! Double
+            dailyForecast.feels_like_day = feels_like["day"] as! Double
+            dailyForecast.feels_like_night = feels_like["night"] as! Double
+            dailyForecast.feels_like_eve = feels_like["eve"] as! Double
+            dailyForecast.feels_like_morn = feels_like["morn"] as! Double
+            dailyForecast.weather_description = weather0["description"] as? String
+            dailyForecast.weather_icon = weather0["icon"] as? String
+            dailyForecast.weather_main = weather0["main"] as? String
+            dailyForecast.weather_id = Int32(weather0["id"] as? Int ?? 0)
+            dailyForecast.weatherData = weatherData
         }
-        do {
-            guard let weatherDataJson = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
-                completion(.failure(NSError(domain: "Invalid response from server", code: 0, userInfo: nil)))
-                return
-            }
-            let city = weatherDataJson["city"] as! [String: Any]
-            let name = city["name"] as! String
-            let sunrise = city["sunrise"] as! Int32
-            let sunset = city["sunset"] as! Int32
-            let country = city["country"] as! String
-            let list_forecast = weatherDataJson["list"] as! [[String: Any]]
-            let weatherData = WeatherData(context: context)
-            let cityId = city["id"] as! Int32
-            weatherData.sunrise = sunrise
-            weatherData.sunset = sunset
-            let cityentity = CityEntity.fromId(id: cityId, context: context)
-            if(cityentity == nil) {
-                let city = CityEntity(context: context)
-                city.id = cityId
-                city.name = name
-                city.country = country
-                weatherData.city = city
-            }
-            else {
-                weatherData.city = cityentity
-            }
-            for forecast in list_forecast{
-                let main = forecast["main"] as! [String: Any]
-                let temp = main["temp"] as! Double
-                let feels_like = main["feels_like"] as! Double
-                let temp_min = main["temp_min"] as! Double
-                let temp_max = main["temp_max"] as! Double
-                let humidity = main["humidity"] as! Int32
-                let wind = forecast["wind"] as! [String: Any]
-                let speed = wind["speed"] as! Double
-                let deg = wind["deg"] as! Int32
-                let weather = forecast["weather"] as! [[String: Any]]
-                let weather0 = weather[0]
-                let description = weather0["description"] as! String
-                let icon = weather0["icon"] as! String
-//                let iconUrl = "https://openweathermap.org/img/wn/"+icon+"@4x.png"
-                let dt_txt = forecast["dt_txt"] as! String
-                let dt = forecast["dt"] as! Int32
-                let pressure = main["pressure"] as! Int32
-                let visibility = forecast["visibility"] as! Int32
-                let temperatureforecast = TemperatureForecast(context: context)
-                temperatureforecast.temp = temp
-                temperatureforecast.feels_like = feels_like
-                temperatureforecast.temp_min = temp_min
-                temperatureforecast.temp_max = temp_max
-                temperatureforecast.humidityLevel = humidity
-                temperatureforecast.windSpeed = speed
-                temperatureforecast.windDeg = deg
-                temperatureforecast.weatherDescription = description
-                temperatureforecast.icon = icon
-                temperatureforecast.dt_txt = dt_txt
-                temperatureforecast.dt = dt
-                temperatureforecast.pressure = pressure
-                temperatureforecast.visibility = visibility
-                temperatureforecast.weatherData = weatherData
-            }
-            let urlstring2 = "https://api.openweathermap.org/data/2.5/forecast/daily?lat=\(lat)&lon=\(lon)&units=metric&appid=\(apiKey)"
-            let url2 = URL(string: urlstring2)!
-            let task2 = URLSession.shared.dataTask(with: url2) { data2, response2, error2 in
-                if let error = error2 {
-                    completion(.failure(error))
-                    return
-                }
-
-                guard let data = data2, let response = response2 as? HTTPURLResponse, response.statusCode == 200 else {
-                    completion(.failure(NSError(domain: "Invalid response from server", code: 0, userInfo: nil)))
-                    return
-                }
-                do {
-                    guard let weatherDataJson = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
-                        completion(.failure(NSError(domain: "Invalid response from server", code: 0, userInfo: nil)))
-                        return
-                    }
-
-                    let list = weatherDataJson["list"] as! [[String: Any]]
-                    print(list.count)
-                    for dailyForecastJson in list{
-                        let dt = dailyForecastJson["dt"] as! Int32
-                        let sunrise = dailyForecastJson["sunrise"] as! Int32
-                        let sunset = dailyForecastJson["sunset"] as! Int32
-                        let pressure = dailyForecastJson["pressure"] as! Int32
-                        let humidity = dailyForecastJson["humidity"] as! Int32
-                        let speed = dailyForecastJson["speed"] as! Double
-                        let deg = dailyForecastJson["deg"] as! Int32
-                        let clouds = dailyForecastJson["clouds"] as! Int32
-                        let pop = dailyForecastJson["pop"] as? Double ?? 0.0
-                        let rain = dailyForecastJson["rain"] as? Double ?? 0.0
-                        let gust = dailyForecastJson["gust"] as? Double ?? 0.0
-                        let temp = dailyForecastJson["temp"] as! [String: Any]
-                        let temp_day = temp["day"] as! Double
-                        let temp_min = temp["min"] as! Double
-                        let temp_max = temp["max"] as! Double
-                        let temp_night = temp["night"] as! Double
-                        let temp_eve = temp["eve"] as! Double
-                        let temp_morn = temp["morn"] as! Double
-                        let feels_like = dailyForecastJson["feels_like"] as! [String: Any]
-                        let feels_like_day = feels_like["day"] as! Double
-                        let feels_like_night = feels_like["night"] as! Double
-                        let feels_like_eve = feels_like["eve"] as! Double
-                        let feels_like_morn = feels_like["morn"] as! Double
-                        let weather = dailyForecastJson["weather"] as! [[String: Any]]
-                        let weather0 = weather[0]
-                        let description = weather0["description"] as! String
-                        let icon = weather0["icon"] as! String
-                        let main = weather0["main"] as! String
-                        let dailyForecast = TemperatureForecastDaily(context: context)
-                        dailyForecast.dt = dt
-                        dailyForecast.sunrise = sunrise
-                        dailyForecast.sunset = sunset
-                        dailyForecast.pressure = pressure
-                        dailyForecast.humidity = humidity
-                        dailyForecast.wind_speed = speed
-                        dailyForecast.wind_deg = deg
-                        dailyForecast.clouds = clouds
-                        dailyForecast.pop = pop
-                        dailyForecast.rain = rain
-                        dailyForecast.gust = gust
-                        dailyForecast.temp_day = temp_day
-                        dailyForecast.temp_min = temp_min
-                        dailyForecast.temp_max = temp_max
-                        dailyForecast.temp_night = temp_night
-                        dailyForecast.temp_eve = temp_eve
-                        dailyForecast.temp_morn = temp_morn
-                        dailyForecast.feels_like_day = feels_like_day
-                        dailyForecast.feels_like_night = feels_like_night
-                        dailyForecast.feels_like_eve = feels_like_eve
-                        dailyForecast.feels_like_morn = feels_like_morn
-                        dailyForecast.weather_description = description
-                        dailyForecast.weather_icon = icon
-                        dailyForecast.weather_main = main
-                        dailyForecast.weather_id = Int32(weather0["id"] as? Int ?? 0)
-                        dailyForecast.weatherData = weatherData
-                    }
-                    try context.save()
-                    completion(.success(weatherData))
-                }
-                catch {
-                    print("ERROR : \(error)")
-                    completion(.failure(error))
-                }
-            }
-            task2.resume()
-        } catch {
-            print("ERROR : \(error)")
-            completion(.failure(error))
+        do{
+            try context.save()
+        } catch let error {
+            fatalError("Error saving context: \(error)")
         }
     }
-    task.resume()
+
+    guard weatherData != nil else {
+        fatalError("weatherData is nil")
+    }
+    return weatherData!
 }
 
-func fetchWeatherData(context: NSManagedObjectContext, for cityEntity: CityEntity, completion: @escaping (Result<WeatherData, Error>) -> Void) {
-    fetchWeatherDataFromLonLat(context: context, lon: cityEntity.lon, lat: cityEntity.lat, completion: completion)
+func fetchWeatherData(context: NSManagedObjectContext, for cityEntity: CityEntity) async throws -> WeatherData {
+    print("fetchWeatherData for city \(String(describing: cityEntity.name)) with lon \(cityEntity.lon) and lat \(cityEntity.lat)")
+    let weatherData = try await fetchWeatherDataFromLonLat(context: context, lon: cityEntity.lon, lat: cityEntity.lat)
+    print("fetchWeatherData for city \(String(describing: cityEntity.name)) with id \(cityEntity.id) Done !")
+    return weatherData
 }
 
 func intToDate(unixTime: Int32) -> String {
@@ -207,12 +157,6 @@ func currentTemperature(weatherData: WeatherData) -> TemperatureForecast? {
 }
 
 extension WeatherData{
-    var sunriseDate: String{
-        return intToDate(unixTime: sunrise)
-    }
-    var sunsetDate: String{
-        return intToDate(unixTime: sunset)
-    }
     var currentTemperatureForecast: TemperatureForecast?{
         return currentTemperature(weatherData: self)
     }

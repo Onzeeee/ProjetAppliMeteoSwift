@@ -11,7 +11,7 @@ import CoreData
 
 final class WeatherDataTests: XCTestCase {
 
-    func testFetchWeatherData() {
+    func testFetchWeatherData() throws {
         let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
         let cities = loadCitiesFromJson(context: context)
@@ -21,47 +21,42 @@ final class WeatherDataTests: XCTestCase {
         }
         let expectation = XCTestExpectation(description: "Fetch weather data")
 
-        let id: Int32 = 6454159 // Orléans, FR
-        let city = findCityFromCoreDataById(id: id as Int32, context: context)
+        let id: Int32 = 2989317 // Orléans, FR
+        //let id: Int32 = 6455259 // Paris, FR
+        let city = CityEntity.fromId(id: id, context: context)
         if(city == nil){
             XCTFail("City not found")
             return
         }
         print("City: \(city!.name)")
-        if(city!.name != "Orléans"){
-            XCTFail("City not found")
-        }
 
-
-
-        fetchWeatherData(context: context, for: city!) { result in
-            switch result {
-            case .success(let weatherData):
+        Task{
+            do{
+                let weatherData = try await fetchWeatherData(context: context, for: city!)
                 print("Weather data: \(weatherData)")
-                let currentTemp: TemperatureForecast? = currentTemperature(weatherData: weatherData)
-                if(currentTemp == nil){
-                    XCTFail("Current temp not found")
+                if(weatherData == nil){
+                    XCTFail("Weather data not found")
                     return
                 }
-                print("Current temp time: \(currentTemp!.dt_txt)")
-                print("Current picto: \(currentTemp!.icon)")
-                print("Current temp: \(currentTemp!.temp)")
-                print("sunrise on \(intToDate(unixTime: weatherData.sunrise))")
-                print("daily forecast for \(weatherData.temperatureForecastDaily!.count) days")
-                let list = weatherData.sortedTemperatureForecastDaily
-                for day in list {
-                    print("Day: \(intToDate(unixTime: day.dt))")
-                    print("Picto: \(day.weather_icon)")
-                    print("Temp min: \(day.temp_min)")
-                    print("Temp max: \(day.temp_max)")
+                if(weatherData.city!.id != city!.id){
+                    XCTFail("Weather data city is not the same as the city")
+                    return
                 }
                 expectation.fulfill()
-            case .failure(let error):
-                XCTFail("Error fetching weather data: \(error.localizedDescription)")
+            }
+            catch{
+                XCTFail("Error: \(error)")
             }
         }
 
+
         wait(for: [expectation], timeout: 10.0)
+        do{
+            try context.save()
+        }
+        catch{
+            XCTFail("Error saving context: \(error)")
+        }
     }
 
 

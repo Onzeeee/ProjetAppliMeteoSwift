@@ -8,7 +8,7 @@
 import UIKit
 import CoreData
 
-class ViewControllerFavori: UIViewController, UISearchResultsUpdating, UISearchControllerDelegate, UINavigationBarDelegate, UITableViewDelegate, UITableViewDataSource{
+class ViewControllerFavori: UIViewController, UISearchResultsUpdating, UISearchControllerDelegate, UITableViewDelegate, UITableViewDataSource{
 
     @IBOutlet weak var editButton: UIBarButtonItem!
     @IBOutlet weak var tableView: UITableView!
@@ -61,6 +61,7 @@ class ViewControllerFavori: UIViewController, UISearchResultsUpdating, UISearchC
     var listeCities : [CityEntity] = []
     
     override func viewDidLoad() {
+
         listeCities = findFavoriteCitiesFromCoreData(context: (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext)
         let searchResultsController = SearchResultsTableViewController(style: .plain)
         searchResultsController.definesPresentationContext = true

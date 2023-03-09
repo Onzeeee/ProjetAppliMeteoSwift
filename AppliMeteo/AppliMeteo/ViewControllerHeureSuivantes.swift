@@ -16,18 +16,19 @@ class ViewControllerHeureSuivantes: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         if(villeActuelle != nil){
-            fetchWeatherDataFromLonLat(context: leContexte, lon: villeActuelle!.lon, lat: villeActuelle!.lat) { result in
-                switch result{
-                case .success(let weatherData):
+            Task{
+                do{
+                    let weatherData = try? await fetchWeatherData(context: leContexte, for: villeActuelle!)
+                    guard let weatherData else {return}
                     DispatchQueue.main.async {
-                        for index in 0..<8{
-                            let labelHeure = UILabel(frame: CGRect(x: 10+(100*index), y: 0, width: 80, height: 50))
+                        for index in 0..<weatherData.sortedTemperatureForecast.count{
+                            let labelHeure = UILabel(frame: CGRect(x: 10 + (100 * index), y: 0, width: 80, height: 50))
                             labelHeure.textAlignment = .center
                             labelHeure.font = .systemFont(ofSize: 25)
                             labelHeure.text = "\(intToDate(unixTime: weatherData.sortedTemperatureForecast[index].dt).components(separatedBy: " ")[1].components(separatedBy: ":")[0])h"
-                            let imageIcon = UIImageView(frame: CGRect(x: 5+(100*index), y: 58, width: 90, height: 90))
+                            let imageIcon = UIImageView(frame: CGRect(x: 5 + (100 * index), y: 58, width: 90, height: 90))
                             imageIcon.image = UIImage(named: "\(weatherData.sortedTemperatureForecast[index].icon!).png")
-                            let labelTemp = UILabel(frame: CGRect(x: 10+(100*index), y: 156, width: 80, height: 40))
+                            let labelTemp = UILabel(frame: CGRect(x: 10 + (100 * index), y: 156, width: 80, height: 40))
                             labelTemp.textAlignment = .center
                             labelTemp.font = .systemFont(ofSize: 20)
                             labelTemp.text = "\(Int(weatherData.sortedTemperatureForecast[index].temp))°C"
@@ -36,14 +37,9 @@ class ViewControllerHeureSuivantes: UIViewController {
                             self.viewScroll.addSubview(labelTemp)
                         }
                     }
-                    break
-                case .failure(let error):
-                    print(error)
                 }
             }
-        }
-        else{
-            print("Pas de ville")
+
         }
         // Do any additional setup after loading the view.
     }

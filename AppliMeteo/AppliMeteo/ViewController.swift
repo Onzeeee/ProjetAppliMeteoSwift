@@ -7,18 +7,20 @@
 
 import UIKit
 
-class HomeViewController: UIViewController {
+class HomeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var imageDescriptionTemps: UIImageView!
     @IBOutlet weak var labelTemp: UILabel!
     @IBOutlet weak var labelTempMaxMin: UILabel!
     @IBOutlet weak var labelTempRessenti: UILabel!
+    @IBOutlet weak var tableViewJoursSuivants: UITableView!
     
     let leContexte = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     
     var ville : [CityEntity] = []
     var pageActuelle : Int = 0;
+    var joursSuivants : [TemperatureForecastDaily] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,6 +30,8 @@ class HomeViewController: UIViewController {
                 switch(result){
                 case .success(let weatherData):
                     self.chargerLesDonneesVille(weatherData: weatherData)
+                    self.joursSuivants = weatherData.sortedTemperatureForecastDaily
+                    self.tableViewJoursSuivants.reloadData()
                 case .failure:
                     break
                 }
@@ -66,7 +70,17 @@ class HomeViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if(segue.identifier == "heuresSuivantes"){
             let sndVC = segue.destination as! ViewControllerHeureSuivantes
-            sndVC.villeActuelle = ville[0]
+            if(ville.count == 0){}
+            else{
+                sndVC.villeActuelle = ville[0]
+            }
+        }
+        else if(segue.identifier == "joursSuivants"){
+            let sndVC = segue.destination as! ViewControllerJoursSuivants
+            if(ville.count == 0){}
+            else{
+                sndVC.villeActuelle = ville[0]
+            }
         }
     }
 
@@ -80,6 +94,17 @@ class HomeViewController: UIViewController {
     static func getInstanceNil() -> HomeViewController {
         let vc = UIStoryboard (name: "Main", bundle: nil).instantiateViewController(withIdentifier: "HomeViewController") as! HomeViewController
         return vc
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return joursSuivants.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableViewJoursSuivants.dequeueReusableCell(withIdentifier: "maCellule", for: indexPath)
+        cell.textLabel!.text = intToDate(unixTime: joursSuivants[indexPath.row].dt).components(separatedBy: " ")[0]
+        cell.detailTextLabel!.text = "\(String(Int(joursSuivants[indexPath.row].temp_day)))°C"
+        return cell
     }
 
 }

@@ -24,10 +24,15 @@ class PageViewController: UIPageViewController,
     var currentCity : CityEntity?
     var currentLocationAdded = false
     let locationManager = CLLocationManager()
+    var seuleVille = false
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        initFavoris()
+        if(seuleVille){
+            initFavoris(seule : seuleVille)
+        }else{
+            initFavoris(seule : seuleVille)
+        }
     }
 
     override func viewDidLoad() {
@@ -46,7 +51,7 @@ class PageViewController: UIPageViewController,
         super.viewDidLoad()
     }
 
-    func initFavoris(){
+    func initFavoris(seule : Bool){
         listeCities.removeAll()
 
         let favs = findFavoriteCitiesFromCoreData(context: leContexte)

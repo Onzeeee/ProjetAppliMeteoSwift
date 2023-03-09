@@ -20,7 +20,7 @@ class ViewControllerPourPageControl: UIViewController {
     var currentCity : CityEntity!
     let leContexte = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     @IBOutlet weak var boutonFavori: UIButton!
-    @IBOutlet weak var imageFond: UIImageView!
+    var seuleVille = false
     
     override func viewDidLoad() {
         super.viewDidLoad()

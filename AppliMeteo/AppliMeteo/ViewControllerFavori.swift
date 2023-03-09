@@ -104,13 +104,13 @@ class ViewControllerFavori: UIViewController, UISearchResultsUpdating, UISearchC
             }
             let storyBoard = UIStoryboard(name: "Main", bundle: nil)
             
-            let VC = storyBoard.instantiateViewController(withIdentifier: "HomeViewController") as! HomeViewController
+            let VC = storyBoard.instantiateViewController(withIdentifier: "ViewControllerPourPageControl") as! ViewControllerPourPageControl
             
             tableView.deselectRow(at: indexPath, animated: true)
             
-            VC.ville.append(listeCities[indexPath.row])
+            VC.seuleVille = true
             
-            self.navigationController?.pushViewController(VC, animated: true)
+//            self.navigationController?.pushViewController(VC, animated: true)
         }
     
         func didDismissSearchController(_ searchController: UISearchController) {

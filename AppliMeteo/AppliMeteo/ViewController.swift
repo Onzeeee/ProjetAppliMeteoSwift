@@ -55,6 +55,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func chargerLesDonneesVille(weatherData : WeatherData){
+        if(weatherData.city == nil){
+            print("Error: city is nil : \(weatherData.city) for city \(ville[0].name) (not a probem in this case since we have the city entity, but something with the model should be wrong)")
+        }
         let ville = ville[0];
         self.title = ville.name
         self.imageDescriptionTemps.image = UIImage(named: "\(weatherData.currentTemperatureForecast!.icon!).png")

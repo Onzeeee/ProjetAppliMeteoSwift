@@ -23,7 +23,7 @@ func performRequest(url: URL) async throws -> [String: Any] {
 func fetchWeatherDataFromLonLat(context: NSManagedObjectContext, lon: Double, lat: Double) async throws -> WeatherData{
 
     let apiKey = ProcessInfo.processInfo.environment["OPENWEATHER_APIKEY"] ?? ""
-    let urlstring = "https://api.openweathermap.org/data/2.5/forecast?lat=\(lat)&lon=\(lon)&units=metric&appid=\(apiKey)"
+    let urlstring = "https://pro.openweathermap.org/data/2.5/forecast/hourly?lat=\(lat)&lon=\(lon)&units=metric&appid=\(apiKey)"
     let url = URL(string: urlstring)!
     let weatherDataJson = try await performRequest(url: url)
     let city = weatherDataJson["city"] as! [String: Any]

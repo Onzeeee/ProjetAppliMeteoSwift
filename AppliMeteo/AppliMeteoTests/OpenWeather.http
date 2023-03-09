@@ -3,7 +3,7 @@ GET https://api.openweathermap.org/data/2.5/forecast?id=6454159&units=metric&app
 Accept: application/json
 
 ### GET request with a header
-GET https://api.openweathermap.org/data/2.5/forecast?lat=37.785834&lon=-122.406417&units=metric&appid=$(OPENWEATHER_APIKEY)
+GET https://pro.openweathermap.org/data/2.5/forecast/hourly?lat=37.785834&lon=-122.406417&units=metric&appid=a426b9f2f27a821c5ebd69e882daff65
 Accept: application/json
 
 ### GET request with a header

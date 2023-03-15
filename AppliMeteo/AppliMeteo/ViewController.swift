@@ -23,6 +23,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableViewJoursSuivants.isScrollEnabled = false
         title = "Loading..."
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
             fatalError("Could not access app delegate")
@@ -84,13 +85,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 sndVC.villeActuelle = ville[0]
             }
         }
-        else if(segue.identifier == "joursSuivants"){
-            let sndVC = segue.destination as! ViewControllerJoursSuivants
-            if(ville.count == 0){}
-            else{
-                sndVC.villeActuelle = ville[0]
-            }
-        }
     }
 
     static func getInstance(ville: CityEntity) -> HomeViewController {
@@ -110,9 +104,10 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableViewJoursSuivants.dequeueReusableCell(withIdentifier: "maCellule", for: indexPath)
-        cell.textLabel!.text = intToDate(unixTime: joursSuivants[indexPath.row].dt).components(separatedBy: " ")[0]
-        cell.detailTextLabel!.text = "\(String(Int(joursSuivants[indexPath.row].temp_day)))°C"
+        let cell = tableViewJoursSuivants.dequeueReusableCell(withIdentifier: "maCellule", for: indexPath) as! TableViewCellJoursSuivants
+        cell.dateJour.text = intToDate(unixTime: joursSuivants[indexPath.row].dt).components(separatedBy: " ")[0]
+        cell.tempJour.text = "\(String(Int(joursSuivants[indexPath.row].temp_day)))°C"
+        cell.minMaxJour.text = "test"
         return cell
     }
 

@@ -10,8 +10,9 @@ import UIKit
 class TableViewCellJoursSuivants: UITableViewCell {
 
     @IBOutlet weak var dateJour: UILabel!
-    @IBOutlet weak var tempJour: UILabel!
-    @IBOutlet weak var minMaxJour: UILabel!
+    @IBOutlet weak var tempMin: UILabel!
+    @IBOutlet weak var tempMax: UILabel!
+    @IBOutlet weak var imagePicto: UIImageView!
     
     override func awakeFromNib() {
         super.awakeFromNib()

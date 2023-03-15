@@ -20,6 +20,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     var ville : [CityEntity] = []
     var pageActuelle : Int = 0;
     var joursSuivants : [TemperatureForecastDaily] = []
+    var tempMaxJoursSuivants : Int?
+    var tempMinJoursSuivants : Int?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +40,16 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                     DispatchQueue.main.async{
                         self.chargerLesDonneesVille(weatherData: weatherData)
                         self.joursSuivants = weatherData.sortedTemperatureForecastDaily
+                        self.tempMaxJoursSuivants = Int(self.joursSuivants[0].temp_max)
+                        self.tempMinJoursSuivants = Int(self.joursSuivants[0].temp_min)
+                        for days in 1..<self.joursSuivants.count{
+                            if(Int(self.joursSuivants[days].temp_min) < self.tempMinJoursSuivants!){
+                                self.tempMinJoursSuivants = Int(self.joursSuivants[days].temp_min)
+                            }
+                            if(Int(self.joursSuivants[days].temp_max) > self.tempMaxJoursSuivants!){
+                                self.tempMaxJoursSuivants = Int(self.joursSuivants[days].temp_max)
+                            }
+                        }
                         self.tableViewJoursSuivants.reloadData()
                     }
                 }
@@ -103,11 +115,47 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         return joursSuivants.count
     }
     
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 55
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let layerColor = CALayer()
+        let layerFond = CALayer()
+        
+        let tailleparDegre = 179 / (tempMaxJoursSuivants! - tempMinJoursSuivants!)
+        
+        print("Taille par degre = \(tailleparDegre)")
+        
+        var xColor = 167
+        var widthColor = 179
+        if(Int(joursSuivants[indexPath.row].temp_min) == tempMinJoursSuivants){}
+        else{
+            let tailleDiff = Int(joursSuivants[indexPath.row].temp_min) - tempMinJoursSuivants!
+            xColor = xColor + (tailleDiff*tailleparDegre)
+            widthColor = widthColor - (tailleDiff*tailleparDegre)
+        }
+        if(Int(joursSuivants[indexPath.row].temp_max) == tempMaxJoursSuivants){}
+        else{
+            let tailleDiff = tempMaxJoursSuivants! - Int(joursSuivants[indexPath.row].temp_max)
+            widthColor = widthColor - (tailleDiff*tailleparDegre)
+        }
+        
+        layerColor.frame = CGRect(x: xColor, y: 25, width: widthColor, height: 7)
+        layerColor.backgroundColor = CGColor(red: 0.45, green: 0.7, blue: 1, alpha: 1)
+        layerColor.cornerRadius = 3
+        
+        
+        layerFond.frame = CGRect(x: 167, y: 25, width: 179, height: 7)
+        layerFond.backgroundColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.3)
+        layerFond.cornerRadius = 3
         let cell = tableViewJoursSuivants.dequeueReusableCell(withIdentifier: "maCellule", for: indexPath) as! TableViewCellJoursSuivants
+        cell.layer.addSublayer(layerFond)
+        cell.layer.addSublayer(layerColor)
         cell.dateJour.text = intToDate(unixTime: joursSuivants[indexPath.row].dt).components(separatedBy: " ")[0]
-        cell.tempJour.text = "\(String(Int(joursSuivants[indexPath.row].temp_day)))°C"
-        cell.minMaxJour.text = "test"
+        cell.tempMin.text = "\(String(Int(joursSuivants[indexPath.row].temp_min)))°C"
+        cell.tempMax.text = "\(String(Int(joursSuivants[indexPath.row].temp_max)))°C"
+        cell.imagePicto.image = UIImage(named: "\(joursSuivants[indexPath.row].weather_icon!).png")
         return cell
     }
 

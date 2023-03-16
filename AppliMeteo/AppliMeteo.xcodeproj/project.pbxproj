@@ -17,6 +17,7 @@
 		3B857BE229AE9DE600A1C87E /* ViewControllerImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B857BE129AE9DE600A1C87E /* ViewControllerImage.swift */; };
 		3B857BE429AE9E3000A1C87E /* PageControllerImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B857BE329AE9E3000A1C87E /* PageControllerImage.swift */; };
 		3B857BE629AFB73900A1C87E /* ViewControllerPourPageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B857BE529AFB73900A1C87E /* ViewControllerPourPageControl.swift */; };
+		3B9341F129C1CC5000E809AB /* TableViewCellJoursSuivants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9341F029C1CC5000E809AB /* TableViewCellJoursSuivants.swift */; };
 		3B9D45E029A6871800510517 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9D45DF29A6871800510517 /* AppDelegate.swift */; };
 		3B9D45E229A6871800510517 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9D45E129A6871800510517 /* SceneDelegate.swift */; };
 		3B9D45E429A6871800510517 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9D45E329A6871800510517 /* ViewController.swift */; };
@@ -27,7 +28,6 @@
 		3BB5416429AA6EEA000445BA /* ViewControllerFavori.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BB5416329AA6EEA000445BA /* ViewControllerFavori.swift */; };
 		3BB5416629AA6EF8000445BA /* ViewControllerDetailsVille.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BB5416529AA6EF8000445BA /* ViewControllerDetailsVille.swift */; };
 		3BB5739B29B8C13A00AB9867 /* ViewControllerHeureSuivantes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BB5739A29B8C13A00AB9867 /* ViewControllerHeureSuivantes.swift */; };
-		3BB5739D29B9DD6000AB9867 /* ViewControllerJoursSuivants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BB5739C29B9DD6000AB9867 /* ViewControllerJoursSuivants.swift */; };
 		D51D50734362BD2D379A9D3A /* UINavigationItemDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51D5DA843CABACCA0A4F6CE /* UINavigationItemDate.swift */; };
 		D51D52BDFA4493453C029CD9 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51D5882F7B91B5E4247FCE2 /* Location.swift */; };
 		D51D52F62F26399DB235FCB8 /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51D54FD76C1961117115AD7 /* City.swift */; };
@@ -56,6 +56,7 @@
 		3B857BE129AE9DE600A1C87E /* ViewControllerImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerImage.swift; sourceTree = "<group>"; };
 		3B857BE329AE9E3000A1C87E /* PageControllerImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageControllerImage.swift; sourceTree = "<group>"; };
 		3B857BE529AFB73900A1C87E /* ViewControllerPourPageControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerPourPageControl.swift; sourceTree = "<group>"; };
+		3B9341F029C1CC5000E809AB /* TableViewCellJoursSuivants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCellJoursSuivants.swift; sourceTree = "<group>"; };
 		3B9D45DC29A6871800510517 /* AppliMeteo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppliMeteo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B9D45DF29A6871800510517 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3B9D45E129A6871800510517 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -67,7 +68,6 @@
 		3BB5416329AA6EEA000445BA /* ViewControllerFavori.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerFavori.swift; sourceTree = "<group>"; };
 		3BB5416529AA6EF8000445BA /* ViewControllerDetailsVille.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerDetailsVille.swift; sourceTree = "<group>"; };
 		3BB5739A29B8C13A00AB9867 /* ViewControllerHeureSuivantes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerHeureSuivantes.swift; sourceTree = "<group>"; };
-		3BB5739C29B9DD6000AB9867 /* ViewControllerJoursSuivants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerJoursSuivants.swift; sourceTree = "<group>"; };
 		D51D531A1DFDD5428782D96A /* OpenWeather.http */ = {isa = PBXFileReference; lastKnownFileType = file.http; path = OpenWeather.http; sourceTree = "<group>"; };
 		D51D539F11D590F976325E77 /* AppliMeteoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AppliMeteoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D51D54FD76C1961117115AD7 /* City.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
@@ -129,13 +129,13 @@
 				3BB5416329AA6EEA000445BA /* ViewControllerFavori.swift */,
 				3BB5416529AA6EF8000445BA /* ViewControllerDetailsVille.swift */,
 				3B857BE529AFB73900A1C87E /* ViewControllerPourPageControl.swift */,
-				3BB5739C29B9DD6000AB9867 /* ViewControllerJoursSuivants.swift */,
 				3B9D45E529A6871800510517 /* Main.storyboard */,
 				3B9D45EB29A6871A00510517 /* Assets.xcassets */,
 				3B9D45ED29A6871A00510517 /* LaunchScreen.storyboard */,
 				3B9D45F029A6871A00510517 /* Info.plist */,
 				3B9D45E829A6871800510517 /* AppliMeteo.xcdatamodeld */,
 				D51D533418717573C228A898 /* model */,
+				3B9341F029C1CC5000E809AB /* TableViewCellJoursSuivants.swift */,
 			);
 			path = AppliMeteo;
 			sourceTree = "<group>";
@@ -306,7 +306,6 @@
 				3B9D45E429A6871800510517 /* ViewController.swift in Sources */,
 				3B857BE229AE9DE600A1C87E /* ViewControllerImage.swift in Sources */,
 				3B857BE029AE441E00A1C87E /* PageViewController.swift in Sources */,
-				3BB5739D29B9DD6000AB9867 /* ViewControllerJoursSuivants.swift in Sources */,
 				3B857BE629AFB73900A1C87E /* ViewControllerPourPageControl.swift in Sources */,
 				3B9D45E029A6871800510517 /* AppDelegate.swift in Sources */,
 				3B9D45E229A6871800510517 /* SceneDelegate.swift in Sources */,
@@ -316,6 +315,7 @@
 				3BB5739B29B8C13A00AB9867 /* ViewControllerHeureSuivantes.swift in Sources */,
 				3B857BE429AE9E3000A1C87E /* PageControllerImage.swift in Sources */,
 				D51D52F62F26399DB235FCB8 /* City.swift in Sources */,
+				3B9341F129C1CC5000E809AB /* TableViewCellJoursSuivants.swift in Sources */,
 				3BB5416629AA6EF8000445BA /* ViewControllerDetailsVille.swift in Sources */,
 				D51D52BDFA4493453C029CD9 /* Location.swift in Sources */,
 				D51D50734362BD2D379A9D3A /* UINavigationItemDate.swift in Sources */,

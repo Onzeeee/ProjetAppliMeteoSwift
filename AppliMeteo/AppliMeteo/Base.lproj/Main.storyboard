@@ -142,7 +142,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DeF-4e-FYL">
-                                <rect key="frame" x="0.0" y="462" width="392" height="197"/>
+                                <rect key="frame" x="-1" y="462" width="392" height="197"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <connections>
                                     <segue destination="Lci-aR-RTT" kind="embed" identifier="heuresSuivantes" id="OEg-bh-lRQ"/>
@@ -332,7 +332,7 @@
                                 </connections>
                             </mapView>
                             <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2d7-cC-sVT">
-                                <rect key="frame" x="-10" y="562" width="403" height="290"/>
+                                <rect key="frame" x="-11" y="562" width="403" height="290"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <connections>
                                     <segue destination="lxA-TR-UYZ" kind="embed" identifier="" id="3Nd-pU-JKJ"/>

@@ -12,6 +12,10 @@
     <entity name="Favorites" representedClassName="Favorites" syncable="YES" codeGenerationType="class">
         <relationship name="cities" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="CityEntity"/>
     </entity>
+    <entity name="SearchHistory" representedClassName="SearchHistory" syncable="YES" codeGenerationType="class">
+        <attribute name="date" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="searchString" attributeType="String" defaultValueString=""/>
+    </entity>
     <entity name="TemperatureForecast" representedClassName="TemperatureForecast" syncable="YES" codeGenerationType="class">
         <attribute name="dt" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="dt_txt" optional="YES" attributeType="String"/>

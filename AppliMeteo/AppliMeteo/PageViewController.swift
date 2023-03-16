@@ -24,15 +24,10 @@ class PageViewController: UIPageViewController,
     var currentCity : CityEntity?
     var currentLocationAdded = false
     let locationManager = CLLocationManager()
-    var seuleVille = false
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if(seuleVille){
-            initFavoris(seule : seuleVille)
-        }else{
-            initFavoris(seule : seuleVille)
-        }
+        initFavoris()
     }
 
     override func viewDidLoad() {
@@ -51,10 +46,12 @@ class PageViewController: UIPageViewController,
         super.viewDidLoad()
     }
 
-    func initFavoris(seule : Bool){
+    func initFavoris(){
         listeCities.removeAll()
 
         let favs = findFavoriteCitiesFromCoreData(context: leContexte)
+        print("nb favs")
+        print(favs.count)
         if(favs.count != 0){
             let oldindex = currentIndex
             // remove all pages except the first one
@@ -62,14 +59,21 @@ class PageViewController: UIPageViewController,
             if(currentCity != nil){
                 self.currentLocationAdded = true
                 listeCities.append(currentCity!)
+                if(cityViews[currentCity!.id] == nil){
+                    cityViews[currentCity!.id] = HomeViewController.getInstance(ville : currentCity!)
+                }
+                self.pageViewDelegate?.mettrePosActuellePageControle()
                 //pages.append(HomeViewController.getInstance(ville : currentCity!))
             }
 
             for i in 0..<favs.count{
-                listeCities.append(favs[i])
-                if(cityViews[favs[i].id] == nil){
-                    cityViews[favs[i].id] = HomeViewController.getInstance(ville : favs[i])
+                if(!listeCities.contains(where: {$0.id == favs[i].id})){
+                    listeCities.append(favs[i])
+                    if(cityViews[favs[i].id] == nil){
+                        cityViews[favs[i].id] = HomeViewController.getInstance(ville : favs[i])
+                    }
                 }
+                
                 //pages.append(HomeViewController.getInstance(ville : favs[i]))
             }
             var target = 0
@@ -88,6 +92,9 @@ class PageViewController: UIPageViewController,
         else{
             // todo il se passe des trucs bizarre quand on supprime tous les favoris et qu'on revient sur la page
             if(currentCity != nil){
+                if(cityViews[currentCity!.id] == nil){
+                    cityViews[currentCity!.id] = HomeViewController.getInstance(ville : currentCity!)
+                }
                 listeCities.append(currentCity!)
                 DispatchQueue.main.async() { [self] in
                     self.pageViewDelegate?.numberofpage(atIndex: 1, current: self.currentCity!)
@@ -153,19 +160,11 @@ class PageViewController: UIPageViewController,
                     fatalError("City is nil : \(weatherData)")
                 }
                 DispatchQueue.main.async { [self] in
-                    if(self.currentLocationAdded){
-                        self.listeCities.remove(at: 0)
-                        //self.pages.remove(at: 0)
-                    }
+                    
                     self.currentLocationAdded = true
                     self.currentCity = city
-                    self.listeCities.insert(city, at: 0)
-                    self.pageViewDelegate?.numberofpage(atIndex: self.listeCities.count, current: city)
-                    self.pageViewDelegate?.afficherFavori(ville: city)
-                    self.pageViewDelegate?.mettrePosActuellePageControle()
-                    self.pageViewDelegate?.changerTitle(title: city.name!)
-                    self.cityViews[city.id] = HomeViewController.getInstance(ville: city)
-                    self.setViewControllers([self.cityViews[city.id]!], direction: .reverse, animated: true, completion: nil)
+                    initFavoris()
+
                 }
             }
         }

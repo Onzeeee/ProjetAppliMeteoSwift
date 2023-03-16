@@ -15,6 +15,12 @@ class ViewControllerFavori: UIViewController, UISearchResultsUpdating, UISearchC
     @IBAction func onEditButtonTapped(_ sender: Any) {
         tableView.isEditing = !tableView.isEditing
     }
+    
+    
+    func didPresentSearchController(_ searchController: UISearchController) {
+        searchController.showsSearchResultsController = true
+    }
+    
     func updateSearchResults(for searchController: UISearchController) {
         let searchText = searchController.searchBar.text
         let searchResult = searchController.searchResultsController as! SearchResultsTableViewController
@@ -34,6 +40,9 @@ class ViewControllerFavori: UIViewController, UISearchResultsUpdating, UISearchC
     }
 
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        if(listeCities.count == 0){
+            return false
+        }
         return true
     }
 
@@ -53,7 +62,12 @@ class ViewControllerFavori: UIViewController, UISearchResultsUpdating, UISearchC
     }
     
     func willDismissSearchController(_ searchController: UISearchController) {
-        searchController.dismiss(animated: false)
+        searchController.dismiss(animated: true)
+        let text = searchController.searchBar.text ?? ""
+        if(text != ""){
+            let searchHistory = createSearchHistory(searchString: text, date: Date.now, context: (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext)
+        }
+        
     }
 
     @IBOutlet weak var home: UINavigationItem!
@@ -65,9 +79,11 @@ class ViewControllerFavori: UIViewController, UISearchResultsUpdating, UISearchC
         listeCities = findFavoriteCitiesFromCoreData(context: (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext)
         let searchResultsController = SearchResultsTableViewController(style: .plain)
         searchResultsController.definesPresentationContext = true
+        
         let searchController = UISearchController(searchResultsController: searchResultsController)
         searchController.searchResultsUpdater = self
-        
+        searchResultsController.searchController = searchController
+
         searchController.delegate = self
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.searchController = searchController
@@ -92,26 +108,33 @@ class ViewControllerFavori: UIViewController, UISearchResultsUpdating, UISearchC
             let cellule = tableView.dequeueReusableCell(withIdentifier: "maCellule",for: indexPath)
             if(listeCities.count == 0){
                 cellule.textLabel?.text = "Pas de ville ajoutés"
+                cellule.accessoryType = .none
             }
             else{
                 cellule.textLabel?.text = listeCities[indexPath.row].name
+                cellule.accessoryType = .detailButton
             }
             return cellule
         }
         
         func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+            print(indexPath)
             if(listeCities.count == 0){
                 return
             }
-            let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+            guard let previousViewController = navigationController?.viewControllers.reversed()[1] as? ViewControllerPourPageControl else {
+                    print("no previous controller")
+                    return
+                }
             
-            let VC = storyBoard.instantiateViewController(withIdentifier: "ViewControllerPourPageControl") as! ViewControllerPourPageControl
-            
-            tableView.deselectRow(at: indexPath, animated: true)
-            
-            VC.seuleVille = true
-            
-//            self.navigationController?.pushViewController(VC, animated: true)
+            let targetCity = listeCities[indexPath.row]
+            previousViewController.customPageViewController.initFavoris()
+            guard let targetCityIndex = previousViewController.customPageViewController.listeCities.firstIndex(where: { $0.id == targetCity.id }) else{
+                return
+            }
+                
+            previousViewController.customPageViewController.currentIndex = targetCityIndex
+            navigationController?.popViewController(animated: true)
         }
     
         func didDismissSearchController(_ searchController: UISearchController) {
@@ -129,7 +152,7 @@ class ViewControllerFavori: UIViewController, UISearchResultsUpdating, UISearchC
         }
         
         func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
-            if(tableView.isEditing){
+            if(tableView.isEditing || listeCities.count == 0){
                 return
             }
             let storyBoard = UIStoryboard(name: "Main", bundle: nil)
@@ -149,13 +172,14 @@ class ViewControllerFavori: UIViewController, UISearchResultsUpdating, UISearchC
 
 class SearchResultsTableViewController: UITableViewController {
     
+    var searchHistory: [SearchHistory] = []
+    
     let leContexte = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     var results: [CityEntity] = []
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return results.count
-    }
+    var searchController: UISearchController? = nil
+    
     
     func search(searchText: String, context: NSManagedObjectContext) {
         results = findCitiesFromCoreDataByName(name: searchText, context: context)
@@ -164,34 +188,74 @@ class SearchResultsTableViewController: UITableViewController {
         tableView.reloadData()
     }
     
+    
     override func viewDidLoad() {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        let name = results[indexPath.row].name
-        let country = results[indexPath.row].country
-        let state = results[indexPath.row].state
-        var str = name! + " " + country!
-        if(state != "") {
-            str += "/" + state!
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if(results.count == 0 && searchController != nil && searchController?.searchBar.text == ""){
+            searchController!.searchBar.text = searchHistory[indexPath.row].searchString
         }
-        cell.textLabel?.text = str
-        
-        let favoriteButton = UIButton(type: .custom)
-        favoriteButton.tag = indexPath.row
-        favoriteButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
-        favoriteButton.tintColor = .gray
-        favoriteButton.setImage(UIImage(systemName: "star"), for: .normal)
-        favoriteButton.setImage(UIImage(systemName: "star.fill"), for: .selected)
-        favoriteButton.isSelected = results[indexPath.row].favorite
-        favoriteButton.tag = indexPath.row
-        favoriteButton.addTarget(self, action: #selector(starButtonTapped(_ :)), for: .touchUpInside)
-        cell.accessoryView = favoriteButton
-        
-        return cell
     }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if(results.count == 0){
+            if(searchController?.searchBar.text != ""){
+                return 1
+            }
+            searchHistory = fetchHistoryOrdered(context: leContexte)
+            return searchHistory.count
+        }
+        return results.count
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if(results.count == 0){
+            if(searchController?.searchBar.text != ""){
+                let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+                cell.textLabel?.text = "Nothing found..."
+                cell.accessoryView = nil
+                return cell
+            }
+            print("display search history at index : "+String( indexPath.row) )
+            let index = indexPath.row
+            let historyString = searchHistory[index].searchString
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+            cell.textLabel?.text = historyString
+            
+            let arrowButton = UIButton(type: .custom)
+            arrowButton.tag = index
+            arrowButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+            arrowButton.setImage(UIImage(systemName: "arrow.up.right"), for: .normal)
+            cell.accessoryView = arrowButton
+            return cell
+        }
+        else{
+            let name = results[indexPath.row].name
+            let country = results[indexPath.row].country
+            let state = results[indexPath.row].state
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+            var str = name! + " " + country!
+            if(state != "") {
+                str += "/" + state!
+            }
+            cell.textLabel?.text = str
+            
+            let favoriteButton = UIButton(type: .custom)
+            favoriteButton.tag = indexPath.row
+            favoriteButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+            favoriteButton.setImage(UIImage(systemName: "star"), for: .normal)
+            favoriteButton.setImage(UIImage(systemName: "star.fill"), for: .selected)
+            favoriteButton.isSelected = results[indexPath.row].favorite
+            favoriteButton.addTarget(self, action: #selector(starButtonTapped(_ :)), for: .touchUpInside)
+            cell.accessoryView = favoriteButton
+            
+            return cell
+        }
+        
+    }
+    
     
     @objc func starButtonTapped(_ sender: UIButton) {
         DispatchQueue.main.async {

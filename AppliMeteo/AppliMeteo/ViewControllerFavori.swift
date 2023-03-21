@@ -260,7 +260,17 @@ class SearchResultsTableViewController: UITableViewController {
     @objc func starButtonTapped(_ sender: UIButton) {
         DispatchQueue.main.async {
             let city = self.results[sender.tag]
-            toggleFavorite(city: city, context: self.leContexte)
+            let listeCities = findFavoriteCitiesFromCoreData(context: (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext)
+            if(listeCities.count == 9){
+                let alertController = UIAlertController(title: "Attention", message: "Vous avez un maximum de 9 favoris.", preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "OK", style: .default) { (action) in}
+                alertController.addAction(okAction)
+
+                self.present(alertController, animated: true, completion: nil)
+            }
+            else{
+                toggleFavorite(city: city, context: self.leContexte)
+            }
             sender.isSelected = city.favorite
         }
     }

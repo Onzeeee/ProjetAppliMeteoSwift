@@ -7,18 +7,13 @@
 
 import UIKit
 
-protocol ViewControllerPourPageControlDelegate : class{
-    func changePageControlPage(atIndex : Int)
-}
-
 class ViewControllerPourPageControl: UIViewController {
 
-    
-    var pageViewDelegate : ViewControllerPourPageControlDelegate?
     @IBOutlet weak var pageControl: UIPageControl!
     var customPageViewController: PageViewController!
     var currentCity : CityEntity!
     let leContexte = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    @IBOutlet weak var imageFond: UIImageView!
     @IBOutlet weak var boutonFavori: UIButton!
     var seuleVille = false
     
@@ -28,8 +23,17 @@ class ViewControllerPourPageControl: UIViewController {
     }
     
     @IBAction func ajouterFavori(_ sender: Any) {
-        toggleFavorite(city: currentCity, context: leContexte)
-        afficherFavori(ville: currentCity)
+        let listeCities = findFavoriteCitiesFromCoreData(context: (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext)
+        if(listeCities.count == 9){
+            let alertController = UIAlertController(title: "Attention", message: "Vous avez un maximum de 9 favoris.", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "OK", style: .default) { (action) in}
+            alertController.addAction(okAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+        else{
+            toggleFavorite(city: currentCity, context: leContexte)
+            afficherFavori(ville: currentCity)
+        }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -37,10 +41,6 @@ class ViewControllerPourPageControl: UIViewController {
         customPageViewController = destinationViewController
         customPageViewController.pageViewDelegate = self
         }
-    }
-    
-    @IBAction func changePages(_ sender: UIPageControl  ) {
-        customPageViewController?.changePageControlPage(atIndex: pageControl.currentPage)
     }
 }
 

@@ -8,6 +8,7 @@
 import UIKit
 import CoreData
 
+
 class HomeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var imageDescriptionTemps: UIImageView!
@@ -27,7 +28,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     var joursSuivants : [TemperatureForecastDaily] = []
     var tempMaxJoursSuivants : Int?
     var tempMinJoursSuivants : Int?
-    var directionVent : [String:[Range<Double>]] = ["N":[0..<22.5],"NNE":[22.5..<45],"NE":[45..<67.5],"ENE":[67.5..<90],"E":[90..<112.5],"ESE":[112.5..<135],"SE":[135..<157.5],"SSE":[157.5..<180],"S":[180..<202.5],"SSO":[202.5..<225],"SO":[225..<247.5],"OSO":[247.5..<270],"O":[270..<292.5],"ONO":[292.5..<315],"NO":[315..<337.5],"NNO":[337.5..<360]]
+    var directionVent : [String:[Range<Double>]] = ["N":[0..<22.5],"NE":[22.5..<67.5],"E":[67.5..<112.5],"SE":[112.5..<157.5],"S":[157.5..<202.5],"SO":[202.5..<247.5],"O":[247.5..<292.5],"NO":[292.5..<337.5]]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,18 +47,6 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                     DispatchQueue.main.async{
                         print(weatherData)
                         self.chargerLesDonneesVille(weatherData: weatherData)
-                        self.joursSuivants = weatherData.sortedTemperatureForecastDaily
-                        self.tempMaxJoursSuivants = Int(self.joursSuivants[0].temp_max)
-                        self.tempMinJoursSuivants = Int(self.joursSuivants[0].temp_min)
-                        for days in 1..<14{
-                            if(Int(self.joursSuivants[days].temp_min) < self.tempMinJoursSuivants!){
-                                self.tempMinJoursSuivants = Int(self.joursSuivants[days].temp_min)
-                            }
-                            if(Int(self.joursSuivants[days].temp_max) > self.tempMaxJoursSuivants!){
-                                self.tempMaxJoursSuivants = Int(self.joursSuivants[days].temp_max)
-                            }
-                        }
-                        self.tableViewJoursSuivants.reloadData()
                     }
                 }
                 catch (let error){
@@ -78,7 +67,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         if(weatherData.city == nil){
             print("Error: city is nil : \(weatherData.city) for city \(ville[0].name) (not a probem in this case since we have the city entity, but something with the model should be wrong)")
         }
-        let ville = ville[0];
+        let ville = ville[0]
         self.title = ville.name
         self.imageDescriptionTemps.image = UIImage(named: "\(weatherData.currentTemperatureForecast!.icon!).png")
         self.labelTemp.text = "\(String(Int(weatherData.currentTemperatureForecast!.temp)+1))°C"
@@ -105,11 +94,26 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 }
             }
         }
+        if(Double(weatherData.currentTemperatureForecast!.windDeg)>337.5){
+            directionString = "N"
+        }
         self.windDir.text = directionString
         self.humidity.text = "\(String(weatherData.currentTemperatureForecast!.humidityLevel))%"
         let vitesseKmH = Int(weatherData.currentTemperatureForecast!.windSpeed*3.6)
         self.windSpeed.text = "\(vitesseKmH) km/h"
         self.pressure.text = "\(String(weatherData.currentTemperatureForecast!.pressure))hPa"
+        self.joursSuivants = weatherData.sortedTemperatureForecastDaily
+        self.tempMaxJoursSuivants = Int(self.joursSuivants[0].temp_max)
+        self.tempMinJoursSuivants = Int(self.joursSuivants[0].temp_min)
+        for days in 1..<14{
+            if(Int(self.joursSuivants[days].temp_min) < self.tempMinJoursSuivants!){
+                self.tempMinJoursSuivants = Int(self.joursSuivants[days].temp_min)
+            }
+            if(Int(self.joursSuivants[days].temp_max) > self.tempMaxJoursSuivants!){
+                self.tempMaxJoursSuivants = Int(self.joursSuivants[days].temp_max)
+            }
+        }
+        self.tableViewJoursSuivants.reloadData()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

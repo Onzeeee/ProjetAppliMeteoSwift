@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import CoreLocation
 
-protocol PageViewControllerDelegate : class{
+protocol PageViewControllerDelegate{
     func numberofpage(atIndex : Int, current: CityEntity)
     func pageChangeTo(atIndex : Int, current: CityEntity)
     func afficherFavori(ville : CityEntity)
@@ -13,8 +13,8 @@ protocol PageViewControllerDelegate : class{
 class PageViewController: UIPageViewController,
         UIPageViewControllerDataSource,
         UIPageViewControllerDelegate,
-        CLLocationManagerDelegate{
-
+                          CLLocationManagerDelegate{
+    
     var pageViewDelegate : PageViewControllerDelegate?
     var currentIndex = 0
     let leContexte = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -108,7 +108,8 @@ class PageViewController: UIPageViewController,
                 DispatchQueue.main.async() { [self] in
                     // todo changer le page control pour qu'il n'y ait qu'une page ( sans ville )
                     self.pageViewDelegate?.changerTitle(title: "Aucune ville en favori")
-                    self.setViewControllers([HomeViewController.getInstanceNil()], direction: .reverse, animated: true, completion: nil)
+                    let pageVilleVide = HomeViewController.getInstanceNil()
+                    self.setViewControllers([pageVilleVide], direction: .reverse, animated: true, completion: nil)
                 }
             }
         }
@@ -197,9 +198,6 @@ class PageViewController: UIPageViewController,
         pageViewDelegate?.pageChangeTo(atIndex: currentIndex, current: listeCities[currentIndex])
         pageViewDelegate?.afficherFavori(ville: listeCities[currentIndex])
         pageViewDelegate?.changerTitle(title: listeCities[currentIndex].name!)
-//        let icon = self.listeCities[currentIndex].weatherData?.currentTemperatureForecast?.icon!
-//        let premiereLettre = icon![icon!.index((icon!.startIndex), offsetBy: 0)]
-//        let deuxiemeLettre = icon![icon!.index((icon!.startIndex), offsetBy: 1)]
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
@@ -215,21 +213,4 @@ class PageViewController: UIPageViewController,
         currentIndex = viewControllerIndex
         title = listeCities[currentIndex].name
     }
-}
-
-extension PageViewController : ViewControllerPourPageControlDelegate{
-
-    func changePageControlPage(atIndex: Int) {
-        DispatchQueue.main.async() {
-            let direction: UIPageViewController.NavigationDirection = atIndex > self.currentIndex ? .forward : .reverse
-            self.pageViewDelegate?.afficherFavori(ville: self.listeCities[atIndex])
-            self.pageViewDelegate?.changerTitle(title: self.listeCities[atIndex].name!)
-            if(self.cityViews[self.listeCities[atIndex].id] == nil){
-                self.cityViews[self.listeCities[atIndex].id] = HomeViewController.getInstance(ville: self.listeCities[atIndex])
-            }
-            self.setViewControllers([self.cityViews[self.listeCities[atIndex].id]!], direction: direction, animated: true, completion: nil)
-            self.currentIndex = atIndex
-        }
-    }
-
 }

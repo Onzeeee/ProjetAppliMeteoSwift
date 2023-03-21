@@ -281,7 +281,6 @@
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="whv-rm-hAY"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <navigationItem key="navigationItem" id="aVj-32-mAG">
                         <barButtonItem key="backBarButtonItem" title="Retour" id="jkZ-fF-s1b"/>
@@ -317,7 +316,6 @@
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mTX-0c-MWe">
                                         <rect key="frame" x="0.0" y="0.0" width="2000" height="197"/>
-                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="2000" id="PfZ-vm-aPM"/>
                                         </constraints>
@@ -332,7 +330,6 @@
                             </scrollView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="dKX-JO-vOw"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="mTX-0c-MWe" firstAttribute="height" secondItem="w0w-oi-1yU" secondAttribute="height" id="Dig-gM-JpI"/>
                             <constraint firstItem="ouu-Ow-bNQ" firstAttribute="trailing" secondItem="dKX-JO-vOw" secondAttribute="trailing" id="Quo-dX-hUs"/>

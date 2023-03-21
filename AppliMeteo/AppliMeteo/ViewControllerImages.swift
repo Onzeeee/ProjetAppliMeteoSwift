@@ -7,16 +7,15 @@
 
 import UIKit
 
-protocol ViewControllerImagesDelegate : AnyObject{
+protocol ViewControllerImagesDelegate{
     func afficherImage(image: UIImageView)
 }
 
-class ViewControllerImages: UIViewController {
-    
+class ViewControllerImages: UIViewController, ViewControllerDetailsVilleDelegate {
 
     @IBOutlet weak var viewImages: UIView!
     var ville : String = ""
-    weak var delegate : ViewControllerImagesDelegate?
+    var delegateImage : ViewControllerImagesDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -68,27 +67,16 @@ class ViewControllerImages: UIViewController {
     
     @objc func imageTapped(_ sender : UITapGestureRecognizer){
         let imageView = sender.view as! UIImageView
-        delegate?.afficherImage(image: imageView)
-    }
-
-    func getImageViewWithTag(tag: Int) -> UIImageView? {
-        for subview in self.view.subviews {
-            if let imageView = subview as? UIImageView, imageView.tag == tag {
-                return imageView
-            }
-        }
-        return nil
+        delegateImage?.afficherImage(image: imageView)
     }
     
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    func afficherImage(image: UIImageView) {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped(_:)))
+        image.isUserInteractionEnabled = true
+        image.addGestureRecognizer(tapGesture)
+        image.frame = CGRect(x: image.tag*196, y: 0, width: 196, height: 285)
+        viewImages.addSubview(image)
     }
-    */
 
 }
 

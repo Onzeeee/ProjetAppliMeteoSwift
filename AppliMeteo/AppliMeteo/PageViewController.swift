@@ -8,7 +8,6 @@ protocol PageViewControllerDelegate : class{
     func afficherFavori(ville : CityEntity)
     func changerTitle(title : String)
     func mettrePosActuellePageControle()
-//    func changerFondEcran(nomImage : String)
 }
 
 class PageViewController: UIPageViewController,

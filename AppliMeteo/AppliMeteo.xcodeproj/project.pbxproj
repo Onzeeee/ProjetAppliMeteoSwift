@@ -14,10 +14,9 @@
 		18BE19A429A8485200F5BED8 /* WeatherData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18BE19A329A8485200F5BED8 /* WeatherData.swift */; };
 		18BE19A629A8491000F5BED8 /* WeatherDataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18BE19A529A8491000F5BED8 /* WeatherDataTests.swift */; };
 		3B857BE029AE441E00A1C87E /* PageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B857BDF29AE441E00A1C87E /* PageViewController.swift */; };
-		3B857BE229AE9DE600A1C87E /* ViewControllerImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B857BE129AE9DE600A1C87E /* ViewControllerImage.swift */; };
-		3B857BE429AE9E3000A1C87E /* PageControllerImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B857BE329AE9E3000A1C87E /* PageControllerImage.swift */; };
 		3B857BE629AFB73900A1C87E /* ViewControllerPourPageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B857BE529AFB73900A1C87E /* ViewControllerPourPageControl.swift */; };
 		3B9341F129C1CC5000E809AB /* TableViewCellJoursSuivants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9341F029C1CC5000E809AB /* TableViewCellJoursSuivants.swift */; };
+		3B9341F329C3E0CF00E809AB /* ViewControllerImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9341F229C3E0CF00E809AB /* ViewControllerImages.swift */; };
 		3B9D45E029A6871800510517 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9D45DF29A6871800510517 /* AppDelegate.swift */; };
 		3B9D45E229A6871800510517 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9D45E129A6871800510517 /* SceneDelegate.swift */; };
 		3B9D45E429A6871800510517 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9D45E329A6871800510517 /* ViewController.swift */; };
@@ -53,10 +52,9 @@
 		18BE19A329A8485200F5BED8 /* WeatherData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherData.swift; sourceTree = "<group>"; };
 		18BE19A529A8491000F5BED8 /* WeatherDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherDataTests.swift; sourceTree = "<group>"; };
 		3B857BDF29AE441E00A1C87E /* PageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageViewController.swift; sourceTree = "<group>"; };
-		3B857BE129AE9DE600A1C87E /* ViewControllerImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerImage.swift; sourceTree = "<group>"; };
-		3B857BE329AE9E3000A1C87E /* PageControllerImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageControllerImage.swift; sourceTree = "<group>"; };
 		3B857BE529AFB73900A1C87E /* ViewControllerPourPageControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerPourPageControl.swift; sourceTree = "<group>"; };
 		3B9341F029C1CC5000E809AB /* TableViewCellJoursSuivants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCellJoursSuivants.swift; sourceTree = "<group>"; };
+		3B9341F229C3E0CF00E809AB /* ViewControllerImages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerImages.swift; sourceTree = "<group>"; };
 		3B9D45DC29A6871800510517 /* AppliMeteo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppliMeteo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B9D45DF29A6871800510517 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3B9D45E129A6871800510517 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -122,20 +120,19 @@
 				3B9D45E129A6871800510517 /* SceneDelegate.swift */,
 				D51D5DA843CABACCA0A4F6CE /* UINavigationItemDate.swift */,
 				3B857BDF29AE441E00A1C87E /* PageViewController.swift */,
-				3B857BE329AE9E3000A1C87E /* PageControllerImage.swift */,
 				3B9D45E329A6871800510517 /* ViewController.swift */,
 				3BB5739A29B8C13A00AB9867 /* ViewControllerHeureSuivantes.swift */,
-				3B857BE129AE9DE600A1C87E /* ViewControllerImage.swift */,
 				3BB5416329AA6EEA000445BA /* ViewControllerFavori.swift */,
 				3BB5416529AA6EF8000445BA /* ViewControllerDetailsVille.swift */,
+				3B9341F229C3E0CF00E809AB /* ViewControllerImages.swift */,
 				3B857BE529AFB73900A1C87E /* ViewControllerPourPageControl.swift */,
+				3B9341F029C1CC5000E809AB /* TableViewCellJoursSuivants.swift */,
 				3B9D45E529A6871800510517 /* Main.storyboard */,
 				3B9D45EB29A6871A00510517 /* Assets.xcassets */,
 				3B9D45ED29A6871A00510517 /* LaunchScreen.storyboard */,
 				3B9D45F029A6871A00510517 /* Info.plist */,
 				3B9D45E829A6871800510517 /* AppliMeteo.xcdatamodeld */,
 				D51D533418717573C228A898 /* model */,
-				3B9341F029C1CC5000E809AB /* TableViewCellJoursSuivants.swift */,
 			);
 			path = AppliMeteo;
 			sourceTree = "<group>";
@@ -304,7 +301,6 @@
 			files = (
 				18ADCAB829C3289600F9BB83 /* History.swift in Sources */,
 				3B9D45E429A6871800510517 /* ViewController.swift in Sources */,
-				3B857BE229AE9DE600A1C87E /* ViewControllerImage.swift in Sources */,
 				3B857BE029AE441E00A1C87E /* PageViewController.swift in Sources */,
 				3B857BE629AFB73900A1C87E /* ViewControllerPourPageControl.swift in Sources */,
 				3B9D45E029A6871800510517 /* AppDelegate.swift in Sources */,
@@ -313,7 +309,7 @@
 				3B9D45EA29A6871800510517 /* AppliMeteo.xcdatamodeld in Sources */,
 				18BE19A429A8485200F5BED8 /* WeatherData.swift in Sources */,
 				3BB5739B29B8C13A00AB9867 /* ViewControllerHeureSuivantes.swift in Sources */,
-				3B857BE429AE9E3000A1C87E /* PageControllerImage.swift in Sources */,
+				3B9341F329C3E0CF00E809AB /* ViewControllerImages.swift in Sources */,
 				D51D52F62F26399DB235FCB8 /* City.swift in Sources */,
 				3B9341F129C1CC5000E809AB /* TableViewCellJoursSuivants.swift in Sources */,
 				3BB5416629AA6EF8000445BA /* ViewControllerDetailsVille.swift in Sources */,

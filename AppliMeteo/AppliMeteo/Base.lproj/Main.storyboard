@@ -142,7 +142,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DeF-4e-FYL">
-                                <rect key="frame" x="-2" y="575" width="391" height="199"/>
+                                <rect key="frame" x="-5" y="574" width="398" height="198"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <connections>
                                     <segue destination="Lci-aR-RTT" kind="embed" identifier="heuresSuivantes" id="OEg-bh-lRQ"/>
@@ -309,14 +309,14 @@
             <objects>
                 <viewController id="Lci-aR-RTT" customClass="ViewControllerHeureSuivantes" customModule="AppliMeteo" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="w0w-oi-1yU">
-                        <rect key="frame" x="0.0" y="0.0" width="391" height="199"/>
+                        <rect key="frame" x="0.0" y="0.0" width="398" height="198"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ouu-Ow-bNQ">
-                                <rect key="frame" x="0.0" y="0.0" width="391" height="199"/>
+                                <rect key="frame" x="0.0" y="0.0" width="398" height="164"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mTX-0c-MWe">
-                                        <rect key="frame" x="0.0" y="0.0" width="2000" height="199"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="2000" height="198"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="2000" id="PfZ-vm-aPM"/>
@@ -415,76 +415,41 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oTv-nK-cOR">
-                                <rect key="frame" x="0.0" y="155" width="393" height="413"/>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6mE-VQ-00e">
+                                <rect key="frame" x="0.0" y="155" width="393" height="414"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <standardMapConfiguration key="preferredConfiguration"/>
                                 <connections>
-                                    <outlet property="delegate" destination="kLS-HI-J56" id="xQd-ve-2IE"/>
+                                    <outlet property="delegate" destination="kLS-HI-J56" id="ESr-GR-Kfz"/>
                                 </connections>
                             </mapView>
-                            <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2d7-cC-sVT">
-                                <rect key="frame" x="-13" y="560" width="402" height="290"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                <connections>
-                                    <segue destination="lxA-TR-UYZ" kind="embed" identifier="" id="3Nd-pU-JKJ"/>
-                                </connections>
-                            </containerView>
-                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="100000" minValue="500" maxValue="100000" translatesAutoresizingMaskIntoConstraints="NO" id="lft-vO-vLl">
-                                <rect key="frame" x="217" y="347" width="300" height="30"/>
+                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="100000" minValue="500" maxValue="100000" translatesAutoresizingMaskIntoConstraints="NO" id="9qd-Ek-3hI">
+                                <rect key="frame" x="227" y="347" width="300" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <connections>
-                                    <action selector="sliderChanged:" destination="kLS-HI-J56" eventType="valueChanged" id="Z3E-lC-Khb"/>
+                                    <action selector="sliderChanged:" destination="kLS-HI-J56" eventType="valueChanged" id="gZ2-PX-ycT"/>
                                 </connections>
                             </slider>
+                            <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="h05-Ul-vNr">
+                                <rect key="frame" x="-1" y="566" width="393" height="285"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <connections>
+                                    <segue destination="0CS-N8-FEz" kind="embed" id="2Nx-l9-HeP"/>
+                                </connections>
+                            </containerView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6WF-i2-ITc"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <navigationItem key="navigationItem" id="f6x-3Y-TIM"/>
                     <connections>
-                        <outlet property="mapVille" destination="oTv-nK-cOR" id="Url-Tz-bf8"/>
-                        <outlet property="verticalSlider" destination="lft-vO-vLl" id="Rlj-w4-8cx"/>
+                        <outlet property="mapVille" destination="6mE-VQ-00e" id="GRh-zi-CUP"/>
+                        <outlet property="verticalSlider" destination="9qd-Ek-3hI" id="IXE-Qj-jwI"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="o7P-dm-fbc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="6400.7633587786258" y="-411.26760563380282"/>
-        </scene>
-        <!--Page Controller Image-->
-        <scene sceneID="1aE-0s-oIH">
-            <objects>
-                <pageViewController storyboardIdentifier="PageControllerImage" autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="lxA-TR-UYZ" customClass="PageControllerImage" customModule="AppliMeteo" customModuleProvider="target" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="X1f-Se-U3U" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="7219" y="-411"/>
-        </scene>
-        <!--View Controller Image-->
-        <scene sceneID="T8Q-1A-X2G">
-            <objects>
-                <viewController storyboardIdentifier="ViewControllerImage" id="Afh-3S-tur" customClass="ViewControllerImage" customModule="AppliMeteo" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="8wl-bR-QPc">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w6r-Lh-6gu">
-                                <rect key="frame" x="16" y="99" width="361" height="40"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="30"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="wKB-QU-G07"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                    </view>
-                    <connections>
-                        <outlet property="textPasImage" destination="w6r-Lh-6gu" id="sTJ-4o-vDv"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="d2h-NP-S2j" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="8075.5725190839694" y="-411.26760563380282"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="zrD-Cp-T3v">
@@ -503,6 +468,52 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="k3T-jq-lxl" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3646.5648854961833" y="-1192.2535211267607"/>
+        </scene>
+        <!--View Controller Images-->
+        <scene sceneID="aDk-j3-nbF">
+            <objects>
+                <viewController storyboardIdentifier="ViewControllerImages" id="0CS-N8-FEz" customClass="ViewControllerImages" customModule="AppliMeteo" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="mCC-d1-Fjj">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="285"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3QC-Eq-aGp">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="285"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wKH-RR-Mfh">
+                                        <rect key="frame" x="0.0" y="0.0" width="1965" height="285"/>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="1965" id="xJ8-am-eST"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="wKH-RR-Mfh" firstAttribute="top" secondItem="3QC-Eq-aGp" secondAttribute="top" id="6Ri-kt-7Jt"/>
+                                    <constraint firstAttribute="trailing" secondItem="wKH-RR-Mfh" secondAttribute="trailing" id="ZcN-e4-qys"/>
+                                    <constraint firstAttribute="bottom" secondItem="wKH-RR-Mfh" secondAttribute="bottom" id="ac0-89-LLn"/>
+                                    <constraint firstItem="wKH-RR-Mfh" firstAttribute="leading" secondItem="3QC-Eq-aGp" secondAttribute="leading" id="jhQ-g2-jNz"/>
+                                    <constraint firstItem="wKH-RR-Mfh" firstAttribute="width" secondItem="3QC-Eq-aGp" secondAttribute="width" multiplier="5" id="zXR-h0-myd"/>
+                                    <constraint firstItem="wKH-RR-Mfh" firstAttribute="height" secondItem="3QC-Eq-aGp" secondAttribute="height" id="zpf-2l-Hvt"/>
+                                </constraints>
+                            </scrollView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="ZWR-RA-bgr"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="3QC-Eq-aGp" firstAttribute="leading" secondItem="mCC-d1-Fjj" secondAttribute="leading" id="1k6-l8-xfT"/>
+                            <constraint firstItem="3QC-Eq-aGp" firstAttribute="top" secondItem="mCC-d1-Fjj" secondAttribute="top" id="CPL-7X-Pdq"/>
+                            <constraint firstAttribute="trailing" secondItem="3QC-Eq-aGp" secondAttribute="trailing" id="Hnf-Yl-bnb"/>
+                            <constraint firstAttribute="bottom" secondItem="3QC-Eq-aGp" secondAttribute="bottom" id="eik-GG-mXD"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="viewImages" destination="wKH-RR-Mfh" id="077-gD-okQ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="UGI-da-jXc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="7423.6641221374039" y="-292.25352112676057"/>
         </scene>
     </scenes>
     <resources>

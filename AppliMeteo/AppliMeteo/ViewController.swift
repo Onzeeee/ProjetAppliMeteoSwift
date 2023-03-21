@@ -49,7 +49,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                         self.joursSuivants = weatherData.sortedTemperatureForecastDaily
                         self.tempMaxJoursSuivants = Int(self.joursSuivants[0].temp_max)
                         self.tempMinJoursSuivants = Int(self.joursSuivants[0].temp_min)
-                        for days in 1..<self.joursSuivants.count{
+                        for days in 1..<14{
                             if(Int(self.joursSuivants[days].temp_min) < self.tempMinJoursSuivants!){
                                 self.tempMinJoursSuivants = Int(self.joursSuivants[days].temp_min)
                             }
@@ -82,7 +82,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.title = ville.name
         self.imageDescriptionTemps.image = UIImage(named: "\(weatherData.currentTemperatureForecast!.icon!).png")
         self.labelTemp.text = "\(String(Int(weatherData.currentTemperatureForecast!.temp)+1))°C"
-        let fullString = NSMutableAttributedString(string : "\(String(Int((weatherData.currentTemperatureForecast!.temp_min))))°C ")
+        let fullString = NSMutableAttributedString(string : "\(String(Int((weatherData.sortedTemperatureForecastDaily[0].temp_min))))°C ")
         let imageUpArrow = NSTextAttachment()
         imageUpArrow.image = UIImage(systemName: "arrow.up")
         let imageUpArrowAttach = NSAttributedString(attachment: imageUpArrow)
@@ -90,7 +90,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         imageDownArrow.image = UIImage(systemName: "arrow.down")
         let imageDownArrowAttach = NSAttributedString(attachment: imageDownArrow)
         fullString.append(imageDownArrowAttach)
-        fullString.append(NSAttributedString(string: " \(String(Int((weatherData.currentTemperatureForecast!.temp_max))+1))°C "))
+        fullString.append(NSAttributedString(string: " \(String(Int((weatherData.sortedTemperatureForecastDaily[0].temp_max))))°C "))
         fullString.append(imageUpArrowAttach)
         self.labelTempMaxMin.attributedText = fullString
         self.labelTempRessenti.text = "Ressenti : \(String(Int((weatherData.currentTemperatureForecast!.feels_like))+1))°C"
@@ -143,6 +143,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let index = indexPath.row+1
         let layerColor = CALayer()
         let layerFond = CALayer()
         
@@ -150,15 +151,15 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         var xColor = 167
         var widthColor = 179
-        if(Int(joursSuivants[indexPath.row].temp_min) == tempMinJoursSuivants){}
+        if(Int(joursSuivants[index].temp_min) == tempMinJoursSuivants){}
         else{
-            let tailleDiff = Int(joursSuivants[indexPath.row].temp_min) - tempMinJoursSuivants!
+            let tailleDiff = Int(joursSuivants[index].temp_min) - tempMinJoursSuivants!
             xColor = xColor + (tailleDiff*tailleparDegre)
             widthColor = widthColor - (tailleDiff*tailleparDegre)
         }
-        if(Int(joursSuivants[indexPath.row].temp_max) == tempMaxJoursSuivants){}
+        if(Int(joursSuivants[index].temp_max) == tempMaxJoursSuivants){}
         else{
-            let tailleDiff = tempMaxJoursSuivants! - Int(joursSuivants[indexPath.row].temp_max)
+            let tailleDiff = tempMaxJoursSuivants! - Int(joursSuivants[index].temp_max)
             widthColor = widthColor - (tailleDiff*tailleparDegre)
         }
         
@@ -173,10 +174,10 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         let cell = tableViewJoursSuivants.dequeueReusableCell(withIdentifier: "maCellule", for: indexPath) as! TableViewCellJoursSuivants
         cell.layer.addSublayer(layerFond)
         cell.layer.addSublayer(layerColor)
-        cell.dateJour.text = intToDate(unixTime: joursSuivants[indexPath.row].dt).components(separatedBy: " ")[0]
-        cell.tempMin.text = "\(String(Int(joursSuivants[indexPath.row].temp_min)))°C"
-        cell.tempMax.text = "\(String(Int(joursSuivants[indexPath.row].temp_max)))°C"
-        cell.imagePicto.image = UIImage(named: "\(joursSuivants[indexPath.row].weather_icon!).png")
+        cell.dateJour.text = intToDate(unixTime: joursSuivants[index].dt).components(separatedBy: " ")[0]
+        cell.tempMin.text = "\(String(Int(joursSuivants[index].temp_min)))°C"
+        cell.tempMax.text = "\(String(Int(joursSuivants[index].temp_max)))°C"
+        cell.imagePicto.image = UIImage(named: "\(joursSuivants[index].weather_icon!).png")
         return cell
     }
 

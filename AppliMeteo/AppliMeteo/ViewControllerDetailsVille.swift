@@ -8,7 +8,7 @@
 import UIKit
 import MapKit
 
-class ViewControllerDetailsVille: UIViewController, MKMapViewDelegate{
+class ViewControllerDetailsVille: UIViewController, MKMapViewDelegate, ViewControllerImagesDelegate{
 
     @IBOutlet weak var mapVille: MKMapView!
     @IBOutlet weak var verticalSlider: UISlider!{
@@ -27,14 +27,19 @@ class ViewControllerDetailsVille: UIViewController, MKMapViewDelegate{
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let imageVC = ViewControllerImages()
+        imageVC.delegate = self
         mapVille.centerToLocation(CLLocation(latitude: latitude, longitude: longitude), regionRadius: 100000)
         // Do any additional setup after loading the view.
     }
     
+    func afficherImage(image: UIImageView) {
+        print("Ca maaaaaaaaaaaaaaaaarche")
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let sndVC = segue.destination as! PageControllerImage
+        let sndVC = segue.destination as! ViewControllerImages
         sndVC.ville = ville
-        navigationItem.title = ville
     }
     
     @IBAction func sliderChanged(_ sender: Any) {

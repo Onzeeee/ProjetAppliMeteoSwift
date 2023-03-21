@@ -14,6 +14,7 @@ protocol ViewControllerImagesDelegate{
 class ViewControllerImages: UIViewController, ViewControllerDetailsVilleDelegate {
 
     @IBOutlet weak var viewImages: UIView!
+    @IBOutlet weak var scrollView: UIScrollView!
     var ville : String = ""
     var delegateImage : ViewControllerImagesDelegate?
     
@@ -24,11 +25,12 @@ class ViewControllerImages: UIViewController, ViewControllerDetailsVilleDelegate
             case .success(let photos):
                 DispatchQueue.main.async { [self] in
                     if(photos.count == 0){
-                        for i in 0..<10{
-                            let label = UILabel(frame: CGRect(x: 45+(196*i), y: 135, width: 106, height: 21))
-                            label.text = "Pas d'images"
-                            viewImages.addSubview(label)
-                        }
+                        let label = UILabel(frame: CGRect(x: 81, y: 101, width: 234, height: 90))
+                        label.font = .systemFont(ofSize: 30.0)
+                        label.text = "Pas d'images"
+                        label.textAlignment = .center
+                        scrollView.isScrollEnabled = false
+                        viewImages.addSubview(label)
                     }
                     else{
                         var index = 0
@@ -38,7 +40,7 @@ class ViewControllerImages: UIViewController, ViewControllerDetailsVilleDelegate
                             image.load(url: url!)
                             image.tag = index
                             image.contentMode = .scaleToFill
-                            image.frame = CGRect(x: index*196, y: 0, width: 196, height: 285)
+                            image.frame = CGRect(x: index*196, y: 0, width: 196, height: 293)
                             let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped(_:)))
                             image.isUserInteractionEnabled = true
                             image.addGestureRecognizer(tapGesture)
@@ -74,7 +76,7 @@ class ViewControllerImages: UIViewController, ViewControllerDetailsVilleDelegate
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped(_:)))
         image.isUserInteractionEnabled = true
         image.addGestureRecognizer(tapGesture)
-        image.frame = CGRect(x: image.tag*196, y: 0, width: 196, height: 285)
+        image.frame = CGRect(x: image.tag*196, y: 0, width: 196, height: 293)
         viewImages.addSubview(image)
     }
 

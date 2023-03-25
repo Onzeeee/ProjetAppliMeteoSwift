@@ -9,6 +9,10 @@ import UIKit
 import CoreData
 
 
+protocol HomeViewControllerDelegate{
+    func changerFondEcran()
+}
+
 class HomeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var imageDescriptionTemps: UIImageView!
@@ -21,19 +25,24 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     @IBOutlet weak var windDir: UILabel!
     @IBOutlet weak var pressure: UILabel!
     @IBOutlet weak var iconDirVent: UIImageView!
+    @IBOutlet weak var leverCoucherSoleil: UILabel!
     
     
     var ville : [CityEntity] = []
+    var delegate : HomeViewControllerDelegate?
     var pageActuelle : Int = 0;
     var joursSuivants : [TemperatureForecastDaily] = []
     var tempMaxJoursSuivants : Int?
     var tempMinJoursSuivants : Int?
     var directionVent : [String:[Range<Double>]] = ["N":[0..<22.5],"NE":[22.5..<67.5],"E":[67.5..<112.5],"SE":[112.5..<157.5],"S":[157.5..<202.5],"SO":[202.5..<247.5],"O":[247.5..<292.5],"NO":[292.5..<337.5]]
+    var icon : String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableViewJoursSuivants.isScrollEnabled = false
         title = "Loading..."
+        tableViewJoursSuivants.backgroundColor = .clear
+        tableViewJoursSuivants.separatorColor = .clear
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
             fatalError("Could not access app delegate")
         }
@@ -47,6 +56,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                     DispatchQueue.main.async{
                         print(weatherData)
                         self.chargerLesDonneesVille(weatherData: weatherData)
+                        self.delegate?.changerFondEcran()
                     }
                 }
                 catch (let error){
@@ -67,6 +77,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         if(weatherData.city == nil){
             print("Error: city is nil : \(weatherData.city) for city \(ville[0].name) (not a probem in this case since we have the city entity, but something with the model should be wrong)")
         }
+        icon = weatherData.currentTemperatureForecast!.icon!
         let ville = ville[0]
         self.title = ville.name
         self.imageDescriptionTemps.image = UIImage(named: "\(weatherData.currentTemperatureForecast!.icon!).png")
@@ -82,6 +93,21 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         fullString.append(NSAttributedString(string: " \(String(Int((weatherData.sortedTemperatureForecastDaily[0].temp_max))))°C "))
         fullString.append(imageUpArrowAttach)
         self.labelTempMaxMin.attributedText = fullString
+        
+        let fullStringLever = NSMutableAttributedString(string : "\(intToDate(unixTime: weatherData.sortedTemperatureForecastDaily[0].sunrise).components(separatedBy: " ")[1]) ")
+        let imageSoleilLevant = NSTextAttachment()
+        imageSoleilLevant.image = UIImage(systemName: "sunrise.fill")
+        imageSoleilLevant.image = imageSoleilLevant.image?.withTintColor(.systemYellow)
+        let imageSoleilLevantAttach = NSAttributedString(attachment: imageSoleilLevant)
+        let imageSoleilCouchant = NSTextAttachment()
+        imageSoleilCouchant.image = UIImage(systemName: "sunset.fill")
+        imageSoleilCouchant.image = imageSoleilCouchant.image?.withTintColor(.systemYellow)
+        let imageSoleilCouchantAttach = NSAttributedString(attachment: imageSoleilCouchant)
+        fullStringLever.append(imageSoleilLevantAttach)
+        fullStringLever.append(NSAttributedString(string: " \(intToDate(unixTime: weatherData.sortedTemperatureForecastDaily[0].sunset).components(separatedBy: " ")[1]) "))
+        fullStringLever.append(imageSoleilCouchantAttach)
+        self.leverCoucherSoleil.attributedText = fullStringLever
+        
         self.labelTempRessenti.text = "Ressenti : \(String(Int((weatherData.currentTemperatureForecast!.feels_like))+1))°C"
         let radians = CGFloat(weatherData.currentTemperatureForecast!.windDeg) * CGFloat.pi / 180.0
         self.iconDirVent.transform = CGAffineTransform(rotationAngle: radians)
@@ -126,10 +152,11 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
     }
 
-    static func getInstance(ville: CityEntity) -> HomeViewController {
+    static func getInstance(ville: CityEntity, pageController : PageViewController) -> HomeViewController {
         let vc = UIStoryboard (name: "Main", bundle:
                                 nil).instantiateViewController(withIdentifier: "HomeViewController") as! HomeViewController
         vc.ville.append(ville)
+        vc.delegate = pageController
         return vc
     }
 
@@ -168,7 +195,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
         
         layerColor.frame = CGRect(x: xColor, y: 25, width: widthColor, height: 7)
-        layerColor.backgroundColor = CGColor(red: 0.45, green: 0.7, blue: 1, alpha: 1)
+        layerColor.backgroundColor = CGColor(red: 0.35, green: 0.6, blue: 1, alpha: 1)
         layerColor.cornerRadius = 3
         
         
@@ -176,6 +203,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         layerFond.backgroundColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.3)
         layerFond.cornerRadius = 3
         let cell = tableViewJoursSuivants.dequeueReusableCell(withIdentifier: "maCellule", for: indexPath) as! TableViewCellJoursSuivants
+        cell.backgroundColor = .clear
         cell.layer.addSublayer(layerFond)
         cell.layer.addSublayer(layerColor)
         cell.dateJour.text = intToDate(unixTime: joursSuivants[index].dt).components(separatedBy: " ")[0]

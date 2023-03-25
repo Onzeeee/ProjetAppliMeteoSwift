@@ -8,12 +8,14 @@ protocol PageViewControllerDelegate{
     func afficherFavori(ville : CityEntity)
     func changerTitle(title : String)
     func mettrePosActuellePageControle()
+    func changerFondEcran(image : String)
 }
 
 class PageViewController: UIPageViewController,
         UIPageViewControllerDataSource,
         UIPageViewControllerDelegate,
-                          CLLocationManagerDelegate{
+                          CLLocationManagerDelegate, HomeViewControllerDelegate{
+    
     
     var pageViewDelegate : PageViewControllerDelegate?
     var currentIndex = 0
@@ -27,6 +29,10 @@ class PageViewController: UIPageViewController,
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         initFavoris()
+    }
+    
+    func changerFondEcran() {
+        pageViewDelegate?.changerFondEcran(image : cityViews[listeCities[currentIndex].id]!.icon)
     }
 
     override func viewDidLoad() {
@@ -59,7 +65,7 @@ class PageViewController: UIPageViewController,
                 self.currentLocationAdded = true
                 listeCities.append(currentCity!)
                 if(cityViews[currentCity!.id] == nil){
-                    cityViews[currentCity!.id] = HomeViewController.getInstance(ville : currentCity!)
+                    cityViews[currentCity!.id] = HomeViewController.getInstance(ville : currentCity!, pageController: self)
                 }
                 self.pageViewDelegate?.mettrePosActuellePageControle()
                 //pages.append(HomeViewController.getInstance(ville : currentCity!))
@@ -69,7 +75,7 @@ class PageViewController: UIPageViewController,
                 if(!listeCities.contains(where: {$0.id == favs[i].id})){
                     listeCities.append(favs[i])
                     if(cityViews[favs[i].id] == nil){
-                        cityViews[favs[i].id] = HomeViewController.getInstance(ville : favs[i])
+                        cityViews[favs[i].id] = HomeViewController.getInstance(ville : favs[i], pageController: self)
                     }
                 }
                 
@@ -92,7 +98,7 @@ class PageViewController: UIPageViewController,
             // todo il se passe des trucs bizarre quand on supprime tous les favoris et qu'on revient sur la page
             if(currentCity != nil){
                 if(cityViews[currentCity!.id] == nil){
-                    cityViews[currentCity!.id] = HomeViewController.getInstance(ville : currentCity!)
+                    cityViews[currentCity!.id] = HomeViewController.getInstance(ville : currentCity!, pageController: self)
                 }
                 listeCities.append(currentCity!)
                 DispatchQueue.main.async() { [self] in
@@ -178,7 +184,7 @@ class PageViewController: UIPageViewController,
         if(cityViews[listeCities[previousIndex].id] != nil){
             return cityViews[listeCities[previousIndex].id]
         }
-        cityViews[listeCities[previousIndex].id] = HomeViewController.getInstance(ville: listeCities[previousIndex])
+        cityViews[listeCities[previousIndex].id] = HomeViewController.getInstance(ville: listeCities[previousIndex], pageController: self)
         return cityViews[listeCities[previousIndex].id]
     }
 
@@ -190,7 +196,7 @@ class PageViewController: UIPageViewController,
         if(cityViews[listeCities[nextIndex].id] != nil){
             return cityViews[listeCities[nextIndex].id]
         }
-        cityViews[listeCities[nextIndex].id] = HomeViewController.getInstance(ville: listeCities[nextIndex])
+        cityViews[listeCities[nextIndex].id] = HomeViewController.getInstance(ville: listeCities[nextIndex], pageController: self)
         return cityViews[listeCities[nextIndex].id]
     }
 
@@ -198,6 +204,7 @@ class PageViewController: UIPageViewController,
         pageViewDelegate?.pageChangeTo(atIndex: currentIndex, current: listeCities[currentIndex])
         pageViewDelegate?.afficherFavori(ville: listeCities[currentIndex])
         pageViewDelegate?.changerTitle(title: listeCities[currentIndex].name!)
+        pageViewDelegate?.changerFondEcran(image: cityViews[listeCities[currentIndex].id]!.icon)
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {

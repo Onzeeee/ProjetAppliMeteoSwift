@@ -261,8 +261,8 @@ class SearchResultsTableViewController: UITableViewController {
         DispatchQueue.main.async {
             let city = self.results[sender.tag]
             let listeCities = findFavoriteCitiesFromCoreData(context: (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext)
-            if(listeCities.count == 9){
-                let alertController = UIAlertController(title: "Attention", message: "Vous avez un maximum de 9 favoris.", preferredStyle: .alert)
+            if(listeCities.count == 15){
+                let alertController = UIAlertController(title: "Attention", message: "Vous avez un maximum de 15 favoris.", preferredStyle: .alert)
                 let okAction = UIAlertAction(title: "OK", style: .default) { (action) in}
                 alertController.addAction(okAction)
 

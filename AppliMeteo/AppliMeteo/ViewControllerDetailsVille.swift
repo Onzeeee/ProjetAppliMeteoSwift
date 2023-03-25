@@ -37,19 +37,20 @@ class ViewControllerDetailsVille: UIViewController, MKMapViewDelegate, ViewContr
     }
     
     func afficherImage(image: UIImageView) {
-        let ancienCGRect = image.frame
         image.frame = CGRect(x: 16, y: 211, width: 361, height: 528)
         let newView = UIView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height))
         newView.backgroundColor = UIColor.black.withAlphaComponent(0.7)
         self.view.addSubview(newView)
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped(_:)))
         image.isUserInteractionEnabled = true
+        image.contentMode = .scaleAspectFit
         image.addGestureRecognizer(tapGesture)
         self.view.addSubview(image)
     }
     
     @objc func imageTapped(_ sender : UITapGestureRecognizer){
         let imageView = sender.view as! UIImageView
+        imageView.contentMode = .scaleToFill
         delegateDetails?.afficherImage(image: imageView)
         if let frontSubview = self.view.subviews.last {
             frontSubview.removeFromSuperview()

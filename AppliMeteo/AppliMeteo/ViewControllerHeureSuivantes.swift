@@ -18,7 +18,7 @@ class ViewControllerHeureSuivantes: UIViewController {
         if(villeActuelle != nil){
             Task{
                 do{
-                    let weatherData = try? await fetchWeatherData(context: leContexte, for: villeActuelle!)
+                    let weatherData = try? await fetchWeatherData(context: leContexte, for: villeActuelle!, language: "fr")
                     guard let weatherData else {return}
                     DispatchQueue.main.async {
                         for index in 0..<weatherData.sortedTemperatureForecast.count{

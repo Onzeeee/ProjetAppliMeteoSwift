@@ -32,7 +32,7 @@ final class WeatherDataTests: XCTestCase {
 
         Task{
             do{
-                let weatherData = try await fetchWeatherData(context: context, for: city!)
+                let weatherData = try await fetchWeatherData(context: context, for: city!, language: "fr")
                 print("Weather data: \(weatherData)")
                 if(weatherData == nil){
                     XCTFail("Weather data not found")

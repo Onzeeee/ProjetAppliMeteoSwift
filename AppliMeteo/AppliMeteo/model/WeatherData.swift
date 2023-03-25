@@ -20,15 +20,27 @@ func performRequest(url: URL) async throws -> [String: Any] {
 }
 
 
-func fetchWeatherDataFromLonLat(context: NSManagedObjectContext, lon: Double, lat: Double) async throws -> WeatherData{
+func fetchWeatherDataFromLonLat(context: NSManagedObjectContext, lon: Double, lat: Double, language: String) async throws -> WeatherData{
 
     let apiKey = ProcessInfo.processInfo.environment["OPENWEATHER_APIKEY"] ?? ""
-    let urlstring = "https://pro.openweathermap.org/data/2.5/forecast/hourly?lat=\(lat)&lon=\(lon)&units=metric&appid=\(apiKey)"
+    var urlstring = ""
+    var urlstring_dailyforecast = ""
+    if(language == "fr"){
+        urlstring = "https://pro.openweathermap.org/data/2.5/forecast/hourly?lat=\(lat)&lon=\(lon)&units=metric&appid=\(apiKey)"
+    }
+    else{
+        urlstring = "https://pro.openweathermap.org/data/2.5/forecast/hourly?lat=\(lat)&lon=\(lon)&units=imperial&appid=\(apiKey)"
+    }
     let url = URL(string: urlstring)!
     let weatherDataJson = try await performRequest(url: url)
     let city = weatherDataJson["city"] as! [String: Any]
     let cityId = city["id"] as! Int32
-    let urlstring_dailyforecast = "https://api.openweathermap.org/data/2.5/forecast/daily?id=\(cityId)&units=metric&appid=\(apiKey)&cnt=16"
+    if(language == "fr"){
+        urlstring_dailyforecast = "https://api.openweathermap.org/data/2.5/forecast/daily?id=\(cityId)&units=metric&appid=\(apiKey)&cnt=16"
+    }
+    else{
+        urlstring_dailyforecast = "https://api.openweathermap.org/data/2.5/forecast/daily?id=\(cityId)&units=imperial&appid=\(apiKey)&cnt=16"
+    }
     let url_daily = URL(string: urlstring_dailyforecast)!
     let weatherDataJson_daily = try await performRequest(url: url_daily)
     var weatherData: WeatherData?
@@ -124,9 +136,9 @@ func fetchWeatherDataFromLonLat(context: NSManagedObjectContext, lon: Double, la
     return weatherData!
 }
 
-func fetchWeatherData(context: NSManagedObjectContext, for cityEntity: CityEntity) async throws -> WeatherData {
+func fetchWeatherData(context: NSManagedObjectContext, for cityEntity: CityEntity, language : String) async throws -> WeatherData {
     print("fetchWeatherData for city \(String(describing: cityEntity.name)) with lon \(cityEntity.lon) and lat \(cityEntity.lat)")
-    let weatherData = try await fetchWeatherDataFromLonLat(context: context, lon: cityEntity.lon, lat: cityEntity.lat)
+    let weatherData = try await fetchWeatherDataFromLonLat(context: context, lon: cityEntity.lon, lat: cityEntity.lat, language: language)
     print("fetchWeatherData for city \(String(describing: cityEntity.name)) with id \(cityEntity.id) Done !")
     return weatherData
 }

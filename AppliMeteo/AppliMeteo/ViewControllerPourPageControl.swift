@@ -7,15 +7,22 @@
 
 import UIKit
 
+protocol ViewControllerPourPageControlDelegate{
+    func passageFrancais()
+    func passageAnglais()
+}
+
 class ViewControllerPourPageControl: UIViewController {
 
     @IBOutlet weak var pageControl: UIPageControl!
+    var delegate : ViewControllerPourPageControlDelegate?
     var customPageViewController: PageViewController!
     var currentCity : CityEntity!
     let leContexte = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     @IBOutlet weak var boutonFavori: UIButton!
     var seuleVille = false
     @IBOutlet weak var fondPageControlFavoriMenu: UIView!
+    let switchControl = UISwitch(frame: CGRect(x: 31, y: 6, width: 49, height: 31))
     var couleurFond : [String:UIColor] = [
         "01d":UIColor(red: 245/255, green: 239/255, blue: 215/255, alpha: 1),
         "01n":UIColor(red: 125/255, green: 140/255, blue: 149/255, alpha: 1),
@@ -57,9 +64,31 @@ class ViewControllerPourPageControl: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let switchContainerView = UIView(frame: CGRect(x: 0, y: 0, width: 110, height: 44))
+        let leftImage = UIImage(named: "france.png")
+        let leftImageView = UIImageView(image: leftImage)
+        leftImageView.frame = CGRect(x: 0, y: 13, width: 22, height: 18)
+        switchContainerView.addSubview(leftImageView)
+        let rightImage = UIImage(named: "UK.png")
+        let rightImageView = UIImageView(image: rightImage)
+        rightImageView.frame = CGRect(x: 88, y: 13, width: 22, height: 18)
+        switchContainerView.addSubview(rightImageView)
+        switchControl.onTintColor = UIColor(red: 155/255, green: 155/255, blue: 155/255, alpha: 0.1)
+        switchContainerView.addSubview(switchControl)
+        let switchBarButton = UIBarButtonItem(customView: switchContainerView)
+        switchControl.addTarget(self, action: #selector(switchChanged(_:)), for: .valueChanged)
+        navigationItem.rightBarButtonItem = switchBarButton
         // Do any additional setup after loading the view.
     }
     
+    @objc func switchChanged(_ sender: UISwitch) {
+        if sender.isOn {
+            delegate?.passageAnglais()
+        } else {
+            delegate?.passageFrancais()
+        }
+    }
+
     @IBAction func ajouterFavori(_ sender: Any) {
         let listeCities = findFavoriteCitiesFromCoreData(context: (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext)
         if(listeCities.count == 15){
@@ -82,6 +111,7 @@ class ViewControllerPourPageControl: UIViewController {
         if let destinationViewController = segue.destination as? PageViewController {
         customPageViewController = destinationViewController
         customPageViewController.pageViewDelegate = self
+        delegate = customPageViewController
         }
     }
 }

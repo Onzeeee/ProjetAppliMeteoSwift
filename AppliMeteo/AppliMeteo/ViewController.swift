@@ -13,7 +13,66 @@ protocol HomeViewControllerDelegate{
     func changerFondEcran()
 }
 
-class HomeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class HomeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, PageViewControllerDelegateDeux {
+    
+    func passageFrancais() {
+        langage = "fr"
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            fatalError("Could not access app delegate")
+        }
+        let leContexte = appDelegate.persistentContainer.viewContext
+        if(ville.count != 0){
+            let cityentity = self.ville[0]
+            Task{
+                do{
+                    let weatherData = try await fetchWeatherData(context: leContexte, for: cityentity, language: "fr")
+                    print("Weather data loaded for \(cityentity.name)")
+                    DispatchQueue.main.async{
+                        print(weatherData)
+                        self.chargerLesDonneesVilleFR(weatherData: weatherData)
+                        self.delegate?.changerFondEcran()
+                    }
+                }
+                catch (let error){
+                    print("Error: \(error)")
+                }
+            }
+        }
+        else{
+            print("No city selected")
+            self.title = "No city selected"
+        }
+    }
+    
+    func passageAnglais() {
+        langage = "en"
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            fatalError("Could not access app delegate")
+        }
+        let leContexte = appDelegate.persistentContainer.viewContext
+        if(ville.count != 0){
+            let cityentity = self.ville[0]
+            Task{
+                do{
+                    let weatherData = try await fetchWeatherData(context: leContexte, for: cityentity, language: "en")
+                    print("Weather data loaded for \(cityentity.name)")
+                    DispatchQueue.main.async{
+                        print(weatherData)
+                        self.chargerLesDonneesVilleEN(weatherData: weatherData)
+                        self.delegate?.changerFondEcran()
+                    }
+                }
+                catch (let error){
+                    print("Error: \(error)")
+                }
+            }
+        }
+        else{
+            print("No city selected")
+            self.title = "No city selected"
+        }
+    }
+    
     
     @IBOutlet weak var imageDescriptionTemps: UIImageView!
     @IBOutlet weak var labelTemp: UILabel!
@@ -27,7 +86,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     @IBOutlet weak var iconDirVent: UIImageView!
     @IBOutlet weak var leverCoucherSoleil: UILabel!
     
-    
+    var langage = "fr"
     var ville : [CityEntity] = []
     var delegate : HomeViewControllerDelegate?
     var pageActuelle : Int = 0;
@@ -51,11 +110,11 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             let cityentity = self.ville[0]
             Task{
                 do{
-                    let weatherData = try await fetchWeatherData(context: leContexte, for: cityentity)
+                    let weatherData = try await fetchWeatherData(context: leContexte, for: cityentity, language: "fr")
                     print("Weather data loaded for \(cityentity.name)")
                     DispatchQueue.main.async{
                         print(weatherData)
-                        self.chargerLesDonneesVille(weatherData: weatherData)
+                        self.chargerLesDonneesVilleFR(weatherData: weatherData)
                         self.delegate?.changerFondEcran()
                     }
                 }
@@ -73,7 +132,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         // Do any additional setup after loading the view.
     }
     
-    func chargerLesDonneesVille(weatherData : WeatherData){
+    func chargerLesDonneesVilleFR(weatherData : WeatherData){
         if(weatherData.city == nil){
             print("Error: city is nil : \(weatherData.city) for city \(ville[0].name) (not a probem in this case since we have the city entity, but something with the model should be wrong)")
         }
@@ -127,6 +186,74 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.humidity.text = "\(String(weatherData.currentTemperatureForecast!.humidityLevel))%"
         let vitesseKmH = Int(weatherData.currentTemperatureForecast!.windSpeed*3.6)
         self.windSpeed.text = "\(vitesseKmH) km/h"
+        self.pressure.text = "\(String(weatherData.currentTemperatureForecast!.pressure))hPa"
+        self.joursSuivants = weatherData.sortedTemperatureForecastDaily
+        self.tempMaxJoursSuivants = Int(self.joursSuivants[0].temp_max)
+        self.tempMinJoursSuivants = Int(self.joursSuivants[0].temp_min)
+        for days in 1..<14{
+            if(Int(self.joursSuivants[days].temp_min) < self.tempMinJoursSuivants!){
+                self.tempMinJoursSuivants = Int(self.joursSuivants[days].temp_min)
+            }
+            if(Int(self.joursSuivants[days].temp_max) > self.tempMaxJoursSuivants!){
+                self.tempMaxJoursSuivants = Int(self.joursSuivants[days].temp_max)
+            }
+        }
+        self.tableViewJoursSuivants.reloadData()
+    }
+    
+    func chargerLesDonneesVilleEN(weatherData : WeatherData){
+        if(weatherData.city == nil){
+            print("Error: city is nil : \(weatherData.city) for city \(ville[0].name) (not a probem in this case since we have the city entity, but something with the model should be wrong)")
+        }
+        icon = weatherData.currentTemperatureForecast!.icon!
+        let ville = ville[0]
+        self.title = ville.name
+        self.imageDescriptionTemps.image = UIImage(named: "\(weatherData.currentTemperatureForecast!.icon!).png")
+        self.labelTemp.text = "\(String(Int(weatherData.currentTemperatureForecast!.temp)+1))°F"
+        let fullString = NSMutableAttributedString(string : "\(String(Int((weatherData.sortedTemperatureForecastDaily[0].temp_min))))°F ")
+        let imageUpArrow = NSTextAttachment()
+        imageUpArrow.image = UIImage(systemName: "arrow.up")
+        let imageUpArrowAttach = NSAttributedString(attachment: imageUpArrow)
+        let imageDownArrow = NSTextAttachment()
+        imageDownArrow.image = UIImage(systemName: "arrow.down")
+        let imageDownArrowAttach = NSAttributedString(attachment: imageDownArrow)
+        fullString.append(imageDownArrowAttach)
+        fullString.append(NSAttributedString(string: " \(String(Int((weatherData.sortedTemperatureForecastDaily[0].temp_max))))°F "))
+        fullString.append(imageUpArrowAttach)
+        self.labelTempMaxMin.attributedText = fullString
+        
+        let fullStringLever = NSMutableAttributedString(string : "\(intToDate(unixTime: weatherData.sortedTemperatureForecastDaily[0].sunrise).components(separatedBy: " ")[1]) ")
+        let imageSoleilLevant = NSTextAttachment()
+        imageSoleilLevant.image = UIImage(systemName: "sunrise.fill")
+        imageSoleilLevant.image = imageSoleilLevant.image?.withTintColor(.systemYellow)
+        let imageSoleilLevantAttach = NSAttributedString(attachment: imageSoleilLevant)
+        let imageSoleilCouchant = NSTextAttachment()
+        imageSoleilCouchant.image = UIImage(systemName: "sunset.fill")
+        imageSoleilCouchant.image = imageSoleilCouchant.image?.withTintColor(.systemYellow)
+        let imageSoleilCouchantAttach = NSAttributedString(attachment: imageSoleilCouchant)
+        fullStringLever.append(imageSoleilLevantAttach)
+        fullStringLever.append(NSAttributedString(string: " \(intToDate(unixTime: weatherData.sortedTemperatureForecastDaily[0].sunset).components(separatedBy: " ")[1]) "))
+        fullStringLever.append(imageSoleilCouchantAttach)
+        self.leverCoucherSoleil.attributedText = fullStringLever
+        
+        self.labelTempRessenti.text = "Ressenti : \(String(Int((weatherData.currentTemperatureForecast!.feels_like))+1))°F"
+        let radians = CGFloat(weatherData.currentTemperatureForecast!.windDeg) * CGFloat.pi / 180.0
+        self.iconDirVent.transform = CGAffineTransform(rotationAngle: radians)
+        var directionString = ""
+        for (cle, plage) in self.directionVent {
+            for intervalle in plage {
+                if intervalle.contains(Double(weatherData.currentTemperatureForecast!.windDeg)) {
+                    directionString = cle
+                    break
+                }
+            }
+        }
+        if(Double(weatherData.currentTemperatureForecast!.windDeg)>337.5){
+            directionString = "N"
+        }
+        self.windDir.text = directionString
+        self.humidity.text = "\(String(weatherData.currentTemperatureForecast!.humidityLevel))%"
+        self.windSpeed.text = "\(Int(weatherData.currentTemperatureForecast!.windSpeed)) mi/h"
         self.pressure.text = "\(String(weatherData.currentTemperatureForecast!.pressure))hPa"
         self.joursSuivants = weatherData.sortedTemperatureForecastDaily
         self.tempMaxJoursSuivants = Int(self.joursSuivants[0].temp_max)
@@ -200,15 +327,21 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         
         layerFond.frame = CGRect(x: 167, y: 25, width: 179, height: 7)
-        layerFond.backgroundColor = CGColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.3)
+        layerFond.backgroundColor = CGColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1)
         layerFond.cornerRadius = 3
         let cell = tableViewJoursSuivants.dequeueReusableCell(withIdentifier: "maCellule", for: indexPath) as! TableViewCellJoursSuivants
         cell.backgroundColor = .clear
         cell.layer.addSublayer(layerFond)
         cell.layer.addSublayer(layerColor)
         cell.dateJour.text = intToDate(unixTime: joursSuivants[index].dt).components(separatedBy: " ")[0]
-        cell.tempMin.text = "\(String(Int(joursSuivants[index].temp_min)))°C"
-        cell.tempMax.text = "\(String(Int(joursSuivants[index].temp_max)))°C"
+        if(langage == "fr"){
+            cell.tempMin.text = "\(String(Int(joursSuivants[index].temp_min)))°C"
+            cell.tempMax.text = "\(String(Int(joursSuivants[index].temp_max)))°C"
+        }
+        else{
+            cell.tempMin.text = "\(String(Int(joursSuivants[index].temp_min)))°F"
+            cell.tempMax.text = "\(String(Int(joursSuivants[index].temp_max)))°F"
+        }
         cell.imagePicto.image = UIImage(named: "\(joursSuivants[index].weather_icon!).png")
         return cell
     }

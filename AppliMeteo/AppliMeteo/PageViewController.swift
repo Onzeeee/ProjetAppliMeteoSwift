@@ -11,13 +11,29 @@ protocol PageViewControllerDelegate{
     func changerFondEcran(image : String)
 }
 
-class PageViewController: UIPageViewController,
+protocol PageViewControllerDelegateDeux{
+    func passageFrancais()
+    func passageAnglais()
+}
+
+class PageViewController:
+        UIPageViewController,
         UIPageViewControllerDataSource,
         UIPageViewControllerDelegate,
-                          CLLocationManagerDelegate, HomeViewControllerDelegate{
+        CLLocationManagerDelegate,
+        HomeViewControllerDelegate,
+        ViewControllerPourPageControlDelegate{
     
+    func passageFrancais() {
+        delegateDeux?.passageFrancais()
+    }
+    
+    func passageAnglais() {
+        delegateDeux?.passageAnglais()
+    }
     
     var pageViewDelegate : PageViewControllerDelegate?
+    var delegateDeux : PageViewControllerDelegateDeux?
     var currentIndex = 0
     let leContexte = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     var listeCities : [CityEntity] = []
@@ -91,6 +107,7 @@ class PageViewController: UIPageViewController,
                 self.pageViewDelegate?.afficherFavori(ville: self.listeCities[target])
                 self.pageViewDelegate?.changerTitle(title: self.listeCities[target].name!)
                 self.pageViewDelegate?.pageChangeTo(atIndex: target, current: self.listeCities[target])
+                delegateDeux = cityViews[listeCities[target].id]
                 self.setViewControllers([self.cityViews[self.listeCities[target].id]!], direction: .reverse, animated: true, completion: nil)
             }
         }
@@ -107,6 +124,7 @@ class PageViewController: UIPageViewController,
                     self.pageViewDelegate?.mettrePosActuellePageControle()
                     self.pageViewDelegate?.changerTitle(title: self.currentCity!.name!)
                     self.pageViewDelegate?.pageChangeTo(atIndex: 0, current: self.currentCity!)
+                    delegateDeux = cityViews[self.currentCity!.id]!
                     self.setViewControllers([cityViews[self.currentCity!.id]!], direction: .reverse, animated: true, completion: nil)
                 }
             }
@@ -161,7 +179,7 @@ class PageViewController: UIPageViewController,
     func updateUserLocation(lat: CLLocationDegrees, lon: CLLocationDegrees) {
         Task{
             do{
-                let weatherData = try await fetchWeatherDataFromLonLat(context: self.leContexte, lon: lon, lat: lat)
+                let weatherData = try await fetchWeatherDataFromLonLat(context: self.leContexte, lon: lon, lat: lat, language: "fr")
                 guard let city = weatherData.city else {
                     fatalError("City is nil : \(weatherData)")
                 }
@@ -205,6 +223,7 @@ class PageViewController: UIPageViewController,
         pageViewDelegate?.afficherFavori(ville: listeCities[currentIndex])
         pageViewDelegate?.changerTitle(title: listeCities[currentIndex].name!)
         pageViewDelegate?.changerFondEcran(image: cityViews[listeCities[currentIndex].id]!.icon)
+        delegateDeux = cityViews[listeCities[currentIndex].id]
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {

@@ -13,6 +13,11 @@ protocol HomeViewControllerDelegate{
     func changerFondEcran()
 }
 
+protocol HomeViewControllerDelegateDeux{
+    func passageFrancais()
+    func passageAnglais()
+}
+
 class HomeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, PageViewControllerDelegateDeux {
     
     func passageFrancais() {
@@ -42,6 +47,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             print("No city selected")
             self.title = "No city selected"
         }
+        delegateDeux?.passageFrancais()
     }
     
     func passageAnglais() {
@@ -71,6 +77,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             print("No city selected")
             self.title = "No city selected"
         }
+        delegateDeux?.passageAnglais()
     }
     
     
@@ -89,6 +96,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     var langage = "fr"
     var ville : [CityEntity] = []
     var delegate : HomeViewControllerDelegate?
+    var delegateDeux : HomeViewControllerDelegateDeux?
     var pageActuelle : Int = 0;
     var joursSuivants : [TemperatureForecastDaily] = []
     var tempMaxJoursSuivants : Int?
@@ -275,6 +283,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             if(ville.count == 0){}
             else{
                 sndVC.villeActuelle = ville[0]
+                self.delegateDeux = sndVC
             }
         }
     }

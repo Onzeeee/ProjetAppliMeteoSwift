@@ -7,7 +7,72 @@
 
 import UIKit
 
-class ViewControllerHeureSuivantes: UIViewController {
+class ViewControllerHeureSuivantes: UIViewController, HomeViewControllerDelegateDeux {
+    
+    func passageFrancais() {
+        for subview in viewScroll.subviews{
+            subview.removeFromSuperview()
+        }
+        if(villeActuelle != nil){
+            Task{
+                do{
+                    let weatherData = try? await fetchWeatherData(context: leContexte, for: villeActuelle!, language: "fr")
+                    guard let weatherData else {return}
+                    DispatchQueue.main.async {
+                        for index in 0..<weatherData.sortedTemperatureForecast.count{
+                            let labelHeure = UILabel(frame: CGRect(x: 10 + (100 * index), y: 0, width: 80, height: 50))
+                            labelHeure.textAlignment = .center
+                            labelHeure.font = .systemFont(ofSize: 25)
+                            labelHeure.text = "\(intToDate(unixTime: weatherData.sortedTemperatureForecast[index].dt).components(separatedBy: " ")[1].components(separatedBy: ":")[0])h"
+                            let imageIcon = UIImageView(frame: CGRect(x: 5 + (100 * index), y: 58, width: 90, height: 90))
+                            imageIcon.image = UIImage(named: "\(weatherData.sortedTemperatureForecast[index].icon!).png")
+                            let labelTemp = UILabel(frame: CGRect(x: 10 + (100 * index), y: 156, width: 80, height: 40))
+                            labelTemp.textAlignment = .center
+                            labelTemp.font = .systemFont(ofSize: 20)
+                            labelTemp.text = "\(Int(weatherData.sortedTemperatureForecast[index].temp))°C"
+                            self.viewScroll.addSubview(labelHeure)
+                            self.viewScroll.addSubview(imageIcon)
+                            self.viewScroll.addSubview(labelTemp)
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+    
+    func passageAnglais() {
+        for subview in viewScroll.subviews{
+            subview.removeFromSuperview()
+        }
+        if(villeActuelle != nil){
+            Task{
+                do{
+                    let weatherData = try? await fetchWeatherData(context: leContexte, for: villeActuelle!, language: "an")
+                    guard let weatherData else {return}
+                    DispatchQueue.main.async {
+                        for index in 0..<weatherData.sortedTemperatureForecast.count{
+                            let labelHeure = UILabel(frame: CGRect(x: 10 + (100 * index), y: 0, width: 80, height: 50))
+                            labelHeure.textAlignment = .center
+                            labelHeure.font = .systemFont(ofSize: 25)
+                            labelHeure.text = "\(intToDate(unixTime: weatherData.sortedTemperatureForecast[index].dt).components(separatedBy: " ")[1].components(separatedBy: ":")[0])h"
+                            let imageIcon = UIImageView(frame: CGRect(x: 5 + (100 * index), y: 58, width: 90, height: 90))
+                            imageIcon.image = UIImage(named: "\(weatherData.sortedTemperatureForecast[index].icon!).png")
+                            let labelTemp = UILabel(frame: CGRect(x: 10 + (100 * index), y: 156, width: 80, height: 40))
+                            labelTemp.textAlignment = .center
+                            labelTemp.font = .systemFont(ofSize: 20)
+                            labelTemp.text = "\(Int(weatherData.sortedTemperatureForecast[index].temp))°F"
+                            self.viewScroll.addSubview(labelHeure)
+                            self.viewScroll.addSubview(imageIcon)
+                            self.viewScroll.addSubview(labelTemp)
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+    
 
     var villeActuelle : CityEntity?
     let leContexte = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -15,6 +80,9 @@ class ViewControllerHeureSuivantes: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        for subview in viewScroll.subviews{
+            subview.removeFromSuperview()
+        }
         if(villeActuelle != nil){
             Task{
                 do{

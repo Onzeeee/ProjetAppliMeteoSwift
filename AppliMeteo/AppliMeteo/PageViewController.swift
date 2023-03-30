@@ -9,6 +9,7 @@ protocol PageViewControllerDelegate{
     func changerTitle(title : String)
     func mettrePosActuellePageControle()
     func changerFondEcran(image : String)
+    func checkLangage()
 }
 
 protocol PageViewControllerDelegateDeux{
@@ -107,6 +108,7 @@ class PageViewController:
                 self.pageViewDelegate?.afficherFavori(ville: self.listeCities[target])
                 self.pageViewDelegate?.changerTitle(title: self.listeCities[target].name!)
                 self.pageViewDelegate?.pageChangeTo(atIndex: target, current: self.listeCities[target])
+                self.pageViewDelegate?.changerFondEcran(image: self.cityViews[self.listeCities[target].id]!.icon)
                 delegateDeux = cityViews[listeCities[target].id]
                 self.setViewControllers([self.cityViews[self.listeCities[target].id]!], direction: .reverse, animated: true, completion: nil)
             }
@@ -124,6 +126,7 @@ class PageViewController:
                     self.pageViewDelegate?.mettrePosActuellePageControle()
                     self.pageViewDelegate?.changerTitle(title: self.currentCity!.name!)
                     self.pageViewDelegate?.pageChangeTo(atIndex: 0, current: self.currentCity!)
+                    self.pageViewDelegate?.changerFondEcran(image: cityViews[self.currentCity!.id]!.icon)
                     delegateDeux = cityViews[self.currentCity!.id]!
                     self.setViewControllers([cityViews[self.currentCity!.id]!], direction: .reverse, animated: true, completion: nil)
                 }
@@ -219,11 +222,14 @@ class PageViewController:
     }
 
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
-        pageViewDelegate?.pageChangeTo(atIndex: currentIndex, current: listeCities[currentIndex])
-        pageViewDelegate?.afficherFavori(ville: listeCities[currentIndex])
-        pageViewDelegate?.changerTitle(title: listeCities[currentIndex].name!)
-        pageViewDelegate?.changerFondEcran(image: cityViews[listeCities[currentIndex].id]!.icon)
-        delegateDeux = cityViews[listeCities[currentIndex].id]
+        if(completed){
+            pageViewDelegate?.pageChangeTo(atIndex: currentIndex, current: listeCities[currentIndex])
+            pageViewDelegate?.afficherFavori(ville: listeCities[currentIndex])
+            pageViewDelegate?.changerTitle(title: listeCities[currentIndex].name!)
+            pageViewDelegate?.changerFondEcran(image: cityViews[listeCities[currentIndex].id]!.icon)
+            delegateDeux = cityViews[listeCities[currentIndex].id]
+            pageViewDelegate?.checkLangage()
+        }
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {

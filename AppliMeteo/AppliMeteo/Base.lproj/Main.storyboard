@@ -288,7 +288,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DeF-4e-FYL">
-                                <rect key="frame" x="-5" y="642" width="399" height="197"/>
+                                <rect key="frame" x="-5" y="640" width="398" height="198"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <connections>
                                     <segue destination="Lci-aR-RTT" kind="embed" identifier="heuresSuivantes" id="OEg-bh-lRQ"/>
@@ -324,14 +324,14 @@
             <objects>
                 <viewController id="Lci-aR-RTT" customClass="ViewControllerHeureSuivantes" customModule="AppliMeteo" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="w0w-oi-1yU">
-                        <rect key="frame" x="0.0" y="0.0" width="399" height="197"/>
+                        <rect key="frame" x="0.0" y="0.0" width="398" height="198"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ouu-Ow-bNQ">
-                                <rect key="frame" x="0.0" y="0.0" width="399" height="197"/>
+                                <rect key="frame" x="0.0" y="0.0" width="398" height="198"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mTX-0c-MWe">
-                                        <rect key="frame" x="0.0" y="0.0" width="2000" height="197"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="2000" height="198"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="2000" id="YXy-j5-tp4"/>
                                         </constraints>
@@ -444,7 +444,7 @@
                                 </connections>
                             </slider>
                             <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="h05-Ul-vNr">
-                                <rect key="frame" x="-3" y="563" width="402" height="293"/>
+                                <rect key="frame" x="-4" y="561" width="401" height="294"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <connections>
                                     <segue destination="0CS-N8-FEz" kind="embed" identifier="listeImages" id="2Nx-l9-HeP"/>
@@ -487,14 +487,14 @@
             <objects>
                 <viewController storyboardIdentifier="ViewControllerImages" id="0CS-N8-FEz" customClass="ViewControllerImages" customModule="AppliMeteo" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="mCC-d1-Fjj">
-                        <rect key="frame" x="0.0" y="0.0" width="402" height="293"/>
+                        <rect key="frame" x="0.0" y="0.0" width="401" height="294"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3QC-Eq-aGp">
-                                <rect key="frame" x="0.0" y="0.0" width="402" height="293"/>
+                                <rect key="frame" x="0.0" y="0.0" width="401" height="294"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wKH-RR-Mfh">
-                                        <rect key="frame" x="0.0" y="0.0" width="1965" height="293"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="1965" height="294"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="1965" id="Rd0-bT-89K"/>

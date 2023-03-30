@@ -32,16 +32,16 @@ class ViewControllerPourPageControl: UIViewController {
         "03n":UIColor(red: 211/255, green: 213/255, blue: 222/255, alpha: 1),
         "04d":UIColor(red: 189/255, green: 196/255, blue: 197/255, alpha: 1),
         "04n":UIColor(red: 189/255, green: 196/255, blue: 197/255, alpha: 1),
-        "09d":.white,
-        "09n":.white,
+        "09d":UIColor(red: 205/255, green: 210/255, blue: 210/255, alpha: 1),
+        "09n":UIColor(red: 205/255, green: 210/255, blue: 210/255, alpha: 1),
         "10d":UIColor(red: 208/255, green: 226/255, blue: 231/255, alpha: 1),
-        "10n":.white,
-        "11d":.white,
-        "11n":.white,
-        "13d":.systemMint,
-        "13n":.systemMint,
-        "50d":.white,
-        "50n":.white]
+        "10n":UIColor(red: 188/255, green: 206/255, blue: 211/255, alpha: 1),
+        "11d":UIColor(red: 154/255, green: 185/255, blue: 194/255, alpha: 1),
+        "11n":UIColor(red: 154/255, green: 185/255, blue: 194/255, alpha: 1),
+        "13d":UIColor(red: 244/255, green: 243/255, blue: 230/255, alpha: 1),
+        "13n":UIColor(red: 244/255, green: 243/255, blue: 230/255, alpha: 1),
+        "50d":UIColor(red: 212/255, green: 226/255, blue: 223/255, alpha: 1),
+        "50n":UIColor(red: 212/255, green: 226/255, blue: 223/255, alpha: 1)]
     var couleurPageControl : [String:UIColor] = [
         "01d":UIColor(red: 215/255, green: 209/255, blue: 185/255, alpha: 1),
         "01n":UIColor(red: 145/255, green: 160/255, blue: 169/255, alpha: 1),
@@ -51,16 +51,16 @@ class ViewControllerPourPageControl: UIViewController {
         "03n":UIColor(red: 181/255, green: 183/255, blue: 192/255, alpha: 1),
         "04d":UIColor(red: 159/255, green: 166/255, blue: 167/255, alpha: 1),
         "04n":UIColor(red: 159/255, green: 166/255, blue: 167/255, alpha: 1),
-        "09d":.white,
-        "09n":.white,
+        "09d":UIColor(red: 185/255, green: 190/255, blue: 190/255, alpha: 1),
+        "09n":UIColor(red: 185/255, green: 190/255, blue: 190/255, alpha: 1),
         "10d":UIColor(red: 178/255, green: 196/255, blue: 201/255, alpha: 1),
-        "10n":.white,
-        "11d":.white,
-        "11n":.white,
-        "13d":.systemMint,
-        "13n":.systemMint,
-        "50d":.white,
-        "50n":.white]
+        "10n":UIColor(red: 168/255, green: 186/255, blue: 191/255, alpha: 1),
+        "11d":UIColor(red: 124/255, green: 155/255, blue: 164/255, alpha: 1),
+        "11n":UIColor(red: 124/255, green: 155/255, blue: 164/255, alpha: 1),
+        "13d":UIColor(red: 214/255, green: 213/255, blue: 200/255, alpha: 1),
+        "13n":UIColor(red: 214/255, green: 213/255, blue: 200/255, alpha: 1),
+        "50d":UIColor(red: 182/255, green: 196/255, blue: 193/255, alpha: 1),
+        "50n":UIColor(red: 182/255, green: 196/255, blue: 193/255, alpha: 1)]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -117,6 +117,16 @@ class ViewControllerPourPageControl: UIViewController {
 }
 
 extension ViewControllerPourPageControl : PageViewControllerDelegate{
+    
+    func checkLangage() {
+        if(switchControl.isOn){
+            delegate?.passageAnglais()
+        }
+        else{
+            delegate?.passageFrancais()
+        }
+    }
+    
     
     func changerFondEcran(image: String) {
         UIView.animate(withDuration: 0.5, delay: 0, options: [.curveEaseIn]) {

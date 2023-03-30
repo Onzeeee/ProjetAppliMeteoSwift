@@ -5,6 +5,7 @@
 import Foundation
 import UIKit
 
+// Cette classe permet d'ajouter la date actuelle qui est affiché à côté du nom de la ville dans la page home
 class UINavigationItemDate : UINavigationItem {
     required init?(coder: NSCoder) {
         super.init(title: "")

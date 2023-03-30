@@ -7,6 +7,7 @@
 
 import UIKit
 
+// Cette permet l'implémentation de la tableview qui affiche les jours suivants afin de les afficher comme on le souhaite via une custom cell
 class TableViewCellJoursSuivants: UITableViewCell {
 
     @IBOutlet weak var dateJour: UILabel!

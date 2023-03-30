@@ -7,22 +7,30 @@
 
 import UIKit
 
+// Ce protocol permet de faire communiquer le changement d'unité implémenté dans la navigationBar via le switch
+// Il communique avec la classe PageViewControl, qui permet d'aller dire a la classe HomeViewController de changer ses données en fonction de la langue.
 protocol ViewControllerPourPageControlDelegate{
     func passageFrancais()
     func passageAnglais()
 }
 
+// Cette classe est la partie principale du menu home, elle contient, dans la vue, la classe PageControlView dans un containerView.
+// Elle permet l'utilisation du bouton favori, menu et le changement de page sur le pageControl.
+// Elle fait aussi le changement de couleur sur le fond d'écran et sur la view derrière le pageControl.
+// Elle permet aussi de changer les unités montré à l'utilisateur, soit des données metric (°C, m/s) soit des données impérial (°F, mi/h)
 class ViewControllerPourPageControl: UIViewController {
 
+    // Ici nous instantions toutes les variables nécessaire aux changements graphiques.
     @IBOutlet weak var pageControl: UIPageControl!
+    // Ici nous créons une variable afin de pouvoir utiliser le protocol instantié plus en haut.
     var delegate : ViewControllerPourPageControlDelegate?
-    var customPageViewController: PageViewController!
     var currentCity : CityEntity!
     let leContexte = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     @IBOutlet weak var boutonFavori: UIButton!
     var seuleVille = false
     @IBOutlet weak var fondPageControlFavoriMenu: UIView!
     let switchControl = UISwitch(frame: CGRect(x: 31, y: 6, width: 49, height: 31))
+    // Ici nous stockons toutes les valeurs de fond d'écran choisi par nos soins afin de correspondre au mieux à la météo actuellement montré sur la page home.
     var couleurFond : [String:UIColor] = [
         "01d":UIColor(red: 245/255, green: 239/255, blue: 215/255, alpha: 1),
         "01n":UIColor(red: 125/255, green: 140/255, blue: 149/255, alpha: 1),
@@ -42,6 +50,7 @@ class ViewControllerPourPageControl: UIViewController {
         "13n":UIColor(red: 244/255, green: 243/255, blue: 230/255, alpha: 1),
         "50d":UIColor(red: 212/255, green: 226/255, blue: 223/255, alpha: 1),
         "50n":UIColor(red: 212/255, green: 226/255, blue: 223/255, alpha: 1)]
+    // Cela suit la lise précédemment instantié mais avec des teintes plus sombres pour les couleurs claire et des teintes plus claire pour les couleurs plus sombre.
     var couleurPageControl : [String:UIColor] = [
         "01d":UIColor(red: 215/255, green: 209/255, blue: 185/255, alpha: 1),
         "01n":UIColor(red: 145/255, green: 160/255, blue: 169/255, alpha: 1),
@@ -64,6 +73,7 @@ class ViewControllerPourPageControl: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        // Toute cette partie va instancier et créer la changement d'unité en haut à droite de l'appli
         let switchContainerView = UIView(frame: CGRect(x: 0, y: 0, width: 110, height: 44))
         let leftImage = UIImage(named: "france.png")
         let leftImageView = UIImageView(image: leftImage)
@@ -81,6 +91,7 @@ class ViewControllerPourPageControl: UIViewController {
         // Do any additional setup after loading the view.
     }
     
+    // Cette fonction sert à changer l'unité lorsque le switch est changé de status
     @objc func switchChanged(_ sender: UISwitch) {
         if sender.isOn {
             delegate?.passageAnglais()
@@ -89,6 +100,8 @@ class ViewControllerPourPageControl: UIViewController {
         }
     }
 
+    // Cette fonction est lié au bouton étoile sur la page d'accueil et permet d'ajouter la ville actuelle en tant que favori
+    // Il a une spécialité qui est que lorsque l'utilisateur à deja 15 favori une pop up apparait pour le prevenir qu'il a atteint le nombre limite de favori
     @IBAction func ajouterFavori(_ sender: Any) {
         let listeCities = findFavoriteCitiesFromCoreData(context: (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext)
         if(listeCities.count == 15){
@@ -103,21 +116,20 @@ class ViewControllerPourPageControl: UIViewController {
         }
     }
     
-    func changerCouleurPageControl(image : String){
-        fondPageControlFavoriMenu.backgroundColor = .white
-    }
-    
+    // Cette fonction permet à la classe PageViewController d'être lié à cette instanciation de classe, afin que le delegate puisse fonctionner 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let destinationViewController = segue.destination as? PageViewController {
-        customPageViewController = destinationViewController
-        customPageViewController.pageViewDelegate = self
-        delegate = customPageViewController
+        destinationViewController.pageViewDelegate = self
+        delegate = destinationViewController
         }
     }
 }
 
+// Cette extension est lié à un protocol venant de la classe PageViewController, cela permet de les lié via des fonctions afin d'avoir les changements qu'on veut
+// lié à une autre classe.
 extension ViewControllerPourPageControl : PageViewControllerDelegate{
     
+    // Cette fonction permet aux autres classes de savoir quel est l'unité choisi
     func checkLangage() {
         if(switchControl.isOn){
             delegate?.passageAnglais()
@@ -127,7 +139,7 @@ extension ViewControllerPourPageControl : PageViewControllerDelegate{
         }
     }
     
-    
+    // Cette fonction permet aux autres classes de changer le fond d'ecran en fonction de la meteo actuelle, lié au nom de l'image de l'icon
     func changerFondEcran(image: String) {
         UIView.animate(withDuration: 0.5, delay: 0, options: [.curveEaseIn]) {
             if(self.couleurFond[image] == nil){
@@ -139,19 +151,21 @@ extension ViewControllerPourPageControl : PageViewControllerDelegate{
                 self.fondPageControlFavoriMenu.backgroundColor = self.couleurPageControl[image]
             }
         }
-    }
+    }   
     
-    
+    // Cela permet d'avoir le nombre de point pour le pageControl lié à cette classe
     func numberofpage(atIndex: Int, current: CityEntity) {
         pageControl.numberOfPages = atIndex
         currentCity = current
     }
     
+    // Cela permet de changer le point actif par rapport au pageControl lié à cette classe
     func pageChangeTo(atIndex: Int, current: CityEntity) {
         pageControl.currentPage = atIndex
         currentCity = current
     }
     
+    // Cela permet de changer l'image lié au bouton favori, si il est rempli alors la ville est favorite, si il est pas rempli alors la ville n'est pas favorite
     func afficherFavori(ville : CityEntity){
         if(ville.favorite){
             boutonFavori.setImage(UIImage(systemName: "star.fill"), for: .normal)
@@ -163,10 +177,13 @@ extension ViewControllerPourPageControl : PageViewControllerDelegate{
         }
     }
     
+    // Cela permet de changer le nom du titre lié au navigation bar, donc changer le nom de la ville
     func changerTitle(title : String){
         self.title = title
     }
     
+    // Cela change l'image du premier point du pageControl en une sorte d'avion en papier très connu pour indique que ce point est 
+    // la position actuelle de l'utilisateur
     func mettrePosActuellePageControle(){
         pageControl.setIndicatorImage(UIImage(systemName: "paperplane.fill"), forPage: 0)
     }

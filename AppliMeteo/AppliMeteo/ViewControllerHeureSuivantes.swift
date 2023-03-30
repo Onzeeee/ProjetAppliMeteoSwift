@@ -82,7 +82,7 @@ class ViewControllerHeureSuivantes: UIViewController, HomeViewControllerDelegate
     @IBOutlet weak var viewScroll: UIView!
     
     // Dans ce viewDidLoad nous récupérons les weatherData afin d'avoir par la suite toutes les heures suivantes et de les afficher
-    // Leur affichage est lié à leur taille ou on multiplie leur place dans la liste et une taille prévu.
+    // Leur affichage est lié à leur taille ou on multiplie leur place dans la liste et une taille prévu (par rapport à la taille de UILabel/Image).
     override func viewDidLoad() {
         super.viewDidLoad()
         for subview in viewScroll.subviews{

@@ -130,8 +130,14 @@ extension ViewControllerPourPageControl : PageViewControllerDelegate{
     
     func changerFondEcran(image: String) {
         UIView.animate(withDuration: 0.5, delay: 0, options: [.curveEaseIn]) {
-            self.view.backgroundColor = self.couleurFond[image]
-            self.fondPageControlFavoriMenu.backgroundColor = self.couleurPageControl[image]
+            if(self.couleurFond[image] == nil){
+                self.view.backgroundColor = .white
+                self.fondPageControlFavoriMenu.backgroundColor = .white
+            }
+            else{
+                self.view.backgroundColor = self.couleurFond[image]
+                self.fondPageControlFavoriMenu.backgroundColor = self.couleurPageControl[image]
+            }
         }
     }
     

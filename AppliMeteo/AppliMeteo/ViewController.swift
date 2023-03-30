@@ -8,18 +8,21 @@
 import UIKit
 import CoreData
 
-
+//  Ce protocol agit sur la classe ViewControllerPourPageControl afin de changer le fond d'ecran
 protocol HomeViewControllerDelegate{
     func changerFondEcran()
 }
 
+// Ce protocol agit sur la classe PageViewController afin d'agir ensuite sur ViewControllerPourPageControl afin de savoir qu'elle type d'unité est utilisé.
 protocol HomeViewControllerDelegateDeux{
     func passageFrancais()
     func passageAnglais()
 }
 
+// Cette classe est le coeur aussi de l'application, elle présente tous les détails de la météo d'une ville donnée.
 class HomeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, PageViewControllerDelegateDeux {
     
+    // Les 2 fonctions suivantes viennent du protocol PageViewControllerDelegateDeux afin de changer l'unité actuellement affiché.
     func passageFrancais() {
         langage = "fr"
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {

@@ -7,10 +7,12 @@
 
 import UIKit
 
+// Ce protocol permet la fonctionnalité d'afficher une image en gros sur la page avec la carte.
 protocol ViewControllerImagesDelegate{
     func afficherImage(image: UIImageView)
 }
 
+// Cette classe est lié à toutes photos qui s'affiche sur la page détails.
 class ViewControllerImages: UIViewController, ViewControllerDetailsVilleDelegate {
 
     @IBOutlet weak var viewImages: UIView!
@@ -18,6 +20,7 @@ class ViewControllerImages: UIViewController, ViewControllerDetailsVilleDelegate
     var ville : String = ""
     var delegateImage : ViewControllerImagesDelegate?
     
+    // Dans ce viewDidLoad on utilise la fonction va chercher toutes les photos via l'api que nous utilisons
     override func viewDidLoad() {
         super.viewDidLoad()
         findPhotos(query: ville) { result in
@@ -67,11 +70,13 @@ class ViewControllerImages: UIViewController, ViewControllerDetailsVilleDelegate
         // Do any additional setup after loading the view.
     }
     
+    // Cette fonction intervient lorsque l'on clique sur une image
     @objc func imageTapped(_ sender : UITapGestureRecognizer){
         let imageView = sender.view as! UIImageView
         delegateImage?.afficherImage(image: imageView)
     }
     
+    // Cette fonction intervient lorsqu'on réappuie sur l'image, c'est une fonction venant du protocol ViewControllerDetailsVilleDelegate
     func afficherImage(image: UIImageView) {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped(_:)))
         image.isUserInteractionEnabled = true
@@ -82,6 +87,7 @@ class ViewControllerImages: UIViewController, ViewControllerDetailsVilleDelegate
 
 }
 
+// Cette extension est la pour permettre le téléchargement des photos via un url
 extension UIImageView {
     func load(url: URL) {
         DispatchQueue.global().async { [weak self] in

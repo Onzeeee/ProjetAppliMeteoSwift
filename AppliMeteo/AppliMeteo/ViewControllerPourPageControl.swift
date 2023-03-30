@@ -24,6 +24,7 @@ class ViewControllerPourPageControl: UIViewController {
     @IBOutlet weak var pageControl: UIPageControl!
     // Ici nous créons une variable afin de pouvoir utiliser le protocol instantié plus en haut.
     var delegate : ViewControllerPourPageControlDelegate?
+    var customPageViewController : PageViewController!
     var currentCity : CityEntity!
     let leContexte = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     @IBOutlet weak var boutonFavori: UIButton!
@@ -119,8 +120,9 @@ class ViewControllerPourPageControl: UIViewController {
     // Cette fonction permet à la classe PageViewController d'être lié à cette instanciation de classe, afin que le delegate puisse fonctionner 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let destinationViewController = segue.destination as? PageViewController {
-        destinationViewController.pageViewDelegate = self
-        delegate = destinationViewController
+            customPageViewController = destinationViewController
+            customPageViewController.pageViewDelegate = self
+        delegate = customPageViewController
         }
     }
 }

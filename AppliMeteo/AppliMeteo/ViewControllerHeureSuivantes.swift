@@ -7,8 +7,11 @@
 
 import UIKit
 
+// Cette classe est utilisé dans la classe HomeViewController, elle n'est pas vraiment appelé ou instancié puisque la liaison est faite dans le storyboard
+// via une segue crée grâce à un container
 class ViewControllerHeureSuivantes: UIViewController, HomeViewControllerDelegateDeux {
     
+    // Les deux fonction suivantes sont lié au protocol HomeViewControllerDelegateDeux qui permet le changement d'unité entre °C et °F
     func passageFrancais() {
         for subview in viewScroll.subviews{
             subview.removeFromSuperview()
@@ -78,6 +81,8 @@ class ViewControllerHeureSuivantes: UIViewController, HomeViewControllerDelegate
     let leContexte = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     @IBOutlet weak var viewScroll: UIView!
     
+    // Dans ce viewDidLoad nous récupérons les weatherData afin d'avoir par la suite toutes les heures suivantes et de les afficher
+    // Leur affichage est lié à leur taille ou on multiplie leur place dans la liste et une taille prévu.
     override func viewDidLoad() {
         super.viewDidLoad()
         for subview in viewScroll.subviews{
@@ -109,18 +114,5 @@ class ViewControllerHeureSuivantes: UIViewController, HomeViewControllerDelegate
             }
 
         }
-        // Do any additional setup after loading the view.
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
